@@ -1,0 +1,32 @@
+/* Simple/Advanced and exact locale contract; no browser, network or model. */
+const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
+const root=path.join(__dirname,'../src/titanos/web'),source=fs.readFileSync(path.join(root,'i18n.js'),'utf8');
+const app=fs.readFileSync(path.join(root,'app.js'),'utf8');
+const values=new Map(),storage={getItem:key=>values.get(key)||null,setItem:(key,value)=>values.set(key,value)};
+const document={documentElement:{lang:'',dataset:{}},dispatchEvent(){},querySelectorAll(){return[];}};
+const context={console,document,navigator:{language:'ja-JP'},localStorage:storage,CustomEvent:class{constructor(name,init){this.type=name;this.detail=init.detail;}}};
+vm.createContext(context);vm.runInContext(source,context);
+const i18n=context.TitanosI18n;
+assert.deepEqual([...i18n.locales],['en','es','ja','zh-CN']);
+const keys=Object.keys(i18n.catalogs.en).sort();
+for(const locale of i18n.locales){assert.deepEqual(Object.keys(i18n.catalogs[locale]).sort(),keys,locale+' key mismatch');for(const key of keys)assert(i18n.catalogs[locale][key]!==''&&i18n.catalogs[locale][key]!==key,locale+' untranslated '+key);}
+const parameters=value=>[...value.matchAll(/\{\{(\w+)\}\}/g)].map(match=>match[1]).sort();
+for(const locale of i18n.locales)for(const key of keys)assert.deepEqual(parameters(i18n.catalogs[locale][key]),parameters(i18n.catalogs.en[key]),locale+' placeholder mismatch '+key);
+let state=i18n.initialize();assert.equal(state.mode,'simple');assert.equal(state.locale,'ja');assert.equal(document.documentElement.lang,'ja');
+assert.match(i18n.t('mode.simple'),/シンプル/);assert.equal(i18n.t('missing.key'),'missing.key');
+i18n.setMode('advanced');i18n.setLocale('zh-CN');
+state=i18n.state();assert.deepEqual({...state},{mode:'advanced',locale:'zh-CN'});
+assert.deepEqual(JSON.parse(values.get('titanos.preferences.v1')),{mode:'advanced',locale:'zh-CN'});
+const broken={getItem(){throw Error('blocked')},setItem(){throw Error('blocked')}};
+state=i18n.initialize({storage:broken,browserLanguage:'es-MX'});assert.deepEqual({...state},{mode:'simple',locale:'es'});
+const denied={console,document,navigator:{language:'ja-JP'},CustomEvent:context.CustomEvent};
+Object.defineProperty(denied,'localStorage',{get(){throw Error('Storage getter denied');}});
+vm.createContext(denied);assert.doesNotThrow(()=>vm.runInContext(source,denied));
+assert.equal(denied.TitanosI18n.initialize().locale,'ja');
+assert.doesNotThrow(()=>denied.TitanosI18n.setMode('advanced'));
+assert.equal(i18n.formatBytes(1048576,'en'),'1 MB');
+const opaque='native/model {{count}} <original>';
+assert(i18n.t('ui.pinned_revision',{revision:opaque}).endsWith(opaque),'Interpolation rewrote opaque user/model text');
+assert.match(app,/function renderReadyAcquisition\(/);
+assert.doesNotMatch(app,/Ready to use\/i\.test|Done\|loaded\|registered/);
+console.log('PASS: Simple default, safe preference storage, exact en/es/ja/zh-CN catalogs, fallback and OS-family selection.');

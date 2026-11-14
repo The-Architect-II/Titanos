@@ -1,0 +1,1136 @@
+{
+  "schema_version": 1,
+  "about": "Every Titanos check, once per tier, in the order the workflow jobs run them. tools/run_checks.py executes tiers from this file; its --sync-check compares the CI tiers with the workflow jobs step for step and fails on drift. Fields: run (the exact workflow command; python and node resolve to the local interpreter), needs (Python modules that must import), os (platform.system() names), tool (node), node_module (under node_modules/), requires_path, ci_only (never run locally), slow (skipped by --fast), note. slow marks checks measured at or above 8 s in one run on 26 Sep 2026 on a loaded Windows workstation (the broker checks in one full base run on 2 Oct 2026 on the same kind of host); timings vary with the host.",
+  "helpers": [
+    "tests/studio_browser_fixture.py",
+    "tests/broker_mocks/__init__.py",
+    "tests/broker_mocks/server.py",
+    "tests/broker_mocks/faults.py",
+    "tests/broker_mocks/netguard.py",
+    "tests/broker_mocks/netguard_site/sitecustomize.py",
+    "tests/broker_mocks/fixtures.py",
+    "tests/broker_mocks/openai_mock.py",
+    "tests/broker_mocks/azure_mock.py",
+    "tests/broker_mocks/anthropic_mock.py",
+    "tests/broker_mocks/gemini_mock.py",
+    "tests/broker_mocks/elevenlabs_mock.py",
+    "tests/broker_mocks/ollama_mock.py",
+    "tests/broker_mocks/router_mock.py",
+    "tests/broker_mocks/advisor_mock.py",
+    "tests/broker_adapter_support.py",
+    "tests/broker_wp6_support.py",
+    "tests/broker_wp7_support.py",
+    "tests/broker_mocks/native_routes.py",
+    "tests/broker_mocks/ws_mock.py",
+    "tests/broker_mocks/compat_mock.py",
+    "tests/broker_mocks/switchyard_mock.py"
+  ],
+  "tiers": {
+    "base": {
+      "description": "engine dependencies only, plus setuptools for the two public-export gates (PyYAML optional); no numpy, pillow or Node",
+      "install": [
+        "python -m pip install 'setuptools>=78' 'PyYAML>=6,<7'",
+        "python -m pip install ."
+      ],
+      "workflow": {
+        "file": ".github/workflows/check.yml",
+        "job": "contract"
+      },
+      "checks": [
+        {
+          "run": "python tests/check.py",
+          "slow": true
+        },
+        {
+          "run": "python tests/check_engine_quality_boundary.py"
+        },
+        {
+          "run": "python tests/check_client_wait_deadline.py"
+        },
+        {
+          "run": "python tests/check_acquisition_progress_units.py"
+        },
+        {
+          "run": "python tests/check_hardware_legacy_selection.py"
+        },
+        {
+          "run": "python tests/check_require_loaded_engine.py"
+        },
+        {
+          "run": "python tests/check_require_loaded_native.py"
+        },
+        {
+          "run": "python tests/check_require_loaded_http.py",
+          "slow": true
+        },
+        {
+          "run": "python tests/check_hub.py"
+        },
+        {
+          "run": "python tests/check_hub_local_dir.py"
+        },
+        {
+          "run": "python tests/check_model_providers.py"
+        },
+        {
+          "run": "python tests/check_model_inspection.py"
+        },
+        {
+          "run": "python tests/check_setup_reconcile_loaded.py"
+        },
+        {
+          "run": "python tests/check_model_page.py"
+        },
+        {
+          "run": "python tests/check_acquisition.py"
+        },
+        {
+          "run": "python tests/check_acquisition_interfaces.py",
+          "slow": true
+        },
+        {
+          "run": "python tests/check_acquisition_atomicity.py"
+        },
+        {
+          "run": "python tests/check_one_stop_interfaces.py"
+        },
+        {
+          "run": "python tests/check_runtime_interfaces.py"
+        },
+        {
+          "run": "python tests/check_accelerator_profiles.py"
+        },
+        {
+          "run": "python tests/check_native_acquisition_join.py"
+        },
+        {
+          "run": "python tests/check_build_resource_bindings.py"
+        },
+        {
+          "run": "python -B tests/check_source_package.py"
+        },
+        {
+          "run": "python -B tests/check_public_export_hygiene.py",
+          "slow": true
+        },
+        {
+          "run": "python -B tests/check_route_contract_matrix.py"
+        },
+        {
+          "run": "python -B tests/check_release_workflow_gates.py"
+        },
+        {
+          "run": "python tests/check_assignments.py"
+        },
+        {
+          "run": "python tests/check_assignment_collision.py"
+        },
+        {
+          "run": "python tests/check_assignment_interfaces.py"
+        },
+        {
+          "run": "python tests/check_accelerator_discovery.py"
+        },
+        {
+          "run": "python tests/check_accelerator_assignment.py"
+        },
+        {
+          "run": "python tests/check_music_provider.py"
+        },
+        {
+          "run": "python tests/check_music_process.py"
+        },
+        {
+          "run": "python tests/check_music_device.py"
+        },
+        {
+          "run": "python tests/check_music_defaults.py"
+        },
+        {
+          "run": "python tests/check_music_package.py"
+        },
+        {
+          "run": "python tests/check_music_build_inclusion.py"
+        },
+        {
+          "run": "python tests/check_remote_pool.py"
+        },
+        {
+          "run": "python tests/check_jobs.py"
+        },
+        {
+          "run": "python tests/check_job_publication.py"
+        },
+        {
+          "run": "python tests/check_protocols.py"
+        },
+        {
+          "run": "python tests/check_option_parity.py",
+          "slow": true
+        },
+        {
+          "run": "python tests/check_protocol_deviations.py"
+        },
+        {
+          "run": "python tools/render_protocol_deviations.py --check"
+        },
+        {
+          "run": "python tests/check_roster.py"
+        },
+        {
+          "run": "python tools/render_roster.py --check"
+        },
+        {
+          "run": "python -B tests/check_progress.py"
+        },
+        {
+          "run": "python tools/render_progress.py --check"
+        },
+        {
+          "run": "python tests/check_execution_matrix.py"
+        },
+        {
+          "run": "python tools/render_execution_matrix.py --check"
+        },
+        {
+          "run": "python tests/check_matrix_kit.py"
+        },
+        {
+          "run": "python tests/check_responses.py"
+        },
+        {
+          "run": "python tests/check_agent_tools.py"
+        },
+        {
+          "run": "python tests/check_genai_request_settings.py"
+        },
+        {
+          "run": "python tests/check_vendor_genai_profile.py"
+        },
+        {
+          "run": "python tests/check_vendor_genai_vision_profile.py"
+        },
+        {
+          "run": "python tests/check_vendor_dml_vision_profile.py"
+        },
+        {
+          "run": "python tests/check_vendor_text_profile.py"
+        },
+        {
+          "run": "python tests/check_vendor_text_audio_profile.py"
+        },
+        {
+          "run": "python tests/check_vendor_text_vision_profile.py"
+        },
+        {
+          "run": "python tests/check_sentiment_backend.py"
+        },
+        {
+          "run": "python tests/check_sentiment_contract.py"
+        },
+        {
+          "run": "python tests/check_sentiment_language.py"
+        },
+        {
+          "run": "python tests/check_registration_defaults.py"
+        },
+        {
+          "run": "python tests/check_registry_transaction.py",
+          "slow": true
+        },
+        {
+          "run": "python tests/check_cli_registry_errors.py"
+        },
+        {
+          "run": "python tests/check_serve_bind_neutrality.py"
+        },
+        {
+          "run": "python tests/check_serve_username_environment.py"
+        },
+        {
+          "run": "python tests/check_registry_native_smoke.py"
+        },
+        {
+          "run": "python tests/check_offline_binary.py"
+        },
+        {
+          "run": "python tests/check_worker_faults.py"
+        },
+        {
+          "run": "python tests/check_worker_execution_settings.py"
+        },
+        {
+          "run": "python tests/check_accelerator_execution.py"
+        },
+        {
+          "run": "python -B tests/check_security_cross_site.py",
+          "slow": true
+        },
+        {
+          "run": "python -B tests/check_security_hf_filenames.py"
+        },
+        {
+          "run": "python -B tests/check_security_hub_pull.py"
+        },
+        {
+          "run": "python -B tests/check_security_persisted_plan.py"
+        },
+        {
+          "run": "python -B tests/check_security_public_routes.py",
+          "slow": true
+        },
+        {
+          "run": "python -B tests/check_docs_offline.py"
+        },
+        {
+          "run": "python -B tests/check_broker_settings.py"
+        },
+        {
+          "run": "python -B tests/check_broker_config.py"
+        },
+        {
+          "run": "python -B tests/check_broker_naming.py"
+        },
+        {
+          "run": "python -B tests/check_broker_contracts.py"
+        },
+        {
+          "run": "python -B tests/check_broker_redact.py"
+        },
+        {
+          "run": "python -B tests/check_broker_keys.py"
+        },
+        {
+          "run": "python -B tests/check_broker_auth.py"
+        },
+        {
+          "run": "python -B tests/check_broker_limits.py"
+        },
+        {
+          "run": "python -B tests/check_broker_accounting.py"
+        },
+        {
+          "run": "python -B tests/check_broker_audit.py"
+        },
+        {
+          "run": "python -B tests/check_broker_mocks.py",
+          "slow": true
+        },
+        {
+          "run": "python -B tests/check_broker_fixtures.py"
+        },
+        {
+          "run": "python -B tests/check_broker_fixture_lint.py"
+        },
+        {
+          "run": "python -B tests/check_broker_vault.py"
+        },
+        {
+          "run": "python -B tests/check_broker_egress.py"
+        },
+        {
+          "run": "python -B tests/check_broker_source_scan.py"
+        },
+        {
+          "run": "python -B tests/check_broker_adapters.py"
+        },
+        {
+          "run": "python -B tests/check_broker_translation_golden.py"
+        },
+        {
+          "run": "python -B tests/check_broker_streaming.py"
+        },
+        {
+          "run": "python -B tests/check_broker_upstream_errors.py"
+        },
+        {
+          "run": "python -B tests/check_broker_routing.py"
+        },
+        {
+          "run": "python -B tests/check_broker_breakers.py"
+        },
+        {
+          "run": "python -B tests/check_broker_advisor.py"
+        },
+        {
+          "run": "python -B tests/check_broker_dispatch.py"
+        },
+        {
+          "run": "python -B tests/check_broker_stages.py"
+        },
+        {
+          "run": "python -B tests/check_broker_http.py",
+          "slow": true
+        },
+        {
+          "run": "python -B tests/check_broker_auth_http.py",
+          "slow": true
+        },
+        {
+          "run": "python -B tests/check_broker_disabled_regression.py"
+        },
+        {
+          "run": "python -B tests/check_broker_roles.py"
+        },
+        {
+          "run": "python -B tests/check_broker_plus.py"
+        },
+        {
+          "run": "python -B tests/check_broker_jobs.py",
+          "slow": true
+        },
+        {
+          "run": "python -B tests/check_broker_scope_coverage.py"
+        },
+        {
+          "run": "python -B tests/check_broker_cli.py"
+        },
+        {
+          "run": "python -B tests/check_broker_mcp.py",
+          "slow": true
+        },
+        {
+          "run": "python -B tests/check_broker_client.py",
+          "slow": true
+        },
+        {
+          "run": "python -B tests/check_broker_manifest.py"
+        },
+        {
+          "run": "python -B tests/check_broker_e2e.py",
+          "slow": true
+        },
+        {
+          "run": "python -B tests/check_broker_redaction.py",
+          "slow": true
+        },
+        {
+          "run": "python -B tests/check_broker_coverage.py",
+          "slow": true
+        },
+        {
+          "run": "python -B tests/check_broker_matrix.py"
+        },
+        {
+          "run": "python -B tests/check_broker_docs_claims.py"
+        },
+        {
+          "run": "python -B tests/check_broker_native.py",
+          "slow": true
+        },
+        {
+          "run": "python -B tests/check_broker_native_ws.py"
+        },
+        {
+          "run": "python -B tests/check_broker_connect.py",
+          "slow": true
+        },
+        {
+          "run": "python -B tests/check_broker_openai_completeness.py",
+          "slow": true
+        },
+        {
+          "run": "python -B tests/check_broker_anthropic_models.py"
+        },
+        {
+          "run": "python -B tests/check_broker_anthropic_platform.py",
+          "slow": true
+        },
+        {
+          "run": "python -B tests/check_broker_elevenlabs.py",
+          "slow": true
+        },
+        {
+          "run": "python -B tests/check_broker_gemini_completeness.py",
+          "slow": true
+        },
+        {
+          "run": "python -B tests/check_broker_compat_family.py",
+          "slow": true
+        },
+        {
+          "run": "python -B tests/check_broker_switchyard.py",
+          "slow": true
+        },
+        {
+          "run": "python -B tests/check_broker_reachability.py",
+          "slow": true
+        },
+        {
+          "run": "python -B tests/check_openai_params.py"
+        },
+        {
+          "run": "python -B tests/check_ops_readiness.py",
+          "note": "OPS (a): GET /v1/health/ready is 200 only while the registry is loaded and not reloading and, in broker role, no required upstream has an open breaker; 503 with a typed reason otherwise; public in keyed mode"
+        },
+        {
+          "run": "python -B tests/check_ops_gateway_bearer.py",
+          "note": "OPS (b): gateway registration sends Authorization: Bearer from TITANOS_API_KEY or --key-env (titanos hivemind register-service, serve --register-with-gateway) against a loopback gateway stand-in in 49900-49949"
+        },
+        {
+          "run": "python -B tests/check_ops_service.py",
+          "note": "OPS (c): titanos service install|start|stop|uninstall|status plans for Windows (Scheduled Task), Linux (systemd) and macOS (launchd), the owner-only environment file, dry run, the install preconditions and readiness wait, and the recorded commands; subprocess.run is replaced"
+        },
+        {
+          "run": "python -B tests/check_ops_default_key.py",
+          "note": "OPS (d): keys create without --scope mints inference + models:read; that key lists models over the app while an inference-only key is 403; the documented examples carry models:read"
+        },
+        {
+          "run": "python -B tests/check_ollama_compat.py",
+          "note": "OLLAMA: GET /api/version outside managed role, POST /api/show from the registry and the passive inspection, keep_alive (0 unloads after the answer, negative resident, a duration named in X-Titanos-Dropped) and options.num_ctx (honoured up to the largest native per-slot context, 400 context_limit above it, named on other backends), typed 400 refusals on /api/pull, /api/create, /api/copy and /api/delete; HiveMind's Ollama options object on /v1/chat/completions and /v1/completions (200 + X-Titanos-Ignored, num_ctx unnamed up to the largest per-slot native context and named above it, where /api/chat is 400 context_limit, never 422); synthetic seam"
+        },
+        {
+          "run": "python -B tests/check_performance_defaults.py",
+          "note": "PERF: the 2026-10-06 serving defaults (limit_concurrency 64; native_slots 4 over native_context_size 8192, 2,048 tokens per slot) in Settings, a new NativeOptions, the broker precondition warning and uvicorn.run; the measured-and-kept serve defaults asserted; a saved registration keeps its values; CONFIGURATION, OPTION_PARITY, BROKER, OPERATIONS, NATIVE, PERFORMANCE and the deviation map state the same numbers; no model, process or listener"
+        },
+        {
+          "run": "python -B tests/check_tracked_files.py",
+          "note": "SAFETY: tracked files stay source: no file over 1 MiB outside the generated or vendored allowlist, no weight, audio, archive, binary or credential file name, no secret-shaped string (Hugging Face, NVIDIA, OpenAI/Anthropic, AWS, Google, GitHub, Slack, PEM) in UTF-8 or UTF-16 text; self-test over synthetic inputs; git ls-files read-only"
+        },
+        {
+          "run": "python -B tests/check_build_refusals.py",
+          "note": "SAFETY: tools/build_binary.py refuses coqui-tts, TTS, ultralytics, phonemizer(-fork), espeakng-loader and any declared GPL, AGPL or non-commercial distribution unless --allow-restricted names it, recorded in the plan and DEPENDENCIES.json; metadata doubles, no build"
+        },
+        {
+          "run": "python -B tests/check_gguf_header.py",
+          "note": "ADMISSION: titanos.gguf_header reads synthetic GGUF v3 headers (scalars, strings, kept and skipped arrays, per-layer KV heads), states the trained context and weight bytes, estimates the KV cache per cache type, caches by file version and refuses a wrong magic, version or byte order, a truncated header and an oversized string; no model, process or network"
+        },
+        {
+          "run": "python -B tests/check_native_context.py",
+          "note": "CONTEXT: options.num_ctx sizes a llama-cpp runtime's per-slot context to the next power of two up to the largest per-slot context (registration, TITANOS_NATIVE_MAX_SLOT_CONTEXT, GGUF trained context_length), above it named in X-Titanos-Ignored on /v1/chat/completions and 400 context_limit on /api/chat; NativePool.lease starts cold runtimes at the size, restarts idle ones, waits for busy ones, never resizes under require_loaded; --ctx-size argv; synthetic GGUF, fake runtimes, proxy seam"
+        },
+        {
+          "run": "python -B tests/check_gpu_exclusion.py",
+          "note": "PLACEMENT: TITANOS_EXCLUDE_GPU_UUIDS accepts complete NVIDIA GPU UUIDs; automatic native placement takes the first visible GPU not excluded and fails when all are; an explicit excluded GPU fails closed; synthetic inventories, no GPU"
+        },
+        {
+          "run": "python -B tests/check_admission.py",
+          "note": "ADMISSION: llama-cpp starts estimated from the GGUF header (weights, KV cache, compute margin) and admitted against injected free GPU memory minus TITANOS_ADMISSION_RESERVE_MIB (TITANOS_ADMISSION_FREE_MIB only lowers it; off/auto/on modes); refusals are 503 insufficient_device_memory with Retry-After before any directory, key or process; a refused resize keeps the running runtime; GET /api/models/memory reports the estimate (or the weights-size heuristic) and fits per fake GPU reading; no nvidia-smi, model or GPU"
+        },
+        {
+          "run": "python -B tests/check_child_env.py",
+          "note": "CHILD ENV: llama-server, its supervisor and the device probe start from an allowlist (titanos.child_env.allowlisted_env, TITANOS_CHILD_ENV_ALLOW extends it); provider variables, *_API_KEY, *_BASE_URL, *_TOKEN, *_SECRET, *_PASSWORD and vault env: names never reach a child, replica workers and FFmpeg included; synthetic environments, one Python child, a captured llama-server launch"
+        },
+        {
+          "run": "python -B tests/check_health_listener.py",
+          "note": "HEALTH: TITANOS_HEALTH_PORT runs a second uvicorn listener for /healthz, /readyz and /v1/health/ready outside limit_concurrency; a real loopback pair shows the main port at 503 under the cap while the health port answers, other paths 404, both stop together; serve picks the runner only when the port is set"
+        },
+        {
+          "run": "python -B tests/check_log_rotation.py",
+          "note": "LOGS: TITANOS_LOG_FILE appends uvicorn, access and application lines to a file rotated at TITANOS_LOG_MAX_BYTES into TITANOS_LOG_BACKUPS files (every line kept while the backups hold them, the directory capped otherwise), TITANOS_LOG_MAX_AGE_DAYS prunes old rotations, the redaction filter covers the file, serve passes log_config only when set; temporary files, uvicorn replaced"
+        },
+        {
+          "run": "python -B tests/check_owned_command_race.py",
+          "note": "RACE: run_owned's byte budget skips a file the child renames or deletes between listing and size read (progress.json.tmp replaced onto progress.json) and still reads a growing file's size from os.stat; the music progress read tolerates a missing file; injected stat failures plus 5 real jobs of 1,500 progress publications each, no failure"
+        }
+      ]
+    },
+    "extras": {
+      "description": "numpy and pillow (the dev extra) plus the node:vm Studio checks on Node 22; tiny arrays and doubles, no model",
+      "install": [
+        "python -m pip install '.[dev]'"
+      ],
+      "workflow": {
+        "file": ".github/workflows/check.yml",
+        "job": "extras"
+      },
+      "checks": [
+        {
+          "run": "python tests/check_sherpa_tts.py"
+        },
+        {
+          "run": "python tests/check_asr_language_hint.py"
+        },
+        {
+          "run": "python tests/check_music.py"
+        },
+        {
+          "run": "python tests/check_music_limits.py"
+        },
+        {
+          "run": "python -B tests/check_limit_boundaries.py"
+        },
+        {
+          "run": "python -B tests/check_ace_runner.py"
+        },
+        {
+          "run": "python -B tests/check_music_progress_publication.py"
+        },
+        {
+          "run": "python tests/check_video_diagnostics.py"
+        },
+        {
+          "run": "python tests/check_genai_images.py"
+        },
+        {
+          "run": "python tests/check_compiled_auto.py"
+        },
+        {
+          "run": "python tests/check_genai_cancellation_evidence.py"
+        },
+        {
+          "run": "python tests/check_onnx_images.py"
+        },
+        {
+          "run": "python tests/check_onnx_registration.py"
+        },
+        {
+          "run": "python tests/check_image_mask.py",
+          "slow": true
+        },
+        {
+          "run": "python tests/check_image_output_cleanup.py"
+        },
+        {
+          "run": "python tests/check_image_mask_interfaces.py"
+        },
+        {
+          "run": "python tests/check_image_edit_count.py"
+        },
+        {
+          "run": "python tests/check_instruction_edit.py"
+        },
+        {
+          "run": "node tests/check_image_mask_ui.js"
+        },
+        {
+          "run": "python tests/check_depth.py"
+        },
+        {
+          "run": "python tests/check_segmentation.py"
+        },
+        {
+          "run": "python tests/check_segmentation_interfaces.py"
+        },
+        {
+          "run": "python tests/check_retrieval.py"
+        },
+        {
+          "run": "python tests/check_pair_classification.py"
+        },
+        {
+          "run": "python tests/check_retrieval_workflow.py"
+        },
+        {
+          "run": "python tests/check_retrieval_prompt_versions.py"
+        },
+        {
+          "run": "python tests/check_retrieval_interfaces.py"
+        },
+        {
+          "run": "python tests/check_retrieval_native_context.py"
+        },
+        {
+          "run": "python tests/check_native_queue_settings.py"
+        },
+        {
+          "run": "python -B tests/check_native_attention_options.py"
+        },
+        {
+          "run": "python tests/check_replica_queue_settings.py"
+        },
+        {
+          "run": "python tests/check_tensor_storage.py"
+        },
+        {
+          "run": "python tests/check_replica_settings_propagation.py"
+        },
+        {
+          "run": "node tests/check_retrieval_ui.js"
+        },
+        {
+          "run": "python tests/check_audio.py"
+        },
+        {
+          "run": "python tests/check_whisper_prompt.py"
+        },
+        {
+          "run": "python tests/check_asr_gating.py"
+        },
+        {
+          "run": "python tests/check_translation_provenance.py",
+          "slow": true
+        },
+        {
+          "run": "python tests/check_extra_backend_generation.py"
+        },
+        {
+          "run": "python tests/check_cpu_vision_controls.py",
+          "slow": true
+        },
+        {
+          "run": "python tests/check_tesseract.py"
+        },
+        {
+          "run": "python tests/check_detection_nms.py"
+        },
+        {
+          "run": "node tests/check_asr_gating_ui.js"
+        },
+        {
+          "run": "node tests/check_studio_pairs_ui.js"
+        },
+        {
+          "run": "node tests/check_studio_backends_ui.js"
+        },
+        {
+          "run": "node tests/check_studio_extensions_ui.js"
+        },
+        {
+          "run": "node tests/check_studio_lifecycle_ui.js"
+        },
+        {
+          "run": "node tests/check_studio_creations_persist_ui.js"
+        },
+        {
+          "run": "node tests/check_studio_active_acquisition_ui.js"
+        },
+        {
+          "run": "node tests/check_acquisition_progress_ui.js"
+        },
+        {
+          "run": "node tests/check_studio_design_ui.js"
+        },
+        {
+          "run": "node tests/check_studio_modes_i18n.js"
+        },
+        {
+          "run": "node tests/check_assignment_ui.js"
+        },
+        {
+          "run": "python tests/check_rerank_cancellation.py"
+        },
+        {
+          "run": "python tests/check_sentiment_facets.py"
+        },
+        {
+          "run": "python tests/check_sentiment_native.py"
+        },
+        {
+          "run": "node tests/check_broker_ui.js"
+        },
+        {
+          "run": "python -B tests/check_job_contract.py",
+          "note": "JOBS: the client lifecycle contract (idempotent replay, lookup by Idempotency-Key, status filter, cancel_accepted, restart interruption marked retryable); needs pillow; lambda job runners and a stand-in image model, no weights"
+        }
+      ]
+    },
+    "sdk": {
+      "description": "the OpenAI client library against the local routes with synthetic inference, then the broker SDK lanes: the OpenAI, Anthropic, Google GenAI and ElevenLabs SDKs and the official MCP client against a real titanos serve and loopback mocks; their client runs under TITANOS_SDK_PYTHON (OpenAI) and TITANOS_SDK_PYTHON_EXT (vendor SDKs), default this interpreter, and a missing SDK reports untried (exit 0), never a pass",
+      "install": [
+        "python -m pip install -r tests/requirements-sdk.txt"
+      ],
+      "workflow": {
+        "file": ".github/workflows/check.yml",
+        "job": "extras"
+      },
+      "checks": [
+        {
+          "run": "python tests/check_responses_sdk.py",
+          "needs": [
+            "openai"
+          ]
+        },
+        {
+          "run": "python tests/check_retrieval_sdk.py",
+          "needs": [
+            "openai"
+          ]
+        },
+        {
+          "run": "python tests/check_audio_sdk.py",
+          "needs": [
+            "openai"
+          ]
+        },
+        {
+          "run": "python tests/check_broker_sdk.py",
+          "slow": true,
+          "note": "OpenAI SDK and MCP client against a real serve plus loopback mocks; TITANOS_SDK_FIXTURE_MODELS adds the local cases"
+        },
+        {
+          "run": "python tests/check_broker_sdk_vendors.py",
+          "slow": true,
+          "note": "anthropic, google-genai and elevenlabs SDKs against a real serve plus loopback mocks"
+        },
+        {
+          "run": "python tests/check_broker_elevenlabs_sdk.py",
+          "slow": true,
+          "note": "the elevenlabs SDK across the typed surfaces and the native lane (timestamps, dialogue, sound effects, voices, models) against a real serve plus the loopback ElevenLabs mock"
+        },
+        {
+          "run": "python tests/check_ollama_sdk.py",
+          "needs": [
+            "ollama"
+          ],
+          "note": "the stock ollama client against a real keyless titanos serve on a 49900-49949 port: version, list, ps, show and the refused library routes always; chat/generate/embed with keep_alive and num_ctx when TITANOS_SDK_FIXTURE_MODELS or TITANOS_OLLAMA_SDK_GGUF + TITANOS_OLLAMA_SDK_LLAMA_SERVER add models"
+        }
+      ]
+    },
+    "windows": {
+      "description": "Windows Job objects and the native supervisor with inert processes; a Windows host",
+      "install": [
+        "python -m pip install ."
+      ],
+      "workflow": {
+        "file": ".github/workflows/check.yml",
+        "job": "windows"
+      },
+      "os": [
+        "Windows"
+      ],
+      "checks": [
+        {
+          "run": "python tests/check_windows_job_cleanup.py"
+        },
+        {
+          "run": "python tests/check_windows_job_caller.py"
+        },
+        {
+          "run": "python -B tests/check_native_tree_cleanup.py"
+        },
+        {
+          "run": "python -I -S -B -c \"import sys,unittest;sys.path.insert(0,'tools/validation/gen01');r=unittest.TextTestRunner(verbosity=2).run(unittest.defaultTestLoader.discover('tools/validation/gen01/tests'));raise SystemExit(not r.wasSuccessful())\"",
+          "requires_path": "tools/validation/gen01/tests",
+          "note": "archived GEN-01 controller suite; present in the private repository only, skipped where the tree is absent (check.yml guards it with hashFiles)",
+          "slow": true
+        }
+      ]
+    },
+    "browser": {
+      "description": "headless Studio pages through Playwright 1.62.1 and Chromium; check.yml points the evidence directories at browser-evidence/ for the uploaded artifact; the broker lane also needs Python with the project installed (TITANOS_PYTHON, default python)",
+      "install": [
+        "python -m pip install .",
+        "npm install --no-save --ignore-scripts playwright@1.62.1",
+        "npx playwright install --with-deps chromium"
+      ],
+      "workflow": {
+        "file": ".github/workflows/check.yml",
+        "job": "studio-browser"
+      },
+      "node_module": "playwright",
+      "checks": [
+        {
+          "run": "node tests/check_studio_workflow_i18n.js"
+        },
+        {
+          "run": "node tests/check_studio_workflow_i18n.js --simple-only"
+        },
+        {
+          "run": "node tests/check_studio_accelerators.js"
+        },
+        {
+          "run": "node tests/check_model_setup_ui.js"
+        },
+        {
+          "run": "node tests/check_studio_broker_browser.js",
+          "slow": true,
+          "note": "Studio Cloud and routing panel against a real titanos serve plus the loopback OpenAI mock (netguard, loopback-only egress); TITANOS_CHROME_PATH or TITANOS_CHROME_CHANNEL select a system browser"
+        }
+      ]
+    },
+    "package": {
+      "description": "packaging contracts over inert files with the build extra, then the release directory",
+      "install": [
+        "python -m pip install 'setuptools>=78' wheel '.[build]'"
+      ],
+      "workflow": {
+        "file": ".github/workflows/check.yml",
+        "job": "package"
+      },
+      "checks": [
+        {
+          "run": "python -B tests/check_compose_binary.py"
+        },
+        {
+          "run": "python -B tests/check_packaged_distributions.py"
+        },
+        {
+          "run": "python -B tests/check_ffmpeg_bundle.py"
+        },
+        {
+          "run": "python -B tests/check_engine_excludes.py"
+        },
+        {
+          "run": "python -B tests/check_notice_supplements.py"
+        },
+        {
+          "run": "python -B tests/check_broker_build_inclusion.py"
+        },
+        {
+          "run": "python tools/build_release.py",
+          "ci_only": "writes release/ under the checkout",
+          "note": "builds the wheel and release catalog that the package job uploads; not a check"
+        }
+      ]
+    },
+    "standalone": {
+      "description": "client, settings, lifecycle, Studio and MCP contracts; standalone.yml runs on push to main, pull requests and manual dispatch and repeats four base checks (check.py, check_jobs.py, check_protocols.py, check_hub.py) and one extras check (check_tesseract.py)",
+      "install": [
+        "python -m pip install -e . pillow"
+      ],
+      "workflow": {
+        "file": ".github/workflows/standalone.yml",
+        "job": "contracts"
+      },
+      "checks": [
+        {
+          "run": "python tests/check.py",
+          "slow": true
+        },
+        {
+          "run": "python tests/check_client.py"
+        },
+        {
+          "run": "python tests/check_settings.py"
+        },
+        {
+          "run": "python tests/check_tesseract.py"
+        },
+        {
+          "run": "python tests/check_jobs.py"
+        },
+        {
+          "run": "python tests/check_lifecycle.py"
+        },
+        {
+          "run": "python tests/check_studio.py"
+        },
+        {
+          "run": "python tests/check_mcp.py",
+          "slow": true
+        },
+        {
+          "run": "python tests/check_api_plus.py"
+        },
+        {
+          "run": "python tests/check_protocols.py"
+        },
+        {
+          "run": "python tests/check_hub.py"
+        }
+      ]
+    },
+    "unscheduled": {
+      "description": "contract checks that need no model but are in no workflow yet; candidates for the contract or extras job after a run on each OS; entries with a failure note need repair first",
+      "install": [
+        "python -m pip install '.[dev]'"
+      ],
+      "workflow": null,
+      "checks": [
+        {
+          "run": "python -B tests/check_accelerator_interfaces.py"
+        },
+        {
+          "run": "python -B tests/check_audio_analysis.py"
+        },
+        {
+          "run": "python -B tests/check_client_poll_retries.py"
+        },
+        {
+          "run": "python -B tests/check_diarization.py"
+        },
+        {
+          "run": "python -B tests/check_diarization_provider.py"
+        },
+        {
+          "run": "python -B tests/check_worker_error_diagnostics.py",
+          "note": "fails against the current source (observed 26 Sep 2026): _worker_main signature drift; repair before scheduling"
+        },
+        {
+          "run": "python -B tests/check_sherpa_package.py"
+        },
+        {
+          "run": "python -B tests/check_native_inventory.py"
+        },
+        {
+          "run": "python -B tests/check_music_failure_diagnostics.py"
+        },
+        {
+          "run": "python -B tests/check_directml.py",
+          "note": "fails against the current source (observed 26 Sep 2026): device identity expectations drifted; repair before scheduling"
+        },
+        {
+          "run": "python -B tests/check_audio_decode.py",
+          "note": "fails against the current source (observed 26 Sep 2026): Settings(max_audio_seconds=.01) is refused by the diarization minimum-duration rule; repair before scheduling"
+        },
+        {
+          "run": "python -B tests/check_daybreak_blocker3.py"
+        },
+        {
+          "run": "python -B tests/check_daybreak_blocker4.py"
+        },
+        {
+          "run": "python -B tests/check_daybreak_blocker6.py"
+        },
+        {
+          "run": "python -B tests/check_edit_controls.py",
+          "needs": [
+            "PIL"
+          ]
+        },
+        {
+          "run": "python -B tests/check_tensor_limits.py",
+          "needs": [
+            "numpy"
+          ]
+        },
+        {
+          "run": "python -B tests/check_tensor_b64.py",
+          "needs": [
+            "numpy",
+            "onnx",
+            "onnxruntime"
+          ]
+        },
+        {
+          "run": "python -B tests/check_tensor_convert.py",
+          "needs": [
+            "numpy",
+            "onnx",
+            "onnxruntime"
+          ]
+        },
+        {
+          "run": "python -B tests/check_speech_stream.py",
+          "note": "the transfer cases run real uvicorn servers on loopback"
+        },
+        {
+          "run": "python -B tests/check_ingest_gate_negative.py",
+          "note": "reads a pre-change file from git history; on a checkout without that commit the red proof is reported unavailable and only the green proof runs"
+        },
+        {
+          "run": "python -B tests/check_daybreak_blocker1.py",
+          "os": [
+            "Windows"
+          ],
+          "note": "Windows Job containment proof; prints SKIP and exits 0 elsewhere"
+        },
+        {
+          "run": "python -B tests/check_daybreak_blocker2.py",
+          "os": [
+            "Windows"
+          ],
+          "note": "Windows Job monitoring proof; prints SKIP and exits 0 elsewhere",
+          "slow": true
+        },
+        {
+          "run": "python -B tests/check_matrix_kit_containment.py",
+          "os": [
+            "Windows"
+          ],
+          "needs": [
+            "psutil"
+          ],
+          "note": "Windows Job containment contracts of the matrix kit; allocates past a 256 MiB cap, so it needs free commit charge: on 26 Sep 2026 it did not finish within 12 minutes on a host near its commit limit and was stopped",
+          "slow": true
+        },
+        {
+          "run": "node tests/check_diarization_ui.js",
+          "node_module": "playwright",
+          "note": "headless Studio through Playwright; candidate for the studio-browser job"
+        },
+        {
+          "run": "python -B tools/broker_live_smoke.py --dry-run",
+          "slow": true,
+          "note": "offline self-test of the live smoke against tests/broker_mocks (loopback only, netguard plus the allowlist guard, three serve runs); run on Windows only so far, candidate for the contract job after a run on Linux and macOS"
+        }
+      ]
+    },
+    "manual": {
+      "description": "need local checkpoints, a numerical runtime, real hardware or built artifacts; never in CI; placeholders below are yours to replace",
+      "workflow": null,
+      "manual": true,
+      "checks": [
+        {
+          "run": "python tests/check.py --models /path/to/models --report /path/to/report.json",
+          "note": "seven tiny checkpoints from tools/fetch_checkpoints.py; the models extra (torch runtime)"
+        },
+        {
+          "run": "python tests/check_api_plus.py --models /path/to/models --detection-image /path/to/image.png --report /path/to/report.json",
+          "note": "model directory layout t5-small/, trocr-small-printed/, yolos-tiny/; the models extra"
+        },
+        {
+          "run": "python tests/check_parallel.py --model /path/to/checkpoint --report /path/to/report.json",
+          "note": "add --gpus 0 1 for two GPUs; native-smoke.yml runs it on a dispatched runner"
+        },
+        {
+          "run": "python tests/check_devices.py",
+          "note": "torch; deliberately reordered synthetic GPUs, not GPU evidence; native-smoke.yml"
+        },
+        {
+          "run": "python tests/check_compiled.py --registry /path/to/models.json --onnx NAME --openvino NAME",
+          "note": "prepared ONNX and OpenVINO models (titanos prepare); numpy"
+        },
+        {
+          "run": "python tests/check_native.py --registry /path/to/models.json --report /path/to/report.json",
+          "note": "a llama.cpp native profile and GGUF checkpoint; psutil"
+        },
+        {
+          "run": "python tests/check_onnx_only.py --model /path/to/prepared-embedding-model",
+          "note": "an ONNX-only environment without PyTorch"
+        },
+        {
+          "run": "python tests/check_responses_trained.py --model-dir /path/to/checkpoint --output /path/to/evidence",
+          "note": "torch; a local trained checkpoint; never downloads"
+        },
+        {
+          "run": "python tests/check_frozen_workers.py --executable /path/to/titanos-executable --model /path/to/checkpoint --report /path/to/report.json",
+          "note": "a built self-contained executable and two GPUs"
+        },
+        {
+          "run": "python tests/check_native_install.py --archive /path/to/native-archive --report /path/to/report.json",
+          "note": "a built native archive served from a loopback feed"
+        },
+        {
+          "run": "python tests/check_install.py --target /path/to/fresh-target",
+          "note": "release/ from tools/build_release.py served from a loopback feed"
+        },
+        {
+          "run": "python tests/check_pair.py --engine-manager /path/to/engine-manager --proxy /path/to/proxy --model-dir /path/to/model",
+          "note": "Linux; locally built executables of the optional external PAIR client"
+        },
+        {
+          "run": "python tests/check_mps_cogvideo.py",
+          "note": "torch and diffusers; --model and --report for real video on MPS"
+        },
+        {
+          "run": "python tests/check_qwen_tts.py",
+          "note": "torch and numpy; control checks, inference is a separate gate"
+        },
+        {
+          "run": "python tests/check_qwen_tts_streaming.py",
+          "note": "qwen-tts, torch, librosa and soundfile; a fake model: streaming, sampling and cloning control checks, no inference claims"
+        },
+        {
+          "run": "python tests/check_i2v.py",
+          "note": "torch, transformers, diffusers and pillow; synthetic pipeline fixtures"
+        },
+        {
+          "run": "python tests/check_media.py",
+          "note": "numpy and a real FFmpeg (imageio-ffmpeg)"
+        },
+        {
+          "run": "python tools/broker_live_smoke.py --live --i-understand-this-spends-money --approval /path/to/approval.json --home /path/to/smoke-home",
+          "note": "owner-approved live broker lane V14: OPENAI_API_KEY, NGC_API_KEY and HF_TOKEN by env reference only, at most the approval cap (USD 0.50); never in CI; its <output_dir>/<run>/broker_live_evidence.jsonl feeds tools/build_broker_matrix.py --live"
+        },
+        {
+          "run": "python tools/broker_overhead.py",
+          "note": "BrokerDispatch overhead for local chat (inactive and active paths) in process against a fake engine; reports observations only, never thresholds; --no-request-log separates the per-request log line"
+        },
+        {
+          "run": "python -B tools/build_broker_matrix.py --run --check",
+          "note": "fresh run of every tests/check_broker_*.py and the two JavaScript Studio checks (node) with TITANOS_BROKER_RESULTS; set TITANOS_SDK_PYTHON, TITANOS_SDK_PYTHON_EXT, TITANOS_SDK_FIXTURE_MODELS and the browser lane's Playwright and browser variables, or those cells record untried; fails when docs/broker_matrix.json or docs/BROKER_MATRIX.md drift (a few minutes); regenerate with --run after adding or renaming a broker check"
+        },
+        {
+          "run": "python tests/check_switchyard_interop.py --switchyard-python /path/to/switchyard-venv/python --fixture-models /path/to/fixture/models",
+          "note": "a real NVIDIA NeMo Switchyard (pip install nemo-switchyard in its own venv) and a real titanos serve on loopback, both directions and the loop; untried without the Switchyard interpreter; never in CI"
+        },
+        {
+          "run": "python tests/check_agent_loops.py --llama-server /path/to/llama-server --gguf /path/to/model.gguf --sdk-python /path/to/agents-venv/python --report /path/to/report.json",
+          "note": "real agent tool loops with the stock openai and anthropic SDKs and openai-agents against a real titanos serve on the llama.cpp CPU binary and a Qwen2.5-0.5B-Instruct GGUF (device cpu, gpu_layers 0); the SDK interpreter needs openai, anthropic and openai-agents; a missing SDK reports untried, never a pass; never in CI"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,41 @@
+name: Feature request
+description: A capability, backend, modality, interface or hardware path Titanos should have
+title: "[feature] "
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What you want to do
+      description: The user-visible outcome, in plain words. Name the model class and the hardware if they matter.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed behaviour
+      description: What Titanos should do, seen from the interface you use (HTTP, MCP, CLI, Python client, Studio).
+    validations:
+      required: true
+  - type: checkboxes
+    id: interfaces
+    attributes:
+      label: Interfaces affected
+      options:
+        - label: HTTP API
+        - label: MCP
+        - label: CLI
+        - label: Python client
+        - label: Studio (browser)
+        - label: Packaging, install or Docker
+        - label: Documentation only
+  - type: textarea
+    id: existing
+    attributes:
+      label: What you checked
+      description: Which existing path does not cover it. `docs/CAPABILITY_MATRIX.md` lists what is implemented and how far each path has been exercised; `docs/OPTION_PARITY.md` lists the request controls and their fixed policies.
+  - type: textarea
+    id: hardware
+    attributes:
+      label: Hardware you can test on
+      description: A hardware claim needs a run on that hardware (see CONTRIBUTING.md). Say what you can run and report, or write "none".

@@ -1,0 +1,67 @@
+Titanos
+Copyright 2026 Preston Goode
+
+Titanos is a standalone implementation inspired by the Generic Inference
+Microservices architecture in Preston Goode's HM2 / HiveMind project.
+It does not include or require the HM2 application.
+
+It uses third-party libraries, installed separately for source use or included
+in platform-specific application bundles, including PyTorch,
+Transformers, Diffusers, FastAPI, and optionally Coqui TTS. Those projects and
+model checkpoints retain their own licenses and notices.
+
+NVIDIA PAIR is an optional external integration and is not bundled.
+Ponytail by Dietrich Gebert informed the development and review workflow.
+
+The four-locale selection/fallback behavior and a small set of matching UI
+labels were adapted from the MIT-licensed HM2-UI / HiveMind UI project,
+copyright (c) 2026 HiveMind contributors. Titanos uses an original vanilla
+JavaScript catalog and does not include HiveMind's React/i18next runtime.
+
+The API documentation view (/docs) is rendered by Swagger UI (swagger-ui-dist
+5.33.0, Apache-2.0, Copyright 2020-2021 SmartBear Software Inc.), included
+unmodified under src/titanos/web/ and served by Titanos itself, so the page
+requests nothing outside the server's own origin; its LICENSE and NOTICE are retained under
+tools/licenses/ and tools/licenses/vendored_assets.json records the pinned
+upstream tarball. ReDoc is not included.
+
+Studio's display face is Chakra Petch 1.000 (SemiBold and Bold Italic),
+Copyright 2018 The Chakra Petch Project Authors
+(https://github.com/m4rc1e/Chakra-Petch.git), licensed under the SIL Open Font
+License 1.1. Latin subsets converted to WOFF2 are included under
+src/titanos/web/fonts/ with the license as OFL.txt, and inlined into
+src/titanos/web/style.css, which also carries the license text; a copy is
+retained under tools/licenses/ and tools/licenses/vendored_assets.json records
+the upstream files.
+
+Silero VAD adapter attribution
+
+The Silero VAD adapter's ONNX frame, context and recurrent-state protocol follows
+`OnnxWrapper` from snakers4/silero-vad v6.2.1, commit
+`7e30209a3e901f9842f81b225f3e93d8199902b1`:
+https://github.com/snakers4/silero-vad/blob/7e30209a3e901f9842f81b225f3e93d8199902b1/src/silero_vad/utils_vad.py
+
+The external model is distributed separately. Retain its author's MIT license
+when redistributing it.
+
+MIT License
+
+Copyright (c) 2020-present Silero Team
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

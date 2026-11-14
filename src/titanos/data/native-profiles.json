@@ -1,0 +1,266 @@
+{
+  "version": 1,
+  "runtime": "llama.cpp",
+  "release": "b10809",
+  "upstream_release": "v0.4.0",
+  "profiles": {
+    "macos-arm64": {
+      "os": "darwin",
+      "arch": "aarch64",
+      "assets": [
+        {
+          "file": "llama-b10809-bin-macos-arm64.tar.gz",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/download/b10809/llama-b10809-bin-macos-arm64.tar.gz",
+          "sha256": "7d692df9e1e386e62f1c12b843903218041e6cd74c9415aa39a7ed3176f9eaa2"
+        }
+      ],
+      "validation": "Native execution pending on this platform; drivers/runtime prerequisites must be installed"
+    },
+    "macos-x64": {
+      "os": "darwin",
+      "arch": "x86_64",
+      "assets": [
+        {
+          "file": "llama-b10809-bin-macos-x64.tar.gz",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/download/b10809/llama-b10809-bin-macos-x64.tar.gz",
+          "sha256": "13b34aa8a5d87341a21065a83f54a8167e1aaa6fe0d66065de01632a1ed64be6"
+        }
+      ],
+      "validation": "Native execution pending on this platform; drivers/runtime prerequisites must be installed"
+    },
+    "ubuntu-arm64": {
+      "os": "linux",
+      "arch": "aarch64",
+      "assets": [
+        {
+          "file": "llama-b10809-bin-ubuntu-arm64.tar.gz",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/download/b10809/llama-b10809-bin-ubuntu-arm64.tar.gz",
+          "sha256": "f2b7333971e1b7b42e9268bfdbfa30f5f56e2897156084d2251385df94aec358"
+        }
+      ],
+      "validation": "Native execution pending on this platform; drivers/runtime prerequisites must be installed"
+    },
+    "ubuntu-openvino-2026.3.1-x64": {
+      "os": "linux",
+      "arch": "x86_64",
+      "assets": [
+        {
+          "file": "llama-b10809-bin-ubuntu-openvino-2026.3.1-x64.tar.gz",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/download/b10809/llama-b10809-bin-ubuntu-openvino-2026.3.1-x64.tar.gz",
+          "sha256": "f0e93d2ab92033345aaf35091ca065bd34bdb4da3c382f1664103cc238b90026"
+        }
+      ],
+      "validation": "Native execution pending on this platform; drivers/runtime prerequisites must be installed"
+    },
+    "ubuntu-rocm-10.0-x64": {
+      "os": "linux",
+      "arch": "x86_64",
+      "assets": [
+        {
+          "file": "llama-b10809-bin-ubuntu-rocm-10.0-x64.tar.gz",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/download/b10809/llama-b10809-bin-ubuntu-rocm-10.0-x64.tar.gz",
+          "sha256": "3a08e25328f5ed6ffa759ffe677cb2ecc57e00758282d2d8f856e3b49a65f066"
+        }
+      ],
+      "validation": "Native execution pending on this platform; drivers/runtime prerequisites must be installed"
+    },
+    "ubuntu-sycl-fp16-x64": {
+      "os": "linux",
+      "arch": "x86_64",
+      "assets": [
+        {
+          "file": "llama-b10809-bin-ubuntu-sycl-fp16-x64.tar.gz",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/download/b10809/llama-b10809-bin-ubuntu-sycl-fp16-x64.tar.gz",
+          "sha256": "f67bae6b12e0884117c8c28d5b9b9fd6ee4993978d09705149ba5d5aa83e8e5c"
+        }
+      ],
+      "validation": "Native execution pending on this platform; drivers/runtime prerequisites must be installed"
+    },
+    "ubuntu-sycl-fp32-x64": {
+      "os": "linux",
+      "arch": "x86_64",
+      "assets": [
+        {
+          "file": "llama-b10809-bin-ubuntu-sycl-fp32-x64.tar.gz",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/download/b10809/llama-b10809-bin-ubuntu-sycl-fp32-x64.tar.gz",
+          "sha256": "fae2ac411948d9669430b19fd8fa95784b01e512d988bdc127be24b2b7dc27b8"
+        }
+      ],
+      "validation": "Native execution pending on this platform; drivers/runtime prerequisites must be installed"
+    },
+    "ubuntu-vulkan-arm64": {
+      "os": "linux",
+      "arch": "aarch64",
+      "assets": [
+        {
+          "file": "llama-b10809-bin-ubuntu-vulkan-arm64.tar.gz",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/download/b10809/llama-b10809-bin-ubuntu-vulkan-arm64.tar.gz",
+          "sha256": "fc6cd3084aea0f63244a8a29231a8499642a0235958619cb80c3eedc0629fbaf"
+        }
+      ],
+      "validation": "Native execution pending on this platform; drivers/runtime prerequisites must be installed"
+    },
+    "ubuntu-vulkan-x64": {
+      "os": "linux",
+      "arch": "x86_64",
+      "assets": [
+        {
+          "file": "llama-b10809-bin-ubuntu-vulkan-x64.tar.gz",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/download/b10809/llama-b10809-bin-ubuntu-vulkan-x64.tar.gz",
+          "sha256": "07f029cef440c82c3cff5310641eb6347e5cbcd865a5d88990215058aa049e93"
+        }
+      ],
+      "validation": "Native execution pending on this platform; drivers/runtime prerequisites must be installed"
+    },
+    "ubuntu-x64": {
+      "os": "linux",
+      "arch": "x86_64",
+      "assets": [
+        {
+          "file": "llama-b10809-bin-ubuntu-x64.tar.gz",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/download/b10809/llama-b10809-bin-ubuntu-x64.tar.gz",
+          "sha256": "5e34434ddc6d03cd1584f403201aff0d4bd1a5793a72ff7e286532dfd1e4b941"
+        }
+      ],
+      "validation": "Native execution pending on this platform; drivers/runtime prerequisites must be installed"
+    },
+    "win-cpu-arm64": {
+      "os": "windows",
+      "arch": "aarch64",
+      "assets": [
+        {
+          "file": "llama-b10809-bin-win-cpu-arm64.zip",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/download/b10809/llama-b10809-bin-win-cpu-arm64.zip",
+          "sha256": "c1058fe5764a687275c8d20d6bbc1454e787cdbb8ebb8c37a2f959f2b144dc77"
+        }
+      ],
+      "validation": "Native execution pending on this platform; drivers/runtime prerequisites must be installed"
+    },
+    "win-cpu-x64": {
+      "os": "windows",
+      "arch": "x86_64",
+      "assets": [
+        {
+          "file": "llama-b10809-bin-win-cpu-x64.zip",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/download/b10809/llama-b10809-bin-win-cpu-x64.zip",
+          "sha256": "9df3158ed228a641a4b127942d7f459f24c9e13f04682659d05c00c80099b6b5"
+        }
+      ],
+      "validation": "Native execution pending on this platform; drivers/runtime prerequisites must be installed"
+    },
+    "win-cuda-12.4-x64": {
+      "os": "windows",
+      "arch": "x86_64",
+      "assets": [
+        {
+          "file": "llama-b10809-bin-win-cuda-12.4-x64.zip",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/download/b10809/llama-b10809-bin-win-cuda-12.4-x64.zip",
+          "sha256": "c77bfcd9ed8d91e8721a2d6a290b907fddd4fa5412a47b21c6fa1709116b85f9"
+        },
+        {
+          "file": "cudart-llama-bin-win-cuda-12.4-x64.zip",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/download/b10809/cudart-llama-bin-win-cuda-12.4-x64.zip",
+          "sha256": "8c79a9b226de4b3cacfd1f83d24f962d0773be79f1e7b75c6af4ded7e32ae1d6"
+        }
+      ],
+      "validation": "Native execution pending on this platform; drivers/runtime prerequisites must be installed"
+    },
+    "win-cuda-13.3-x64": {
+      "os": "windows",
+      "arch": "x86_64",
+      "assets": [
+        {
+          "file": "llama-b10809-bin-win-cuda-13.3-x64.zip",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/download/b10809/llama-b10809-bin-win-cuda-13.3-x64.zip",
+          "sha256": "790a89e7c40049b8b1cd1a2565abe1d40cfc4e18843cdefa77ed2ce52d6a7b2d"
+        },
+        {
+          "file": "cudart-llama-bin-win-cuda-13.3-x64.zip",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/download/b10809/cudart-llama-bin-win-cuda-13.3-x64.zip",
+          "sha256": "1462a050eb4c684921ba51dcc4cc488a036674c3e73e9945ee705b854808d03e"
+        }
+      ],
+      "validation": "Native execution pending on this platform; drivers/runtime prerequisites must be installed"
+    },
+    "win-cuda-13.4-arm64": {
+      "os": "windows",
+      "arch": "aarch64",
+      "assets": [
+        {
+          "file": "llama-b10809-bin-win-cuda-13.4-arm64.zip",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/download/b10809/llama-b10809-bin-win-cuda-13.4-arm64.zip",
+          "sha256": "f9181122b90d5a9bf154f3d055c4cb6446800ea99b5e0df6645cec719e3e1753"
+        },
+        {
+          "file": "cudart-llama-bin-win-cuda-13.4-arm64.zip",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/download/b10809/cudart-llama-bin-win-cuda-13.4-arm64.zip",
+          "sha256": "5a40dc7c5fa3d0a80ceeba4f16f9e8d25d87bcf1399c9233588953c43436c33c"
+        }
+      ],
+      "validation": "Native execution pending on this platform; drivers/runtime prerequisites must be installed"
+    },
+    "win-opencl-adreno-arm64": {
+      "os": "windows",
+      "arch": "aarch64",
+      "assets": [
+        {
+          "file": "llama-b10809-bin-win-opencl-adreno-arm64.zip",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/download/b10809/llama-b10809-bin-win-opencl-adreno-arm64.zip",
+          "sha256": "dd5ddb6401c21ed0e8b629f23a99e894dd0d70ecfbfae2dee0f4abb1db8b056c"
+        }
+      ],
+      "validation": "Native execution pending on this platform; drivers/runtime prerequisites must be installed"
+    },
+    "win-openvino-2026.3.1-x64": {
+      "os": "windows",
+      "arch": "x86_64",
+      "assets": [
+        {
+          "file": "llama-b10809-bin-win-openvino-2026.3.1-x64.zip",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/download/b10809/llama-b10809-bin-win-openvino-2026.3.1-x64.zip",
+          "sha256": "71d3946208af69a8724d4430337f5781df1dece2d3f8458c50a8aee98eab9275"
+        }
+      ],
+      "validation": "Native execution pending on this platform; drivers/runtime prerequisites must be installed"
+    },
+    "win-rocm-10.0-x64": {
+      "os": "windows",
+      "arch": "x86_64",
+      "assets": [
+        {
+          "file": "llama-b10809-bin-win-rocm-10.0-x64.zip",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/download/b10809/llama-b10809-bin-win-rocm-10.0-x64.zip",
+          "sha256": "f1773d6031a0f38a2f0b2b4394dd4f3b5a76cecbabcaa673df105023da355150"
+        }
+      ],
+      "validation": "Native execution pending on this platform; drivers/runtime prerequisites must be installed"
+    },
+    "win-sycl-x64": {
+      "os": "windows",
+      "arch": "x86_64",
+      "assets": [
+        {
+          "file": "llama-b10809-bin-win-sycl-x64.zip",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/download/b10809/llama-b10809-bin-win-sycl-x64.zip",
+          "sha256": "7a21bbda49d8d5190b4c9bb12e37cebc64b2fa315faa275b20deb04172f9aafb"
+        }
+      ],
+      "validation": "Native execution pending on this platform; drivers/runtime prerequisites must be installed"
+    },
+    "win-vulkan-x64": {
+      "os": "windows",
+      "arch": "x86_64",
+      "assets": [
+        {
+          "file": "llama-b10809-bin-win-vulkan-x64.zip",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/download/b10809/llama-b10809-bin-win-vulkan-x64.zip",
+          "sha256": "97e50b3ef0cdd2cb4d5afd446a9006b3496bee6c0d0ba7083d32f36075771870"
+        }
+      ],
+      "validation": "Native execution pending on this platform; drivers/runtime prerequisites must be installed"
+    }
+  },
+  "license": "MIT",
+  "source": "https://github.com/ggml-org/llama.cpp",
+  "license_url": "https://github.com/ggml-org/llama.cpp/blob/b10809/LICENSE"
+}

@@ -1,0 +1,18 @@
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      github-actions:
+        patterns:
+          - "*"
+  - package-ecosystem: pip
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    # The pins and ranges in pyproject.toml are qualified compatibility bounds
+    # (docs/DEPENDENCY_PROVENANCE.md). A Dependabot pull request is a prompt to
+    # re-qualify the runtime it touches, not an automatic upgrade. Review before merging.

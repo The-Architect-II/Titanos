@@ -1,0 +1,65 @@
+[
+  {
+    "file": "sentencepiece-0.2.2-LICENSE.txt",
+    "name": "sentencepiece",
+    "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+    "url": "https://raw.githubusercontent.com/google/sentencepiece/v0.2.2/LICENSE",
+    "version": "0.2.2"
+  },
+  {
+    "file": "tokenizers-0.22.2-LICENSE.txt",
+    "name": "tokenizers",
+    "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+    "url": "https://raw.githubusercontent.com/huggingface/tokenizers/v0.22.2/LICENSE",
+    "version": "0.22.2"
+  },
+  {
+    "sha256": "8ceb4b9ee5adedde47b31e975c1d90c73ad27b6b165a1dcd80c7c545eb65b903",
+    "url": "https://raw.githubusercontent.com/gcc-mirror/gcc/releases/gcc-15.2.0/COPYING3",
+    "version": "15.2.0",
+    "file": "gcc-15.2.0-COPYING3.txt",
+    "name": "gcc-runtime"
+  },
+  {
+    "sha256": "9d6b43ce4d8de0c878bf16b54d8e7a10d9bd42b75178153e3af6a815bdc90f74",
+    "url": "https://raw.githubusercontent.com/gcc-mirror/gcc/releases/gcc-15.2.0/COPYING.RUNTIME",
+    "version": "15.2.0",
+    "file": "gcc-15.2.0-COPYING.RUNTIME.txt",
+    "name": "gcc-runtime"
+  },
+  {
+    "sha256": "99a69660981156c21336fdb5661f89341b013c94e4bf9e1c7467b4745718397f",
+    "url": "https://raw.githubusercontent.com/mingw-w64/mingw-w64/v13.0.0/COPYING",
+    "version": "13.0.0",
+    "file": "mingw-w64-13.0.0-COPYING.txt",
+    "name": "mingw-w64"
+  },
+  {
+    "sha256": "8f308316e7a94b8410f871868bd3948f126526dc1775aeee97a0e365f9a0fd9f",
+    "url": "https://raw.githubusercontent.com/mingw-w64/mingw-w64/v13.0.0/AUTHORS",
+    "version": "13.0.0",
+    "file": "mingw-w64-13.0.0-AUTHORS.txt",
+    "name": "mingw-w64"
+  },
+  {
+    "sha256": "63263614cdd29f2f93cba85e992f041b31f9fc7b4033692f31269489a8a1b177",
+    "url": "https://raw.githubusercontent.com/mingw-w64/mingw-w64/v13.0.0/mingw-w64-libraries/winpthreads/COPYING",
+    "version": "13.0.0",
+    "file": "winpthreads-13.0.0-COPYING.txt",
+    "name": "winpthreads"
+  },
+  {
+    "name": "flatbuffers",
+    "file": "flatbuffers-25.12.19-LICENSE.txt",
+    "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+    "version": "25.12.19",
+    "url": "https://raw.githubusercontent.com/google/flatbuffers/v25.12.19/LICENSE"
+  },
+  {
+    "file": "loguru-0.7.3-LICENSE.txt",
+    "name": "loguru",
+    "sha256": "b35d026cc7aca9d5859a02eb87ddf7a386a24c986838651bd1f283f94e003327",
+    "url": "https://raw.githubusercontent.com/Delgan/loguru/0.7.3/LICENSE",
+    "version": "0.7.3"
+  }
+]

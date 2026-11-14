@@ -1,0 +1,65 @@
+include LICENSE NOTICE README.md STATUS.md CONTRIBUTING.md SECURITY.md CODE_OF_CONDUCT.md
+recursive-include docs *.md *.json *.txt *.svg *.png
+recursive-include tests *.py *.txt *.js *.json *.jsonl *.md
+recursive-include tools *.py *.json *.spec *.txt *.md *.sh
+include install.py Dockerfile
+# The tree-kind marker tools/build_public_branch.py writes at the root of a public tree (tools/public_export.json tree_kinds.marker).
+# Absent in the private repository (setuptools warns and skips the line); present in a public tree, so an sdist made there selects
+# the public kind in tests/check_public_export_hygiene.py by itself. tools/build_binary.py source_package copies it the same way.
+include .titanos-public-tree
+
+# Models, compiled payloads, credentials and raw operational outputs stay external.
+global-exclude *.py[cod] *.safetensors *.gguf *.onnx *.pt *.pth *.ckpt *.bin
+global-exclude *.exe *.dll *.pyd *.so *.so.* *.dylib *.msi *.whl
+global-exclude *.zip *.7z *.tar *.tar.* *.tgz *.wav *.mp3 *.flac *.mp4 *.log
+global-exclude *.key *.pem *.pfx *.p12 id_rsa id_dsa id_ecdsa id_ed25519
+global-exclude credentials*.json secrets*.json token.json tokens.json .env .env.*
+global-exclude CURRENT.json CURRENT.md STOP ROOT_RELEASE.json RELEASE.json BUILD_RELEASE.json DRIVER_ATTEMPT.json
+# Deliberate text examples are usable; these are not credential payloads.
+global-include .env.example .env.*.example
+
+# This matches the native SOURCE omission of historical private targeting data.
+exclude tools/matrix_kit/legacy_results.json
+# The private host map tools/lab_paths.py reads (tools/public_export.json private_files) never leaves the repository.
+exclude tools/lab_hosts.private.json
+prune tools/validation/gen01
+prune docs/validation
+# Lab operational records stay in the private repository (tools/public_export.json excluded_paths; the native
+# SOURCE/ copy reads that file and tests/check_public_export_hygiene.py asserts both copies agree).
+prune docs/evidence
+exclude docs/CLUSTER_HANDOFF.md
+prune verification
+prune hardware-window
+prune .git
+prune .ssh
+prune .cache
+prune .venv
+prune venv
+prune env
+prune build
+prune dist
+prune release
+prune weights
+prune models
+prune output
+prune outputs
+prune */verification
+prune */hardware-window
+prune */.git
+prune */.ssh
+prune */.cache
+prune */.pytest_cache
+prune */.mypy_cache
+prune */.ruff_cache
+prune */.titanos
+prune */.venv
+prune */venv
+prune */env
+prune */node_modules
+prune */build
+prune */dist
+prune */release
+prune */weights
+prune */models
+prune */output
+prune */outputs

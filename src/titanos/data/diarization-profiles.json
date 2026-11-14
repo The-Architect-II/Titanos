@@ -1,0 +1,112 @@
+{
+  "schema_version": 1,
+  "profiles": [
+    {
+      "id": "pyannote-3.0-eres2net-base",
+      "revision": "1",
+      "title": "Pyannote 3.0 + 3D-Speaker ERes2Net Base",
+      "task": "diarization",
+      "backend": "sherpa-onnx",
+      "device": "cpu",
+      "dtype": "auto",
+      "sample_rate": 16000,
+      "max_speakers_per_frame": 2,
+      "num_local_speakers": 3,
+      "abi": {
+        "segmentation_model_type": "pyannote-segmentation-3.0",
+        "window_size": 160000,
+        "receptive_field_size": 991,
+        "receptive_field_shift": 270,
+        "num_speakers": 3,
+        "num_classes": 7,
+        "powerset_max_classes": 2,
+        "sample_rate": 16000
+      },
+      "components": {
+        "segmentation": {
+          "path": "segmentation.onnx",
+          "bytes": 5992913,
+          "sha256": "220ad67ca923bef2fa91f2390c786097bf305bceb5e261d4af67b38e938e1079"
+        },
+        "embedding": {
+          "path": "embedding.onnx",
+          "bytes": 39593761,
+          "sha256": "1a331345f04805badbb495c775a6ddffcdd1a732567d5ec8b3d5749e3c7a5e4b"
+        }
+      },
+      "downloads": [
+        {
+          "path": "segmentation.onnx",
+          "size": 5992913,
+          "sha256": "220ad67ca923bef2fa91f2390c786097bf305bceb5e261d4af67b38e938e1079",
+          "url": "https://huggingface.co/csukuangfj/sherpa-onnx-pyannote-segmentation-3-0/resolve/9403a6902bb58e3d5ae8c7e77c3422de279db2e0/model.onnx"
+        },
+        {
+          "path": "embedding.onnx",
+          "size": 39593761,
+          "sha256": "1a331345f04805badbb495c775a6ddffcdd1a732567d5ec8b3d5749e3c7a5e4b",
+          "url": "https://github.com/k2-fsa/sherpa-onnx/releases/download/speaker-recongition-models/3dspeaker_speech_eres2net_base_sv_zh-cn_3dspeaker_16k.onnx"
+        },
+        {
+          "path": "licenses/LICENSE.segmentation",
+          "size": 1061,
+          "sha256": "14d7016ad68e7394d6e6b78d96cc2ae431c905287b89674cfdf021e79e62b8ba",
+          "url": "https://huggingface.co/csukuangfj/sherpa-onnx-pyannote-segmentation-3-0/resolve/9403a6902bb58e3d5ae8c7e77c3422de279db2e0/LICENSE"
+        },
+        {
+          "path": "licenses/README.segmentation.md",
+          "size": 115,
+          "sha256": "0380ed76a50efcc421dc62f251ed06e8349688466beac3177bee6e00dc336bfc",
+          "url": "https://huggingface.co/csukuangfj/sherpa-onnx-pyannote-segmentation-3-0/resolve/9403a6902bb58e3d5ae8c7e77c3422de279db2e0/README.md"
+        },
+        {
+          "path": "licenses/README.embedding.md",
+          "size": 6021,
+          "sha256": "05efb9d9b31433be92260e3811c929b4d5980dd18889220b37dbcd5b973ff6f8",
+          "url": "https://modelscope.cn/api/v1/models/iic/speech_eres2net_base_sv_zh-cn_3dspeaker_16k/repo?Revision=v1.0.1&FilePath=README.md"
+        },
+        {
+          "path": "licenses/LICENSE.embedding",
+          "size": 11357,
+          "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+          "url": "https://raw.githubusercontent.com/modelscope/3D-Speaker/065629c313eaf1a01c65c640c46d77e61e9607b4/LICENSE"
+        }
+      ],
+      "license": "MIT AND Apache-2.0",
+      "runtime_pin": {
+        "sherpa-onnx": "1.13.8",
+        "sherpa-onnx-core": "1.13.8"
+      },
+      "provenance": {
+        "segmentation": {
+          "repository": "csukuangfj/sherpa-onnx-pyannote-segmentation-3-0",
+          "revision": "9403a6902bb58e3d5ae8c7e77c3422de279db2e0",
+          "upstream_model": "pyannote/segmentation-3.0",
+          "license": "MIT",
+          "upstream_training_revision": null
+        },
+        "embedding": {
+          "repository": "k2-fsa/sherpa-onnx",
+          "release_id": 133152315,
+          "asset_id": 198893098,
+          "release_tag": "speaker-recongition-models",
+          "original_model": "iic/speech_eres2net_base_sv_zh-cn_3dspeaker_16k",
+          "model_card_revision": "v1.0.1",
+          "license": "Apache-2.0",
+          "upstream_training_revision": null
+        },
+        "notes": [
+          "Converted artifact hashes are immutable pins; unrecorded original training/conversion revisions are not invented.",
+          "Anonymous within-recording clusters only. At most two simultaneous speakers per model frame; no identity recognition or general diarization-accuracy claim.",
+          "Model licenses are separate from runtime/dependency licenses."
+        ]
+      },
+      "abi_source": {
+        "url": "https://huggingface.co/csukuangfj/sherpa-onnx-pyannote-segmentation-3-0/resolve/9403a6902bb58e3d5ae8c7e77c3422de279db2e0/export-onnx.py",
+        "bytes": 3953,
+        "sha256": "21df426fc6ca2ad54b5c9e114729990e0a669d602ea4e052f38287f99d32c0b0",
+        "executed": false
+      }
+    }
+  ]
+}

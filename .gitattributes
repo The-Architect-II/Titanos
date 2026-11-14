@@ -1,0 +1,20 @@
+# Preserve the exact reviewed inactive control candidate on every checkout.
+tools/validation/gen01/** -text
+# Retained upstream licenses are exact hash-bound bytes.
+tools/licenses/*.txt -text
+tools/licenses/*.json -text
+# Preserve the independently reviewed model-page importer source hash.
+src/titanos/model_page.py text eol=lf
+# Vendored Swagger UI assets are exact hash-bound bytes (tools/licenses/vendored_assets.json).
+src/titanos/web/swagger-ui* -text
+# Vendored Studio fonts and their OFL are exact hash-bound bytes too (same catalog).
+src/titanos/web/fonts/* -text
+# The route-contract matrix is a byte-for-byte fixed point of its generator (tests/check_route_contract_matrix.py): keep LF on every checkout.
+docs/route_contract_matrix.json text eol=lf
+docs/ROUTE_CONTRACT_MATRIX.md text eol=lf
+# Hand-authored diagram sources (docs/assets) render identically everywhere: keep SVG text LF on every checkout.
+*.svg text eol=lf
+# Screenshots are opaque bytes.
+*.png binary
+# This rules file is itself LF on every checkout, so its bytes do not depend on core.autocrlf.
+.gitattributes text eol=lf

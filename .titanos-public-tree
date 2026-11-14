@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "tree_kind": "public",
+  "builder": "tools/build_public_branch.py",
+  "source_commit": "7f473a2f35dbba4d1a9f18917e435a1c3f7e553b",
+  "source_version": "0.5.28.dev0+accelerators1",
+  "absent_records": [
+    "docs/CLUSTER_HANDOFF.md",
+    "docs/evidence",
+    "docs/validation",
+    "tools/lab_hosts.private.json",
+    "tools/matrix_kit/legacy_results.json",
+    "tools/validation/gen01"
+  ],
+  "note": "This tree was built from the private repository at source_commit without its history. The paths under absent_records are lab-private records that stay in the private repository (tools/public_export.json excluded_paths, private_names, private_files); links into them do not resolve here by design. The presence of this file selects the public tree kind for tree-aware checks (tools/public_export.json tree_kinds): tests/check_public_export_hygiene.py then asserts that those records are absent instead of present. The rules that exclude them (MANIFEST.in, .dockerignore, tools/public_export.json) stay in place so an accidental return stays excluded."
+}

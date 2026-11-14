@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 699" width="960" height="699" role="img" aria-labelledby="title desc">
+  <title id="title">How Titanos chooses a runtime on your machine</title>
+  <desc id="desc">Three stages. Stage one, the install profile: python install.py with --profile auto calls hardware.choose_profile. An NVIDIA GPU that nvidia-smi reports selects the lowest CUDA profile (cu126, cu128 or, on Linux ARM64, cu130) that covers its compute capability, with no CPU fallback if none does; Apple silicon macOS selects mps; an NVIDIA display adapter that nvidia-smi does not report stops and asks for the driver's nvidia-smi on PATH or an explicit --profile; Windows x86_64 with an AMD or Intel display adapter selects dml; any other recorded display adapter (AMD or Intel on Linux or on Windows arm64) stops and lists the --profile ids tools/profiles.json publishes for that platform, for example rocm64 or xpu on Linux x86_64 and dml-arm64 or qnn on Windows arm64; a machine with no recorded display vendor (only AMD, Intel and NVIDIA are recorded) selects cpu, which install.py then refuses on Windows arm64 and Intel macOS because no cpu build is published there. The other catalog profiles are explicit choices. Stage two, the native GGUF runtime: runtime_catalog.compatible_profiles filters the pinned llama.cpp catalog by this host's operating system and architecture and recommends the newest CUDA build the visible NVIDIA driver and architecture support, otherwise the CPU build; catalog presence offers an install, not device qualification. Stage three, load time: a model is registered with titanos add or titanos pull, Engine._load picks its runtime class (GGUF models go to NativePool), the device is admitted by identity and a missing or masked device refuses instead of falling back to CPU, and the execution mode is single, model_sharding, tensor_parallel or independent replicas. The footer lists the commands that show each step.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0L10 5 0 10Z" fill="#8B8F98"/>
+    </marker>
+    <style>
+      text{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans",Arial,sans-serif}
+      .h1{font-size:20px;font-weight:600;fill:#ECEDEF}
+      .sub{font-size:13px;fill:#B9BCC3}
+      .h2{font-size:13px;font-weight:600;fill:#ECEDEF}
+      .t{font-size:12px;font-weight:500;fill:#ECEDEF}
+      .s{font-size:11px;fill:#B9BCC3}
+      .m{font-size:11px;fill:#8B8F98}
+      .lime{font-size:11px;font-weight:600;fill:#90E301}
+      .frame{fill:none;stroke:#6C7078;stroke-width:1}
+      .box{fill:#17181B;stroke:#6C7078;stroke-width:1}
+      .bar{fill:#1F2024;stroke:#2A2C30;stroke-width:1}
+      .edge{stroke:#8B8F98;stroke-width:1.25;fill:none;marker-end:url(#arrow)}
+      .proc{stroke-dasharray:5 4}
+    </style>
+  </defs>
+  <rect width="960" height="699" fill="#111214"/>
+  <text class="h1" x="28" y="44">How Titanos chooses a runtime on your machine</text>
+  <text class="sub" x="28" y="66">Detection selects a candidate. Nothing is qualified until it runs on your hardware. Model weights stay external.</text>
+  <rect class="frame" x="28" y="84" width="904" height="249" rx="4"/>
+  <text class="h2" x="44" y="106">1. Install profile</text>
+  <text class="s" x="916" y="106" text-anchor="end">python install.py --catalog release.json --profile auto  →  hardware.choose_profile</text>
+  <rect class="box" x="44" y="118" width="164" height="52" rx="4"/>
+  <text class="t" x="54" y="138">NVIDIA GPU present?</text>
+  <text class="s" x="54" y="154">nvidia-smi, capability</text>
+  <rect class="box" x="221" y="118" width="164" height="52" rx="4"/>
+  <text class="t" x="231" y="138">Apple silicon Mac?</text>
+  <text class="s" x="231" y="154">darwin-aarch64</text>
+  <rect class="box" x="398" y="118" width="164" height="52" rx="4"/>
+  <text class="t" x="408" y="138">Windows AMD or Intel?</text>
+  <text class="s" x="408" y="154">x86_64 display adapter</text>
+  <rect class="box" x="575" y="118" width="164" height="52" rx="4"/>
+  <text class="t" x="585" y="138">Another adapter?</text>
+  <text class="s" x="585" y="154">e.g. Linux AMD, Intel</text>
+  <rect class="box" x="752" y="118" width="164" height="52" rx="4"/>
+  <text class="t" x="762" y="138">No adapter found</text>
+  <text class="s" x="762" y="154">no AMD, Intel or NVIDIA</text>
+  <path class="edge" d="M208 144 L221 144"/>
+  <text class="m" x="214" y="139" text-anchor="middle">no</text>
+  <path class="edge" d="M385 144 L398 144"/>
+  <text class="m" x="391" y="139" text-anchor="middle">no</text>
+  <path class="edge" d="M562 144 L575 144"/>
+  <text class="m" x="568" y="139" text-anchor="middle">no</text>
+  <path class="edge" d="M739 144 L752 144"/>
+  <text class="m" x="745" y="139" text-anchor="middle">no</text>
+  <path class="edge" d="M126 170 L126 194"/>
+  <text class="lime" x="132" y="186">yes</text>
+  <rect class="bar" x="44" y="194" width="164" height="76" rx="4"/>
+  <text class="t" x="54" y="214">cu126, cu128 or cu130</text>
+  <text class="s" x="54" y="230">lowest CUDA profile</text>
+  <text class="s" x="54" y="244">covering the GPU; no</text>
+  <text class="s" x="54" y="258">CPU fallback otherwise</text>
+  <path class="edge" d="M303 170 L303 194"/>
+  <text class="lime" x="309" y="186">yes</text>
+  <rect class="bar" x="221" y="194" width="164" height="76" rx="4"/>
+  <text class="t" x="231" y="214">mps</text>
+  <text class="s" x="231" y="230">PyTorch on Apple GPU</text>
+  <path class="edge" d="M480 170 L480 194"/>
+  <text class="lime" x="486" y="186">yes</text>
+  <rect class="bar" x="398" y="194" width="164" height="76" rx="4"/>
+  <text class="t" x="408" y="214">dml (AMD or Intel)</text>
+  <text class="s" x="408" y="230">DirectML, ONNX Runtime</text>
+  <text class="s" x="408" y="244">an NVIDIA adapter with</text>
+  <text class="s" x="408" y="258">no nvidia-smi row stops</text>
+  <path class="edge" d="M657 170 L657 194"/>
+  <text class="lime" x="663" y="186">yes</text>
+  <rect class="bar" x="575" y="194" width="164" height="76" rx="4"/>
+  <text class="t" x="585" y="214">choose explicitly</text>
+  <text class="s" x="585" y="230">auto stops and lists</text>
+  <text class="s" x="585" y="244">--profile ids published</text>
+  <text class="s" x="585" y="258">for this platform</text>
+  <path class="edge" d="M834 170 L834 194"/>
+  <text class="m" x="840" y="186">default</text>
+  <rect class="bar" x="752" y="194" width="164" height="76" rx="4"/>
+  <text class="t" x="762" y="214">cpu</text>
+  <text class="s" x="762" y="230">PyTorch CPU profile;</text>
+  <text class="s" x="762" y="244">on Windows arm64 or an</text>
+  <text class="s" x="762" y="258">Intel Mac it is refused</text>
+  <text class="m" x="44" y="290">All 20 profile ids in tools/profiles.json: cpu · cu126 · cu128 · cu130 · rocm64 · xpu · mps · dml · dml-arm64 · onnx-cpu · onnx-intel-mac</text>
+  <text class="m" x="44" y="305">openvino-cpu/gpu/npu · genai-cpu/gpu/npu · qnn · coreml · engine (no PyTorch or compiled runtime; pair it with stage 2)</text>
+  <text class="m" x="44" y="320">Ids outside the auto path are explicit --profile choices. install.py refuses an unknown id or a platform without a published build.</text>
+  <rect class="frame" x="28" y="347" width="904" height="124" rx="4"/>
+  <text class="h2" x="44" y="369">2. Native GGUF runtime</text>
+  <text class="s" x="916" y="369" text-anchor="end">titanos native-install --profile ID  ·  or in-app RuntimeSetup: titanos runtime-prepare ID</text>
+  <rect class="box" x="44" y="381" width="380" height="76" rx="4"/>
+  <text class="t" x="54" y="401">runtime_catalog.compatible_profiles</text>
+  <text class="s" x="54" y="417">filters the pinned catalog by this host's os and arch;</text>
+  <text class="s" x="54" y="431">recommends the newest CUDA build that the visible</text>
+  <text class="s" x="54" y="445">NVIDIA driver and architecture support, else CPU build</text>
+  <rect x="405.5" y="392.5" width="5" height="5" fill="#90E301"/>
+  <path class="edge" d="M424 419 L448 419"/>
+  <rect class="box" x="448" y="381" width="468" height="76" rx="4"/>
+  <text class="t" x="458" y="401">Catalog ids in tools/native-profiles.json (20 pinned builds)</text>
+  <text class="s" x="458" y="417">Windows x64 and arm64, Ubuntu x64 and arm64, macOS x64 and arm64</text>
+  <text class="s" x="458" y="431">flavors: CPU · CUDA · Vulkan · ROCm · SYCL · OpenVINO · OpenCL Adreno</text>
+  <text class="s" x="458" y="445">presence in the catalog offers an install, not device qualification</text>
+  <rect class="frame" x="28" y="485" width="904" height="148" rx="4"/>
+  <text class="h2" x="44" y="507">3. Load time</text>
+  <text class="s" x="916" y="507" text-anchor="end">per registered model, every time it loads</text>
+  <rect class="box" x="44" y="519" width="206" height="100" rx="4"/>
+  <text class="t" x="54" y="539">Register</text>
+  <text class="s" x="54" y="555">titanos add NAME DIR --task T</text>
+  <text class="s" x="54" y="569">titanos pull NAME ID --task T</text>
+  <text class="s" x="54" y="583">--device auto (default) or an</text>
+  <text class="s" x="54" y="597">explicit: cpu · GPU-&lt;uuid&gt; …</text>
+  <path class="edge" d="M250 569 L266 569"/>
+  <rect class="box" x="266" y="519" width="206" height="100" rx="4"/>
+  <text class="t" x="276" y="539">Dispatch</text>
+  <text class="s" x="276" y="555">Engine._load picks a runtime</text>
+  <text class="s" x="276" y="569">class by task and backend</text>
+  <text class="s" x="276" y="583">llama-cpp → NativePool</text>
+  <text class="s" x="276" y="597">split off in create_app</text>
+  <path class="edge" d="M472 569 L488 569"/>
+  <rect class="box" x="488" y="519" width="206" height="100" rx="4"/>
+  <text class="t" x="498" y="539">Admit the device</text>
+  <text class="s" x="498" y="555">devices.py identities:</text>
+  <text class="s" x="498" y="569">GPU- HIP- XPU- OV- DML-</text>
+  <text class="s" x="498" y="583">missing or masked → refuse</text>
+  <text class="s" x="498" y="597">no silent fallback to CPU</text>
+  <path class="edge" d="M694 569 L710 569"/>
+  <rect class="box" x="710" y="519" width="206" height="100" rx="4"/>
+  <text class="t" x="720" y="539">Execution mode</text>
+  <text class="s" x="720" y="555">single · model_sharding ·</text>
+  <text class="s" x="720" y="569">tensor_parallel · replicas</text>
+  <text class="s" x="720" y="583">titanos assignment save MODEL</text>
+  <text class="s" x="720" y="597">titanos worker NAME --models</text>
+  <rect class="bar" x="28" y="647" width="904" height="28" rx="4"/>
+  <rect x="39.5" y="658.5" width="5" height="5" fill="#90E301"/>
+  <text class="s" x="54" y="665">Verify: titanos doctor --check · titanos devices --backend all --refresh · titanos capabilities NAME · titanos runtime-profiles</text>
+</svg>

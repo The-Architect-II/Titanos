@@ -58,10 +58,10 @@ models = [
   "scipy>=1.12,<2", "imageio>=2.36,<3", "imageio-ffmpeg>=0.6,<1",
   "sentencepiece>=0.2,<1", "ftfy==6.3.1", "timm==1.0.29",
 ]
-xtts = ["coqui-tts>=0.27,<0.28", "torchaudio>=2.8,<2.9"]
+xtts = ["coqui-tts>=0.27,<0.28", "torchaudio>=2.8,<2.12"]
 qwen3-tts = [
   "qwen-tts @ git+https://github.com/dffdeeq/Qwen3-TTS-streaming.git@13ef823ffe76aec4ac7e35d3fec28ecfc8d7427a",
-  "torchaudio>=2.8,<2.9", "librosa>=0.10.2,<0.12", "soundfile>=0.14,<0.15",
+  "torchaudio>=2.8,<2.12", "librosa>=0.10.2,<0.12", "soundfile>=0.14,<0.15",
 ]
 sherpa-onnx = ["sherpa-onnx==1.13.8", "sherpa-onnx-core==1.13.8", "numpy>=1.26,<2.6"]
 # base and extras check tiers (tests/README.md): setuptools for the public-export gates, numpy and pillow for the

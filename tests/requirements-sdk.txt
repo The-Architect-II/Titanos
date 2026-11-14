@@ -1,6 +1,6 @@
 # Test clients only; not Titanos runtime dependencies.
 # check_responses_sdk, check_retrieval_sdk, check_audio_sdk and check_broker_sdk (the official OpenAI client):
-openai==2.54.0
+openai==3.49.0
 # check_broker_sdk_vendors (stock vendor clients pointed at a Titanos base URL):
 anthropic==1.11.0
 google-genai==2.27.0

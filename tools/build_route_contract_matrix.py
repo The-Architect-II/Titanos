@@ -584,7 +584,9 @@ def cite(function):
 
 def type_name(annotation, aliases):
     for name, value in aliases.items():
-        if value is annotation:
+        # FastAPI 0.163 hands the body parameter the Annotated alias's bare union (the discriminator moves into
+        # field_info), older releases the alias itself; both name the alias.
+        if value is annotation or (typing.get_origin(value) is typing.Annotated and typing.get_args(value)[0] == annotation):
             return name
     if inspect.isclass(annotation):
         module = annotation.__module__.split('.')[-1] if annotation.__module__.startswith('titanos.') else annotation.__module__

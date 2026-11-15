@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "titanos-engine"
-version = "0.5.28"
+version = "0.5.29"
 description = "Standalone, local-first multimodal inference engine"
 readme = "README.md"
 requires-python = ">=3.11,<3.14"

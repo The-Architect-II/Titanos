@@ -2,6 +2,12 @@
 
 Newest first. Each entry names the source version it describes. A version number is not a qualification claim: delivered packages keep their own manifests and validation receipts, and the [capability matrix](CAPABILITY_MATRIX.md) records what has actually run. `.github/workflows/release.yml` attaches this file to every draft release it creates.
 
+## 0.5.29 (15 Nov 2026)
+
+A maintenance release: the engine, its routes, the install catalog and the native profiles are unchanged from 0.5.28.
+
+- `tools/build_route_contract_matrix.py` names a discriminated-union request body (`server.AssetJob`, `api_plus.ExtensionRequest`) the same way under FastAPI 0.163 and later, which hand the route's body parameter the union without its `Annotated` wrapper. The committed route matrix is unchanged; `tests/check_route_contract_matrix.py` now passes with the newest FastAPI the package allows, as it already did with older releases.
+
 ## 0.5.28 (15 Nov 2026)
 
 No binary release carries this line yet. What changed since 0.4.0, in user terms:

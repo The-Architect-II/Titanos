@@ -1,6 +1,6 @@
 # Progress checklist
 
-Updated **2026-11-14** for source `0.5.28` (commit `fd5638a`). The rows below are a rendered view of [progress.json](progress.json); edit the JSON, not this page. **95 items: 32 closed within recorded scope, 63 open** (59 partial, 2 missing, 1 active, 1 planned). By primary acceptance layer: ENGINE_CONTRACT 88 rows (29 closed), MODEL_QUALITY 3 (3 closed), HUMAN_PRESENTATION 4 (0 closed). Counts combine separate layers and are not a percentage-complete figure.
+Updated **2026-11-14** for source `0.5.29` (commit `fd5638a`). The rows below are a rendered view of [progress.json](progress.json); edit the JSON, not this page. **95 items: 32 closed within recorded scope, 63 open** (59 partial, 2 missing, 1 active, 1 planned). By primary acceptance layer: ENGINE_CONTRACT 88 rows (29 closed), MODEL_QUALITY 3 (3 closed), HUMAN_PRESENTATION 4 (0 closed). Counts combine separate layers and are not a percentage-complete figure.
 
 ## How a row reads
 

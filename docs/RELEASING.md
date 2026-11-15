@@ -11,7 +11,7 @@ Titanos is not published on PyPI. A release is a GitHub Release built by `.githu
 | The tag is `vX.Y.Z` for version `X.Y.Z`. | Convention only. `release.yml` checks out the tag you name and titles the release `Titanos <tag>`; it does not compare the tag with the package version. |
 | The tag exists on GitHub before the workflow runs. | `gh release create --verify-tag` fails otherwise. |
 
-The first release is `0.5.28`, tagged `v0.5.28`; `docs/RELEASE_NOTES.md` opens with its entry above the retained `0.4.0` note.
+The first release is `0.5.28`, tagged `v0.5.28`; `docs/RELEASE_NOTES.md` lists each release, newest first, above the retained `0.4.0` note.
 
 ## Steps
 

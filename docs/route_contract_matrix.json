@@ -13036,7 +13036,7 @@
   "/api/version": "GET /api/version returns {name, version, role} in every role (Ollama clients read version: protocols.py outside managed role, broker/routes.py in managed role) and is public only in managed role (Guard per-app public set, broker.scopes.MANAGED_PUBLIC_ROUTES); this standalone build lists it as a scoped operation"
  },
  "schema_version": 1,
- "source_version": "0.5.28",
+ "source_version": "0.5.29",
  "unlisted_routes": [
   {
    "auth": "public",

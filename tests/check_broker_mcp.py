@@ -56,13 +56,12 @@ INFERENCE_TOOLS = {'chat', 'complete', 'responses', 'embed', 'speak', 'transcrib
 SECRET_FIELD = re.compile(r'(^|_)(secret|password|passphrase|api_?key|apikey|access_token|bearer|credential_value)($|_)', re.I)
 
 
-def free_port() -> int:
+def bound_socket() -> socket.socket:
+    """A loopback socket bound to a free port and handed to uvicorn as it is: closing it and binding the port again
+    lets another socket take the port in between (Windows then refuses uvicorn's bind with WinError 10013)."""
     sock = socket.socket()
     sock.bind(('127.0.0.1', 0))
-    try:
-        return sock.getsockname()[1]
-    finally:
-        sock.close()
+    return sock
 
 
 def tools(url: str, calls, tokens):
@@ -96,14 +95,16 @@ class Served(unittest.TestCase):
         import uvicorn
         full = W.FullApp(document, models={'chat-local': 'chat'}, api_key=api_key)
         self.addCleanup(full.close)
-        port = free_port()
+        sock = bound_socket()
+        port = sock.getsockname()[1]
         server = uvicorn.Server(uvicorn.Config(full.app, host='127.0.0.1', port=port, log_level='warning', lifespan='on'))
-        thread = threading.Thread(target=server.run, daemon=True)
+        thread = threading.Thread(target=server.run, kwargs={'sockets': [sock]}, daemon=True)
         thread.start()
 
         def stop():
             server.should_exit = True
             thread.join(15)
+            sock.close()
         self.addCleanup(stop)
         deadline = time.monotonic() + 30
         while not server.started:

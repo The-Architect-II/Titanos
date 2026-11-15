@@ -98,7 +98,7 @@ def check_native_launch(folder):
         Path(argv[argv.index('titanos.native_process') + 1]).write_text('4242')
         return Running()
     worker = native.NativeWorker('w', 'm', spec)
-    with patch.dict(os.environ, {**{name: 'secret-value' for name in CREDENTIALS}, **OTHERS}), \
+    with patch.dict(os.environ, {**{name: 'secret-value' for name in CREDENTIALS}, **OTHERS, 'TITANOS_HOME': str(folder / 'home')}), \
          patch.object(native, 'executable_path', return_value=executable), \
          patch.object(native, 'resolve_native_placement', return_value=placement), \
          patch.object(native.subprocess, 'Popen', side_effect=start), \

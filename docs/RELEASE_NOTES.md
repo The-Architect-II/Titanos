@@ -2,6 +2,14 @@
 
 Newest first. Each entry names the source version it describes. A version number is not a qualification claim: delivered packages keep their own manifests and validation receipts, and the [capability matrix](CAPABILITY_MATRIX.md) records what has actually run. `.github/workflows/release.yml` attaches this file to every draft release it creates.
 
+## 0.5.30 (15 Nov 2026)
+
+A maintenance release: the engine, its routes, the install catalog and the native profiles are unchanged from 0.5.29. Three tests are fixed.
+
+- `tests/check_child_env.py` sets `TITANOS_HOME` for the captured native launch it checks; it passed before only on a host that already had `TITANOS_HOME` set.
+- `tests/check_broker_mcp.py` hands uvicorn the socket it bound instead of closing it and binding its port again, so another socket can no longer take the port in between (on Windows that failed the server's start with WinError 10013).
+- `tests/check_tesseract.py`'s Windows cancellation case has its child write the descendant's process id under a temporary name and rename it, so the check never reads a file that exists but is still empty.
+
 ## 0.5.29 (15 Nov 2026)
 
 A maintenance release: the engine, its routes, the install catalog and the native profiles are unchanged from 0.5.28.

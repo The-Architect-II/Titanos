@@ -22067,7 +22067,7 @@
   "platform": "Windows"
  },
  "schema_version": 1,
- "source_version": "0.5.29",
+ "source_version": "0.5.30",
  "surfaces": [
   {
    "capability": "chat",

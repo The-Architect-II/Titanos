@@ -1,0 +1,246 @@
+{
+  "version": 1,
+  "runtime": "llama.cpp",
+  "release": "b12284",
+  "commit": "9e9619d030bbe6b584d826a0a6cf06e38251f52b",
+  "upstream_release": "v0.9.0",
+  "upstream_relation": "174 commits after the v0.9.0 tag; --version reports 0.9.0-dev",
+  "profiles": {
+    "macos-arm64": {
+      "os": "darwin",
+      "arch": "aarch64",
+      "assets": [
+        {
+          "file": "llama-b12284-bin-macos-arm64.tar.gz",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/download/b12284/llama-b12284-bin-macos-arm64.tar.gz",
+          "sha256": "7965e7701df311c49cfc629cfe14cc5092fcc590ef8c85f4c436a2973031e9d0",
+          "size": 16870569
+        }
+      ],
+      "validation": "Native execution pending on this platform; drivers/runtime prerequisites must be installed"
+    },
+    "macos-x64": {
+      "os": "darwin",
+      "arch": "x86_64",
+      "assets": [
+        {
+          "file": "llama-b12284-bin-macos-x64.tar.gz",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/download/b12284/llama-b12284-bin-macos-x64.tar.gz",
+          "sha256": "4513149cdc86dff07dcfafcaca1b3522b81a2ccd6476e32b9ef185b3fcdbbe49",
+          "size": 12613082
+        }
+      ],
+      "validation": "Native execution pending on this platform; drivers/runtime prerequisites must be installed"
+    },
+    "ubuntu-arm64": {
+      "os": "linux",
+      "arch": "aarch64",
+      "assets": [
+        {
+          "file": "llama-b12284-bin-ubuntu-arm64.tar.gz",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/download/b12284/llama-b12284-bin-ubuntu-arm64.tar.gz",
+          "sha256": "88cd4ac318056bcbcc05d92613481c303eecb03b6ded77367cbd5711aaba4435",
+          "size": 18926615
+        }
+      ],
+      "validation": "Native execution pending on this platform; drivers/runtime prerequisites must be installed"
+    },
+    "ubuntu-rocm-10.0-x64": {
+      "os": "linux",
+      "arch": "x86_64",
+      "assets": [
+        {
+          "file": "llama-b12284-bin-ubuntu-rocm-10.0-x64.tar.gz",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/download/b12284/llama-b12284-bin-ubuntu-rocm-10.0-x64.tar.gz",
+          "sha256": "690ba8ac1f69452aef737b04d5571ea7422d3da858f8cd9cc5e7ac9688512184",
+          "size": 262599299
+        }
+      ],
+      "validation": "Native execution pending on this platform; drivers/runtime prerequisites must be installed"
+    },
+    "ubuntu-sycl-fp16-x64": {
+      "os": "linux",
+      "arch": "x86_64",
+      "assets": [
+        {
+          "file": "llama-b12284-bin-ubuntu-sycl-fp16-x64.tar.gz",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/download/b12284/llama-b12284-bin-ubuntu-sycl-fp16-x64.tar.gz",
+          "sha256": "594737aa7ad579c03fc9c227e9a1a416f57ef156719261e21775b6687c6be383",
+          "size": 67011067
+        }
+      ],
+      "validation": "Native execution pending on this platform; drivers/runtime prerequisites must be installed"
+    },
+    "ubuntu-sycl-fp32-x64": {
+      "os": "linux",
+      "arch": "x86_64",
+      "assets": [
+        {
+          "file": "llama-b12284-bin-ubuntu-sycl-fp32-x64.tar.gz",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/download/b12284/llama-b12284-bin-ubuntu-sycl-fp32-x64.tar.gz",
+          "sha256": "da456d2bf11e4aa6d085d2ceadd836338ad75410b647c9fdbb30b7b0b345b3c0",
+          "size": 66908504
+        }
+      ],
+      "validation": "Native execution pending on this platform; drivers/runtime prerequisites must be installed"
+    },
+    "ubuntu-vulkan-arm64": {
+      "os": "linux",
+      "arch": "aarch64",
+      "assets": [
+        {
+          "file": "llama-b12284-bin-ubuntu-vulkan-arm64.tar.gz",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/download/b12284/llama-b12284-bin-ubuntu-vulkan-arm64.tar.gz",
+          "sha256": "1d7574f7143f15c8f600906b8f5f0a7bd0977e284d9729363e0178d5212b9f89",
+          "size": 29382068
+        }
+      ],
+      "validation": "Native execution pending on this platform; drivers/runtime prerequisites must be installed"
+    },
+    "ubuntu-vulkan-x64": {
+      "os": "linux",
+      "arch": "x86_64",
+      "assets": [
+        {
+          "file": "llama-b12284-bin-ubuntu-vulkan-x64.tar.gz",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/download/b12284/llama-b12284-bin-ubuntu-vulkan-x64.tar.gz",
+          "sha256": "94bfdf9ad9ab4e5544acc71d8699942fe8013b6c3b39f24570262782619de707",
+          "size": 36106190
+        }
+      ],
+      "validation": "Native execution pending on this platform; drivers/runtime prerequisites must be installed"
+    },
+    "ubuntu-x64": {
+      "os": "linux",
+      "arch": "x86_64",
+      "assets": [
+        {
+          "file": "llama-b12284-bin-ubuntu-x64.tar.gz",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/download/b12284/llama-b12284-bin-ubuntu-x64.tar.gz",
+          "sha256": "50b5f85d45f8ddc7179d1b9b65de6534fbb18dc075942413238cb3471570123f",
+          "size": 23284029
+        }
+      ],
+      "validation": "Native execution pending on this platform; drivers/runtime prerequisites must be installed"
+    },
+    "win-cpu-arm64": {
+      "os": "windows",
+      "arch": "aarch64",
+      "assets": [
+        {
+          "file": "llama-b12284-bin-win-cpu-arm64.zip",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/download/b12284/llama-b12284-bin-win-cpu-arm64.zip",
+          "sha256": "be2eb55c767c1066824e2738715d820059bff9cd6f99560daa2f498e5df7f745",
+          "size": 13408918
+        }
+      ],
+      "validation": "Native execution pending on this platform; drivers/runtime prerequisites must be installed"
+    },
+    "win-cpu-x64": {
+      "os": "windows",
+      "arch": "x86_64",
+      "assets": [
+        {
+          "file": "llama-b12284-bin-win-cpu-x64.zip",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/download/b12284/llama-b12284-bin-win-cpu-x64.zip",
+          "sha256": "6b3d2c7034b0c0bac65aa0524ddf01ba9c2b622ce7e32675976df642627defa9",
+          "size": 25058030
+        }
+      ],
+      "validation": "Model execution verified on Windows x86_64 CPU through Titanos on 2026-11-13 (build 12284, commit 9e9619d03: load, chat, responses with streaming, context accounting including requests with tools, unload); drivers/runtime prerequisites must be installed"
+    },
+    "win-cuda-12.4-x64": {
+      "os": "windows",
+      "arch": "x86_64",
+      "assets": [
+        {
+          "file": "llama-b12284-bin-win-cuda-12.4-x64.zip",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/download/b12284/llama-b12284-bin-win-cuda-12.4-x64.zip",
+          "sha256": "2bf31552cee22652f76a108461a1074548ba84e73294dad1061493875255673f",
+          "size": 297066359
+        },
+        {
+          "file": "cudart-llama-bin-win-cuda-12.4-x64.zip",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/download/b12284/cudart-llama-bin-win-cuda-12.4-x64.zip",
+          "sha256": "8c79a9b226de4b3cacfd1f83d24f962d0773be79f1e7b75c6af4ded7e32ae1d6",
+          "size": 391443627
+        }
+      ],
+      "validation": "Model execution verified on one RTX PRO 6000 Blackwell (Windows, driver 610.88) through Titanos on 2026-11-13 (build 12284, commit 9e9619d03; full offload; no native Blackwell kernels in this build); drivers/runtime prerequisites must be installed"
+    },
+    "win-cuda-13.5-x64": {
+      "os": "windows",
+      "arch": "x86_64",
+      "assets": [
+        {
+          "file": "llama-b12284-bin-win-cuda-13.5-x64.zip",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/download/b12284/llama-b12284-bin-win-cuda-13.5-x64.zip",
+          "sha256": "8da9b5e4533c940837f68ca00f2b2e631bd0a05baf044a85a8f069ad25f8fec5",
+          "size": 173597052
+        },
+        {
+          "file": "cudart-llama-bin-win-cuda-13.5-x64.zip",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/download/b12284/cudart-llama-bin-win-cuda-13.5-x64.zip",
+          "sha256": "c2bf4cc202bfbaaa7a0b75f5082457c3811326947bb216059b72839d844e9cba",
+          "size": 426314199
+        }
+      ],
+      "validation": "Model execution verified on one RTX PRO 6000 Blackwell (Windows, driver 610.88) through Titanos on 2026-11-13 (build 12284, commit 9e9619d03; full offload; native sm_120 kernels); needs a driver supporting CUDA 13.5; drivers/runtime prerequisites must be installed"
+    },
+    "win-opencl-adreno-arm64": {
+      "os": "windows",
+      "arch": "aarch64",
+      "assets": [
+        {
+          "file": "llama-b12284-bin-win-opencl-adreno-arm64.zip",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/download/b12284/llama-b12284-bin-win-opencl-adreno-arm64.zip",
+          "sha256": "6db8e28d09585eb8ee905856ca69f00a4310790c69c3c7a957340533810c361b",
+          "size": 14419933
+        }
+      ],
+      "validation": "Native execution pending on this platform; drivers/runtime prerequisites must be installed"
+    },
+    "win-rocm-10.0-x64": {
+      "os": "windows",
+      "arch": "x86_64",
+      "assets": [
+        {
+          "file": "llama-b12284-bin-win-rocm-10.0-x64.zip",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/download/b12284/llama-b12284-bin-win-rocm-10.0-x64.zip",
+          "sha256": "d124fc8c81f91438a019729a4de0113ce89b844a5d978602892dd23d92d06896",
+          "size": 273609091
+        }
+      ],
+      "validation": "Native execution pending on this platform; drivers/runtime prerequisites must be installed"
+    },
+    "win-sycl-x64": {
+      "os": "windows",
+      "arch": "x86_64",
+      "assets": [
+        {
+          "file": "llama-b12284-bin-win-sycl-x64.zip",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/download/b12284/llama-b12284-bin-win-sycl-x64.zip",
+          "sha256": "a87683879d1e33ecea81cda9a5323333004fecd3592570e80cb4e85884a09e13",
+          "size": 160179283
+        }
+      ],
+      "validation": "Native execution pending on this platform; drivers/runtime prerequisites must be installed"
+    },
+    "win-vulkan-x64": {
+      "os": "windows",
+      "arch": "x86_64",
+      "assets": [
+        {
+          "file": "llama-b12284-bin-win-vulkan-x64.zip",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/download/b12284/llama-b12284-bin-win-vulkan-x64.zip",
+          "sha256": "c1d73d3bfdb3e65556f73a7fe79da2cca64aaa8f27e7ee73cf423890e83d4b76",
+          "size": 38022154
+        }
+      ],
+      "validation": "Native execution pending on this platform; drivers/runtime prerequisites must be installed"
+    }
+  },
+  "license": "MIT",
+  "source": "https://github.com/ggml-org/llama.cpp",
+  "license_url": "https://github.com/ggml-org/llama.cpp/blob/b12284/LICENSE"
+}

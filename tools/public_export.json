@@ -1,0 +1,169 @@
+{
+ "schema_version": 2,
+ "scope": "Public export hygiene for the Titanos source copies that leave this repository (the SOURCE/ directory tools/build_binary.py source_package writes into a build, and the sdist MANIFEST.in selects) and for the tracked tree itself outside the excluded paths. It keeps lab locators (record drives, user profiles, Linux homes, LAN addresses, machine names, hostnames) out of published text. It is a hygiene guard for lab locators only: not a secret scanner, not a legal or vendor review (unperformed, see docs/DISTRIBUTION.md) and not a release-readiness claim.",
+ "tree_kinds": {
+  "private": "the default tree kind: the excluded paths and private files may exist, are tolerated only here, and are skipped by the tracked-tree scan",
+  "public": "a tree built from the export set for publication: every excluded path and private file must be absent, the whole tracked tree is scanned, and nothing is tolerated",
+  "selection": "TITANOS_TREE_KIND=public or TITANOS_TREE_KIND=private in the environment; otherwise the marker file named by marker at the repository root selects public; otherwise private",
+  "marker": ".titanos-public-tree"
+ },
+ "excluded_paths": [
+  "docs/CLUSTER_HANDOFF.md",
+  "docs/evidence",
+  "docs/validation",
+  "tools/validation/gen01"
+ ],
+ "historical_exclusions": [
+  "docs/validation"
+ ],
+ "historical_exclusions_note": "Excluded paths that no longer exist in the tree (docs/validation); the rule is kept so an accidental return stays excluded, and tests/check_public_export_hygiene.py does not require them to exist.",
+ "excluded_paths_note": "Repository-relative paths (a directory excludes its whole tree), compared case-insensitively by source_package's public_source_ignore. MANIFEST.in carries the same set as prune/exclude lines and tests/check_public_export_hygiene.py asserts that both copies agree. In a public tree kind these paths must be absent.",
+ "private_names": {
+  "legacy_results.json": "tools/matrix_kit/legacy_results.json: the matrix kit's pinned population of pre-boundary RUN_RESULT hashes. Enforced by source_package's private_names set and by MANIFEST.in 'exclude tools/matrix_kit/legacy_results.json'; listed here for documentation, never edited. tools/matrix_kit/ingest.py pins nothing when the file is absent (fail closed: an unmarked result then needs --legacy-run), so a tree works without it."
+ },
+ "private_files": [
+  "tools/lab_hosts.private.json",
+  "tools/matrix_kit/legacy_results.json"
+ ],
+ "never_tracked": [
+  "tools/lab_hosts.private.json"
+ ],
+ "private_files_note": "Files that must never be tracked in a public tree and are excluded from both export copies. tools/lab_hosts.private.json (or the file TITANOS_LAB_HOSTS_FILE names) is the optional host map read by tools/lab_paths.py: host names mapped to role labels, phrases mapped to neutral wording, names to deny and words to report. It is gitignored; tests/check_public_export_hygiene.py asserts it is not tracked and, when present at the default path, that git ignores it. Every value it maps a host to must be a key of tools/lab_paths.HOST_ROLE_LABELS.",
+ "parameterization": {
+  "labels": {
+   "<lab-records>": "the drive-rooted lab records root (a <letter>:/Titanos<...> or <letter>:/Codex tree) or an agent work tree under a user profile (the lab_codex_worktree class: the account's Documents folder, the agent's folder, a date and a tree name); the remainder of the path is kept",
+   "<user-profile>": "a Windows user profile (<letter>:/Users/<account>); the remainder of the path is kept",
+   "<linux-home>": "a Linux home directory (/home/<account>); the remainder of the path is kept",
+   "<windows-host>": "a generated Windows machine name (the windows_generated_machine_name class) that reached a generator string and that the host map does not name; a last defence applied by tools/lab_paths.neutralize_reference, never the intended spelling: a machine is named by a stable role label chosen in the kit run label at the source (tools/lab_paths.HOST_ROLE_LABELS)"
+  },
+  "host_role_labels": "Hosts are named by stable role labels of the form <hardware>-<form>-<os>-<arch>, with a runtime suffix when it disambiguates (turing-laptop-win-x64, intel-arc-win-x64-openvino, linux-cuda-server-x64, snapdragon-x-laptop-win-arm64, ...). The single mapping of labels to hardware roles is tools/lab_paths.HOST_ROLE_LABELS; docs/MATRIX_KIT.md (Host labels) documents every label and tests/check_public_export_hygiene.py asserts the two agree. The label is chosen at kit launch (tools/matrix_kit/run_cells.py --host-label, or --run-id fleet-<label>-<yyyymmdd>) and is the reader family and mode-cell source in the matrix. The inventory-name to role-label map is private (private_files) and is applied by tools/lab_paths.neutralize_reference at the generators; without it no host renaming happens and the committed records, which already carry role labels, stay fixed points of the rules.",
+  "rules": [
+   {
+    "applies_to": [
+     "docs/execution_matrix.json",
+     "docs/EXECUTION_MATRIX.md",
+     "docs/execution_matrix.csv",
+     "docs/execution_matrix.html"
+    ],
+    "rule": "tools/build_execution_matrix.py applies tools/lab_paths.neutralize_records to every string it writes (rows' source/identity/notes, cell and mode-cell receipt/note/device_named/source/readers, named_devices, the basis): drive-rooted lab records roots and agent work trees become <lab-records>/..., user-profile roots <user-profile>/..., Linux homes <linux-home>/..., bare drive-letter pairs 'lab records', privately mapped hosts their role labels and mapped narrative phrases their neutral wording, and any remaining generated Windows machine name <windows-host> as a last defence; tools/render_execution_matrix.py renders the JSON verbatim, so the renderings inherit it. tools/matrix_kit/ingest.py writes each cell's display receipt as <lab-records>/<parent folder>/<run folder>/<receipt> (lab_paths.records_reference) while resolving the real receipt against the run folder. The builder's named-devices table names hardware and role labels only."
+   },
+   {
+    "applies_to": [
+     "docs/roster.json",
+     "docs/ROSTER.md"
+    ],
+    "rule": "hand-maintained source of truth: record paths cite <lab-records>/..., hosts are named by role labels (for example intel-arc-win-x64-openvino), never by address or machine name; actors are roles (the project owner, the maintainer, a verifier), never persons or agents; tools/render_roster.py renders ROSTER.md from it."
+   },
+   {
+    "applies_to": [
+     "docs/CAPABILITY_MATRIX.md",
+     "docs/MATRIX_KIT.md",
+     "docs/ONNX_IMAGES.md",
+     "docs/execution_matrix_spec.json",
+     "tools/matrix_kit/containment.py"
+    ],
+    "rule": "prose and comments cite record names under <lab-records>/... or by their control-record path without a drive prefix, and hosts by role label."
+   },
+   {
+    "applies_to": [
+     "tests/check_matrix_kit.py"
+    ],
+    "rule": "the pinned bundle folder is read from the TITANOS_KIT_PINNED_BUNDLE environment variable; unset, the header check is skipped and reported as not configured."
+   }
+  ],
+  "one_off_passes": [
+   {
+    "date": "2026-09-26",
+    "files": [
+     "docs/execution_matrix.json",
+     "docs/roster.json"
+    ],
+    "note": "Recorded hygiene pass over the listed files."
+   },
+   {
+    "date": "2026-09-26",
+    "files": [
+     "docs/execution_matrix.json",
+     "docs/CAPABILITY_MATRIX.md"
+    ],
+    "note": "Recorded hygiene pass over the listed files."
+   },
+   {
+    "date": "2026-09-27",
+    "files": [
+     "docs/execution_matrix.json",
+     "docs/EXECUTION_MATRIX.md",
+     "docs/execution_matrix.csv",
+     "docs/execution_matrix.html",
+     "docs/execution_matrix_spec.json",
+     "docs/roster.json",
+     "docs/ROSTER.md"
+    ],
+    "note": "Recorded hygiene pass over the listed files."
+   },
+   {
+    "date": "2026-09-27",
+    "files": [
+     "docs/execution_matrix.json",
+     "docs/execution_matrix.csv",
+     "docs/execution_matrix.html"
+    ],
+    "note": "Recorded hygiene pass over the listed files."
+   },
+   {
+    "date": "2026-09-27",
+    "files": [
+     "docs/execution_matrix.json",
+     "docs/EXECUTION_MATRIX.md",
+     "docs/execution_matrix.csv",
+     "docs/execution_matrix.html",
+     "docs/roster.json",
+     "docs/ROSTER.md",
+     "docs/progress.json"
+    ],
+    "note": "Recorded hygiene pass over the listed files."
+   }
+  ]
+ },
+ "fixture_allowlist": [
+  {
+   "path": "tests/check_model_page.py",
+   "literals": [
+    "10.0.0.1",
+    "10.1.2.3"
+   ],
+   "reason": "synthetic RFC1918 fixtures for the model-page URL policy; not lab addresses"
+  },
+  {
+   "path": "tests/check_music_failure_diagnostics.py",
+   "literals": [
+    "C:\\Users\\example",
+    "/home/example"
+   ],
+   "reason": "synthetic user-profile and Linux-home paths for the redaction fixture (account `example`); the assertion needs only the final component to survive"
+  }
+ ],
+ "fixture_allowlist_note": "A hit is tolerated only when the matched text equals one of the listed literals in the listed file. Any deliberate future example must use a neutral placeholder or an allowlist entry with a reason. No literal of the windows_generated_machine_name class, no private-map name and no machine name may be allowlisted (tests/check_public_export_hygiene.py asserts all three).",
+ "detection_patterns": {
+  "windows_user_profile": "(?i)(?<![A-Za-z0-9])[A-Za-z]:[\\\\/]+Users[\\\\/]+[^\\\\/\\s\"'<>|,;)]+",
+  "rfc1918_ipv4": "\\b(?:10\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}|172\\.(?:1[6-9]|2\\d|3[01])\\.\\d{1,3}\\.\\d{1,3}|192\\.168\\.\\d{1,3}\\.\\d{1,3})\\b",
+  "lab_drive_titanos": "(?i)(?<![A-Za-z0-9])[A-Za-z]:[\\\\/]+Titanos",
+  "lab_drive_codex": "(?i)(?<![A-Za-z0-9])[A-Za-z]:[\\\\/]+Codex",
+  "posix_user_profile": "(?i)(?<![A-Za-z0-9])(?:/cygdrive|/mnt)?/[a-z]/Users[/][^/\\s\"'<>|,;)]+",
+  "lab_codex_worktree": "(?i)(?:<user-profile>|(?<![A-Za-z0-9])[A-Za-z]:[\\\\/]+Users[\\\\/]+[^\\\\/\\s\"'<>|,;)]+|(?<![A-Za-z0-9])(?:/cygdrive|/mnt)?/[a-z]/Users[/][^/\\s\"'<>|,;)]+)[\\\\/]+Documents[\\\\/]+Codex(?![A-Za-z0-9])",
+  "linux_home": "(?<![A-Za-z0-9>/])/home[/][^/\\s\"'<>|,;)]+",
+  "lab_linux_host": "(?i)(?<![A-Za-z0-9])[a-z]+(?:-[a-z]+)*-server-\\d{3}(?![A-Za-z0-9])",
+  "drive_letter_pair": "(?<![A-Za-z0-9])[A-Za-z]:/[A-Za-z]:(?![A-Za-z0-9])",
+  "ssh_hostkey_fingerprint": "(?<![A-Za-z0-9+/])SHA256:[A-Za-z0-9+/]{43}(?![A-Za-z0-9+/=])",
+  "windows_generated_machine_name": "(?ai)(?<![A-Za-z0-9])(?:(?:DESKTOP|LAPTOP)-[A-Z0-9]{7}|WIN-[A-Z0-9]{11})(?![A-Za-z0-9])",
+  "macos_user_home": "(?<![A-Za-z0-9>/:])/Users[/][^/\\s\"'<>|,;)]+"
+ },
+ "detection_patterns_note": "Generic patterns (Python re) that tests/check_public_export_hygiene.py runs over every UTF-8 text file in both export sets and over the tracked tree outside the excluded records; they name pattern classes, never a specific machine, account or address. lab_drive_titanos also matches generic-looking install examples (a Titanos folder at a drive root), which is intended: a public example uses a neutral placeholder. posix_user_profile is the MSYS, Cygwin or WSL spelling of a Windows user profile (a drive letter as a directory under /, /cygdrive/ or /mnt/, then Users/<account>: the configure --prefix an MSYS2 FFmpeg build records in its version.txt and buildconf.txt); the account is the private part, as for windows_user_profile. lab_codex_worktree catches an agent work tree left behind a <user-profile> label, still under a drive, or under one of those POSIX drive spellings. A pattern literal never matches its own text: the Users segment is spelled Users[/] where a plain slash would make the policy or the builder match itself, and the tests and docs assemble their samples from parts. linux_home catches /home/<account> with the account as the private part (a folder named home below another folder or a label does not match; the one synthetic test fixture is allowlisted). lab_linux_host is the shape of the Linux hostnames (<words>-server-<three digits>); it does not match llama-server or a port number. drive_letter_pair catches a bare drive-letter pair used as narrative. ssh_hostkey_fingerprint catches an OpenSSH SHA256 host-key fingerprint. The allowlisted literals necessarily appear in this policy file itself; the hygiene test tolerates exactly those literals here. Path classes are case-insensitive (Windows paths are) and require a non-alphanumeric character before the drive letter, so a URL such as http://titanos.test does not match through its scheme. windows_generated_machine_name is scoped to the demonstrated Windows generated machine-name forms (DESKTOP- or LAPTOP- followed by exactly seven letters/digits, WIN- followed by exactly eleven), any ASCII letter case, also inside hyphen- or underscore-joined names such as a run-folder label or a receipt id; it is not a claim of arbitrary custom-hostname coverage. Ordinary words (desktop), platform slot labels (win-x64-cpu), dated labels with eight digits and model identifiers do not match it. macos_user_home: a macOS home directory (/Users/<account>, no drive letter) names an account like the Windows and Linux forms; tools/lab_paths neutralizes it to <user-profile>.",
+ "narrative_patterns": {
+  "workflow_id": "(?<![A-Za-z0-9])wf_[0-9a-f]{8}(?![A-Za-z0-9])"
+ },
+ "narrative_patterns_note": "Coordination-narrative classes: the hygiene test reports their hits over the tracked tree (file, line, class) but fails only when TITANOS_HYGIENE_STRICT_NARRATIVE=1 is set, because some product terms share the words. workflow_id is the shape of an internal workflow run id. The host map's narrative list and phrase keys join this class as coordination_narrative when the map is present. A published document names actors by role (the project owner, the maintainer, a verifier, this workstation), never by a person's or an agent's name.",
+ "private_denylist_note": "When the host map (private_files) is present, tests/check_public_export_hygiene.py builds the class private_denylist from its host keys and deny list: whole-word, case-insensitive, no allowlist, and scans both export copies and the tracked tree outside the excluded records for it; diagnostics report file, line and class only, never the matched text. Without the map the class is empty and the generic classes and the exporting machine's own name still apply.",
+ "docker_context_note": "The Docker image build context (.dockerignore) excludes the same paths as the SOURCE/ copy and the sdist: the excluded_paths and the private files. No test reads .dockerignore; keep its lines equal to this set by hand.",
+ "machine_name_policy": "The exporting machine's own Windows computer name / hostname is a lab identifier: exported text must not contain it. tests/check_public_export_hygiene.py reads COMPUTERNAME and HOSTNAME from the environment at scan time, falling back to the interpreter's own node name (never from this file; the generic name localhost is ignored), and fails on a whole-word, case-insensitive hit in either export copy (native SOURCE/ and sdist) and in the tracked tree outside the excluded records; the class is always present, has no allowlist and the test refuses an allowlist literal equal to the machine name. The generic detection pattern windows_generated_machine_name additionally catches the Windows generated machine-name forms in any environment, and the private denylist catches every other name when the private map is present. Diagnostics report file, line and pattern class only, never the matched text. Stable role labels are the only accepted way to name a machine (tools/lab_paths.HOST_ROLE_LABELS; docs/MATRIX_KIT.md, Host labels): a fleet inventory name is not a role label even when it looks descriptive. No generated Windows machine name is allowlisted: generated names are neutralized to role labels at the source (the kit run label, the host map at the generators) and tools/lab_paths.neutralize_reference reduces any generated name that still reaches a generator string to <windows-host> as a last defence, so the public matrix views carry zero hits of the class without any allowlist. Repaired 2026-09-26: three capability-matrix summaries that named this workstation now say \"on this workstation\"; rows E-096 and E-098 name the Turing laptop by role. Rebuilt 2026-09-27: every host in docs/execution_matrix.json is named by its role label."
+}

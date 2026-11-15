@@ -1,0 +1,92 @@
+[
+ {
+  "name": "swagger-ui-dist",
+  "version": "5.33.0",
+  "kind": "vendored web asset",
+  "purl": "pkg:npm/swagger-ui-dist@5.33.0",
+  "license_expression": "Apache-2.0",
+  "source_url": "https://registry.npmjs.org/swagger-ui-dist/-/swagger-ui-dist-5.33.0.tgz",
+  "source_integrity": "sha512-wpdK+m6BU5yj6pmUdMskZVTSWYG4DLglAx3sIhylloY37i8O37IrH+YEpqdXNfpaTGxILRBFzUqLF2jKqbfI7A==",
+  "source_tarball_sha256": "434c69385aa02154348e6dcce0076df3a25ed88f673ac16cf4fed3fcf62c3b1b",
+  "upstream_repository": "https://github.com/swagger-api/swagger-ui",
+  "why": "The API documentation view /docs is served from these two unmodified files instead of the FastAPI default CDN URLs, so the rendered page requests nothing outside the server's own loopback origin (shown in real headless Chrome with every non-loopback host unresolvable, against source servers in both key modes on 2026-09-26). Served by src/titanos/server.py under /docs/assets/<name>.",
+  "files": [
+   {
+    "package_path": "src/titanos/web/swagger-ui.css",
+    "packaged_path": "_internal/titanos/web/swagger-ui.css",
+    "route": "/docs/assets/swagger-ui.css",
+    "sha256": "1ac324f7dcd27e4b9386b4bd6421271ec147e922a22c05ba24b11515e9aa6321",
+    "bytes": 186154
+   },
+   {
+    "package_path": "src/titanos/web/swagger-ui-bundle.js",
+    "packaged_path": "_internal/titanos/web/swagger-ui-bundle.js",
+    "route": "/docs/assets/swagger-ui-bundle.js",
+    "sha256": "62df541529080464a7660adc793eab7128c6193ce3be24ddc1e0e0a4a63edc2f",
+    "bytes": 1585988
+   }
+  ],
+  "license_files": [
+   {
+    "file": "swagger-ui-dist-5.33.0-LICENSE.txt",
+    "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+    "url": "https://registry.npmjs.org/swagger-ui-dist/-/swagger-ui-dist-5.33.0.tgz#package/LICENSE",
+    "target": "THIRD_PARTY_LICENSES/swagger-ui-dist/1-LICENSE"
+   },
+   {
+    "file": "swagger-ui-dist-5.33.0-NOTICE.txt",
+    "sha256": "0d20d1adef18aee3f40dd258172155521ce702ac445cb5f7b7d60ed32dad2fb2",
+    "url": "https://registry.npmjs.org/swagger-ui-dist/-/swagger-ui-dist-5.33.0.tgz#package/NOTICE",
+    "target": "THIRD_PARTY_LICENSES/swagger-ui-dist/2-NOTICE"
+   }
+  ],
+  "license_review": "not_performed",
+  "notice_markdown": "## Swagger UI (API documentation view)\n\nThe `/docs` page is rendered by Swagger UI (swagger-ui-dist 5.33.0, Apache-2.0, Copyright 2020-2021 SmartBear Software Inc.), shipped unmodified as `_internal/titanos/web/swagger-ui.css` and `_internal/titanos/web/swagger-ui-bundle.js` and served from this application under `/docs/assets/`; its LICENSE and NOTICE are retained under THIRD_PARTY_LICENSES/swagger-ui-dist. The upstream source is the pinned npm tarball recorded in tools/licenses/vendored_assets.json. ReDoc is not shipped. This is not a legal approval.\n",
+  "acquisition_receipt": "swagger-ui-dist-5.33.0-PROVENANCE.json"
+ },
+ {
+  "name": "chakra-petch",
+  "version": "1.000",
+  "kind": "vendored font",
+  "purl": "pkg:github/google/fonts#ofl/chakrapetch",
+  "license_expression": "OFL-1.1",
+  "source_url": "https://github.com/google/fonts/tree/main/ofl/chakrapetch",
+  "source_integrity": "sha256 of the two upstream files subset here: ChakraPetch-SemiBold.ttf 45264de3204ddbd5fb3e14a2402acd5c630d16650ae5fc221d2c52da46a6734b, ChakraPetch-BoldItalic.ttf bf012ce1894ffcf7d32d3e6548b90df7c40f30161b5cc295eb54ff61c21fab19 (name table: Version 1.000)",
+  "upstream_repository": "https://github.com/m4rc1e/Chakra-Petch",
+  "upstream_commit": "6176529d05acf654f31e024daad77966319e499d",
+  "why": "Studio's display face for plates, numerals and RUN. The two upstream TTFs from google/fonts ofl/chakrapetch (METADATA.pb names the m4rc1e/Chakra-Petch source commit above) were subset to Latin and converted to WOFF2 without renaming (the OFL here declares no Reserved Font Name). The server serves only its named /ui files, so src/titanos/web/style.css carries both faces inline as data:font/woff2 URIs and ends with the full OFL text (tests/check_studio_design_ui.js binds the inlined data to these files); the files and the licence also ship beside the stylesheet under web/fonts. No route serves them and nothing is loaded from another origin.",
+  "files": [
+   {
+    "package_path": "src/titanos/web/fonts/ChakraPetch-SemiBold.woff2",
+    "packaged_path": "_internal/titanos/web/fonts/ChakraPetch-SemiBold.woff2",
+    "route": null,
+    "sha256": "14c8d931ddaeb57af1f0df5f08086751ee7eda0317c1249c66b86105d9546707",
+    "bytes": 7728
+   },
+   {
+    "package_path": "src/titanos/web/fonts/ChakraPetch-BoldItalic.woff2",
+    "packaged_path": "_internal/titanos/web/fonts/ChakraPetch-BoldItalic.woff2",
+    "route": null,
+    "sha256": "1e45ca3b9b53b82029dad1c7281468f6fd6b2f404bfac4a794caa2efe6377971",
+    "bytes": 8320
+   },
+   {
+    "package_path": "src/titanos/web/fonts/OFL.txt",
+    "packaged_path": "_internal/titanos/web/fonts/OFL.txt",
+    "route": null,
+    "sha256": "13831d02389d917d22fcfa6c79f98f8acbf61d230add0e73a4d4dc5f3bfb9e56",
+    "bytes": 4396
+   }
+  ],
+  "license_files": [
+   {
+    "file": "chakra-petch-1.000-OFL.txt",
+    "sha256": "13831d02389d917d22fcfa6c79f98f8acbf61d230add0e73a4d4dc5f3bfb9e56",
+    "url": "https://github.com/google/fonts/blob/main/ofl/chakrapetch/OFL.txt",
+    "target": "THIRD_PARTY_LICENSES/chakra-petch/1-OFL.txt"
+   }
+  ],
+  "license_review": "not_performed",
+  "notice_markdown": "## Chakra Petch (Studio display face)\n\nStudio's plates, numerals and RUN button use Chakra Petch 1.000 (SemiBold and Bold Italic), Copyright 2018 The Chakra Petch Project Authors (https://github.com/m4rc1e/Chakra-Petch.git), designed by Cadson Demak, licensed under the SIL Open Font License 1.1. Latin subsets converted to WOFF2 ship as `_internal/titanos/web/fonts/ChakraPetch-SemiBold.woff2` and `_internal/titanos/web/fonts/ChakraPetch-BoldItalic.woff2`, inlined into `_internal/titanos/web/style.css`, which also carries the licence text; the OFL is retained as `_internal/titanos/web/fonts/OFL.txt` and under THIRD_PARTY_LICENSES/chakra-petch. The upstream source is recorded in tools/licenses/vendored_assets.json. This is not a legal approval.\n"
+ }
+]

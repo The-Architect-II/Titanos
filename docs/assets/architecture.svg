@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 1080" width="960" height="1080" role="img" aria-labelledby="title desc">
+  <title id="title">Titanos architecture</title>
+  <desc id="desc">Clients at the top: Studio in a browser, the titanos command line, the Python client, MCP agents, OpenAI-, Ollama- and Anthropic-style clients, and the Pool helper for several servers. They talk over HTTP, bound to 127.0.0.1:11435 by default, to one server process that titanos.server.create_app builds and titanos serve runs in one uvicorn worker. Inside it: a Guard middleware, the OpenAI-style, Titanos, extension and protocol-shim routes, the vendored API documentation and the mounted MCP endpoint, and the owned state: EngineSlot over Engine or ReplicaEngine, NativePool for llama.cpp subprocesses, VideoJobs, AcquisitionStore with its four default providers (huggingface, ace-step, github-sherpa, github-sherpa-diarization), and RuntimeSetup. State lives under TITANOS_HOME. Below the server, Engine._load picks one runtime class per model by task and backend; GGUF models go to NativePool instead. At the bottom, devices are admitted by identity on CPU, NVIDIA CUDA, AMD ROCm, Intel XPU or OpenVINO, DirectML, Apple MPS or Qualcomm QNN targets; a missing or masked device refuses instead of silently falling back to CPU. Model weights stay outside Titanos.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0L10 5 0 10Z" fill="#8B8F98"/>
+    </marker>
+    <style>
+      text{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans",Arial,sans-serif}
+      .h1{font-size:20px;font-weight:600;fill:#ECEDEF}
+      .sub{font-size:13px;fill:#B9BCC3}
+      .h2{font-size:13px;font-weight:600;fill:#ECEDEF}
+      .t{font-size:12px;font-weight:500;fill:#ECEDEF}
+      .s{font-size:11px;fill:#B9BCC3}
+      .m{font-size:11px;fill:#8B8F98}
+      .lime{font-size:11px;font-weight:600;fill:#90E301}
+      .frame{fill:none;stroke:#6C7078;stroke-width:1}
+      .box{fill:#17181B;stroke:#6C7078;stroke-width:1}
+      .bar{fill:#1F2024;stroke:#2A2C30;stroke-width:1}
+      .edge{stroke:#8B8F98;stroke-width:1.25;fill:none;marker-end:url(#arrow)}
+      .proc{stroke-dasharray:5 4}
+    </style>
+  </defs>
+  <rect width="960" height="1080" fill="#111214"/>
+  <text class="h1" x="28" y="44">Titanos architecture</text>
+  <text class="sub" x="28" y="66">One local server process, built by titanos.server.create_app and run by titanos serve in one uvicorn worker.</text>
+  <text class="h2" x="28" y="96">Clients</text>
+  <rect class="box" x="28" y="106" width="294" height="60" rx="4"/>
+  <text class="t" x="38" y="126">Studio (browser)</text>
+  <text class="s" x="38" y="142">GET / → web/index.html; app.js uses the API</text>
+  <text class="s" x="38" y="156">same registry, jobs and routes as the CLI</text>
+  <rect class="box" x="333" y="106" width="294" height="60" rx="4"/>
+  <text class="t" x="343" y="126">Command line</text>
+  <text class="s" x="343" y="142">titanos.cli → titanos.client → HTTP</text>
+  <text class="s" x="343" y="156">run · embed · jobs · acquire · assignment</text>
+  <rect class="box" x="638" y="106" width="294" height="60" rx="4"/>
+  <text class="t" x="648" y="126">Python client</text>
+  <text class="s" x="648" y="142">titanos.client.Client</text>
+  <text class="s" x="648" y="156">httpx only; never loads a model framework</text>
+  <rect class="box" x="28" y="176" width="294" height="60" rx="4"/>
+  <text class="t" x="38" y="196">MCP agents</text>
+  <text class="s" x="38" y="212">Streamable HTTP at /mcp/ on the same port</text>
+  <text class="s" x="38" y="226">or the stdio bridge: titanos mcp --url URL</text>
+  <rect class="box" x="333" y="176" width="294" height="60" rx="4"/>
+  <text class="t" x="343" y="196">Protocol-compatible clients</text>
+  <text class="s" x="343" y="212">OpenAI-style /v1 · Ollama-style /api/chat</text>
+  <text class="s" x="343" y="226">Anthropic-style /v1/messages (protocols.py)</text>
+  <rect class="box" x="638" y="176" width="294" height="60" rx="4"/>
+  <text class="t" x="648" y="196">Several servers</text>
+  <text class="s" x="648" y="212">titanos.pool.Pool: least-active lease</text>
+  <text class="s" x="648" y="226">no discovery, no probe, no implicit retry</text>
+  <path class="edge" d="M480 236 L480 270"/>
+  <text class="m" x="496" y="257">HTTP on 127.0.0.1:11435 by default · optional Bearer TITANOS_API_KEY</text>
+  <rect class="frame" x="28" y="270" width="904" height="419" rx="4"/>
+  <text class="t" x="44" y="292">titanos serve  →  server.create_app: the FastAPI app in one uvicorn worker</text>
+  <rect class="bar" x="44" y="304" width="872" height="26" rx="4"/>
+  <text class="s" x="56" y="321">Guard middleware: optional bearer key (TITANOS_API_KEY), request body limits · TrustedHost middleware is added when no key is set</text>
+  <rect class="box" x="44" y="340" width="872" height="139" rx="4"/>
+  <text class="h2" x="56" y="362">OpenAI-style /v1/…</text>
+  <text class="s" x="56" y="377">models · chat/completions · completions · responses · embeddings</text>
+  <text class="s" x="56" y="392">audio/speech · audio/transcriptions · images/generations</text>
+  <text class="s" x="56" y="407">images/edits · videos · music/generations · files/{name}</text>
+  <text class="h2" x="56" y="422">Titanos API /api/… (plus /healthz and /readyz)</text>
+  <text class="s" x="56" y="437">info · models/* · infer · jobs · devices · assignments</text>
+  <text class="s" x="56" y="452">acquisitions · model-providers · runtime-profiles · runtime-setups</text>
+  <text class="h2" x="487" y="362">Extensions /v1/… (api_plus.py)</text>
+  <text class="s" x="487" y="377">extensions · translations · audio/translations · sentiment</text>
+  <text class="s" x="487" y="392">images/ocr · images/depth · images/segment · images/detect</text>
+  <text class="s" x="487" y="407">audio/vad · audio/diarizations · audio/analysis</text>
+  <text class="s" x="487" y="422">rerank · retrieval/answer · classifications/text-pairs</text>
+  <text class="h2" x="487" y="437">Protocol shims (protocols.py), docs, MCP</text>
+  <text class="s" x="487" y="452">/api/chat · /api/generate · /api/tags · /api/ps · /api/embeddings</text>
+  <text class="s" x="487" y="467">/v1/messages · /v1/text-to-speech/{voice_id} · /docs · /mcp</text>
+  <rect class="bar" x="44" y="489" width="872" height="26" rx="4"/>
+  <text class="s" x="56" y="506">State under TITANOS_HOME (default ~/.titanos): models.json registry · outputs · acquisitions · runtime-setups</text>
+  <rect class="box" x="44" y="525" width="284" height="70" rx="4"/>
+  <text class="t" x="54" y="545">EngineSlot → Engine</text>
+  <text class="s" x="54" y="561">one resident model, serialized inference</text>
+  <text class="s" x="54" y="575">engine.py: _load picks the runtime class</text>
+  <rect class="box" x="338" y="525" width="284" height="70" rx="4"/>
+  <text class="t" x="348" y="545">ReplicaEngine → Worker processes</text>
+  <text class="s" x="348" y="561">one spawned process per worker assignment</text>
+  <text class="s" x="348" y="575">replicas.py; a Worker runs its own Engine</text>
+  <rect class="box" x="632" y="525" width="284" height="70" rx="4"/>
+  <text class="t" x="642" y="545">NativePool → NativeWorker</text>
+  <text class="s" x="642" y="561">owned llama-server subprocess on loopback</text>
+  <text class="s" x="642" y="575">native.py + native_process.py (GGUF)</text>
+  <rect class="box" x="44" y="605" width="284" height="70" rx="4"/>
+  <text class="t" x="54" y="625">VideoJobs (durable asset jobs)</text>
+  <text class="s" x="54" y="641">png · mp4 · wav artifacts, cancellable</text>
+  <text class="s" x="54" y="655">jobs.py → TITANOS_HOME/outputs/jobs</text>
+  <rect class="box" x="338" y="605" width="284" height="70" rx="4"/>
+  <text class="t" x="348" y="625">AcquisitionStore + ProviderRegistry</text>
+  <text class="s" x="348" y="641">huggingface · ace-step · github-sherpa ·</text>
+  <text class="s" x="348" y="655">github-sherpa-diarization · providers.py</text>
+  <rect class="box" x="632" y="605" width="284" height="70" rx="4"/>
+  <text class="t" x="642" y="625">RuntimeSetup</text>
+  <text class="s" x="642" y="641">pinned llama.cpp catalog, receipts</text>
+  <text class="s" x="642" y="655">native_install.py · runtime_catalog.py</text>
+  <path class="edge" d="M186 689 L186 753"/>
+  <text class="m" x="200" y="711">Engine._load: one runtime class per model (also inside each replica Worker)</text>
+  <path class="edge proc" d="M774 689 L774 753"/>
+  <text class="m" x="788" y="711">spawns llama-server</text>
+  <text class="h2" x="28" y="743">Model runtimes</text>
+  <text class="m" x="178" y="743">dashed outline = a separate process owned by the server</text>
+  <rect class="box" x="28" y="753" width="294" height="56" rx="4"/>
+  <text class="t" x="38" y="773">backends.LoadedModel</text>
+  <text class="s" x="38" y="789">PyTorch: transformers · diffusers · xtts</text>
+  <rect class="box" x="333" y="753" width="294" height="56" rx="4"/>
+  <text class="t" x="343" y="773">parallel.TensorParallelModel</text>
+  <text class="s" x="343" y="789">one process per rank: gloo · nccl · xccl</text>
+  <rect class="box proc" x="638" y="753" width="294" height="56" rx="4"/>
+  <text class="t" x="648" y="773">llama.cpp llama-server (GGUF)</text>
+  <text class="s" x="648" y="789">backend llama-cpp → NativePool, not Engine</text>
+  <rect class="box" x="28" y="819" width="294" height="56" rx="4"/>
+  <text class="t" x="38" y="839">compiled.CompiledModel</text>
+  <text class="s" x="38" y="855">onnx · openvino</text>
+  <rect class="box" x="333" y="819" width="294" height="56" rx="4"/>
+  <text class="t" x="343" y="839">GenAIModel · GenAIImageModel</text>
+  <text class="s" x="343" y="855">openvino-genai (genai.py, genai_images.py)</text>
+  <rect class="box" x="638" y="819" width="294" height="56" rx="4"/>
+  <text class="t" x="648" y="839">onnx_images.ONNXImageModel</text>
+  <text class="s" x="648" y="855">onnx-diffusers on cpu or dml (DirectML)</text>
+  <rect class="box" x="28" y="885" width="294" height="56" rx="4"/>
+  <text class="t" x="38" y="905">QwenTTSModel · SherpaTTSModel</text>
+  <text class="s" x="38" y="921">qwen3-tts · sherpa-onnx (speech)</text>
+  <rect class="box" x="333" y="885" width="294" height="56" rx="4"/>
+  <text class="t" x="343" y="905">TesseractModel · AceStepModel</text>
+  <text class="s" x="343" y="921">tesseract (OCR) · ace-step (music)</text>
+  <rect class="box" x="638" y="885" width="294" height="56" rx="4"/>
+  <text class="t" x="648" y="905">SileroVAD · SherpaDiarizationModel</text>
+  <text class="s" x="648" y="921">chosen by task: vad · diarization</text>
+  <path class="edge" d="M480 941 L480 975"/>
+  <text class="m" x="496" y="962">device admission at load time (devices.py), then execution there</text>
+  <rect class="bar" x="28" y="975" width="904" height="78" rx="4"/>
+  <text class="h2" x="40" y="995">Hardware</text>
+  <text class="m" x="128" y="995">identities from devices.py: GPU- · HIP- · XPU- · OV- (stable) · DML- (per-boot LUID)</text>
+  <rect class="box" x="40" y="1005" width="40" height="22" rx="4"/>
+  <text class="s" x="50" y="1020">CPU</text>
+  <rect class="box" x="88" y="1005" width="94" height="22" rx="4"/>
+  <text class="s" x="98" y="1020">NVIDIA CUDA</text>
+  <rect class="box" x="190" y="1005" width="74" height="22" rx="4"/>
+  <text class="s" x="200" y="1020">AMD ROCm</text>
+  <rect class="box" x="272" y="1005" width="154" height="22" rx="4"/>
+  <text class="s" x="282" y="1020">Intel XPU / OpenVINO</text>
+  <rect class="box" x="434" y="1005" width="74" height="22" rx="4"/>
+  <text class="s" x="444" y="1020">DirectML</text>
+  <rect class="box" x="516" y="1005" width="80" height="22" rx="4"/>
+  <text class="s" x="526" y="1020">Apple MPS</text>
+  <rect class="box" x="604" y="1005" width="101" height="22" rx="4"/>
+  <text class="s" x="614" y="1020">Qualcomm QNN</text>
+  <text class="m" x="920" y="1020" text-anchor="end">no silent CPU fallback</text>
+  <text class="m" x="40" y="1043">Detection selects a target. A missing or masked device refuses at load time. Nothing is qualified until it runs. Weights stay external.</text>
+</svg>

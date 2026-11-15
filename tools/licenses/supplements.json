@@ -1,0 +1,33 @@
+[
+  {
+    "name": "onnx",
+    "version": "1.22.0",
+    "why": "The ONNX wheel vendors protobuf 25.1; its NOTICE labels protobuf Apache-2.0 while its own SBOM labels it BSD-3-Clause. Retain the protobuf v25.1 license text and the verified provenance beside the upstream files, which stay unchanged.",
+    "license_files": [
+      {
+        "file": "onnx-1.22.0-protobuf-v25.1-LICENSE.txt",
+        "sha256": "6e5e117324afd944dcf67f36cf329843bc1a92229a8cd9bb573d7a83130fea7d",
+        "url": "https://raw.githubusercontent.com/protocolbuffers/protobuf/v25.1/LICENSE",
+        "target": "THIRD_PARTY_LICENSES/onnx/3-protobuf-v25.1-LICENSE.txt"
+      }
+    ],
+    "attribution_files": [
+      {
+        "file": "onnx-1.22.0-ATTRIBUTION.json",
+        "sha256": "867a9d74eadc41378d41d4336a37d156e94dfbf6cfbba03e0e42b8e31d7fdb51",
+        "target": "THIRD_PARTY_SOURCES/onnx/ATTRIBUTION.json",
+        "role": "source_attribution"
+      }
+    ],
+    "dist_info_members": [
+      {
+        "member": "sboms/sbom.cdx.json",
+        "target": "THIRD_PARTY_SOURCES/onnx/upstream-sbom.cdx.json",
+        "role": "upstream_sbom",
+        "nest_components": true
+      }
+    ],
+    "license_review": "not_performed; upstream protobuf NOTICE label corrected separately against the retained v25.1 BSD license; see attribution",
+    "notice_markdown": "## ONNX attribution supplement\n\nONNX 1.22.0 retains its Apache-2.0 LICENSE and NOTICE under THIRD_PARTY_LICENSES/onnx. Its upstream NOTICE labels the vendored protobuf 25.1 component Apache-2.0 while the ONNX upstream SBOM labels it BSD-3-Clause; the protobuf v25.1 license text is retained as THIRD_PARTY_LICENSES/onnx/3-protobuf-v25.1-LICENSE.txt and the verified provenance as THIRD_PARTY_SOURCES/onnx/ATTRIBUTION.json beside the upstream SBOM copy. Upstream files are unchanged; this is attribution, not legal approval.\n"
+  }
+]

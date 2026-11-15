@@ -1,0 +1,360 @@
+name: Titanos checks
+# Contract and regression checks over mocked or tiny fixtures. A green run proves the contracts the scripts name, not
+# model, hardware or release qualification. tests/README.md describes the tiers; tests/checks.json mirrors the jobs
+# below and `python -B tools/run_checks.py --sync-check` fails when the two drift, so a local run and CI execute the
+# same list. Every `run:` stays a one-line command: tests/check_release_workflow_gates.py reads them positionally.
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  contract:
+    # base tier: the engine's own dependencies plus setuptools (imported by the two public-export gates) and PyYAML
+    # (lets check_release_workflow_gates.py cross-check its positional reader against a real parser). No numpy,
+    # pillow or Node. Python 3.11-3.13 on Linux; 3.12 on Windows and macOS.
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            python: '3.11'
+          - os: ubuntu-latest
+            python: '3.12'
+          - os: ubuntu-latest
+            python: '3.13'
+          - os: windows-latest
+            python: '3.12'
+          - os: macos-latest
+            python: '3.12'
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - run: python -m pip install 'setuptools>=78' 'PyYAML>=6,<7'
+      - run: python -m pip install .
+      - run: python -B tools/run_checks.py --sync-check
+      - run: python tests/check.py
+      - run: python tests/check_engine_quality_boundary.py
+      - run: python tests/check_client_wait_deadline.py
+      - run: python tests/check_acquisition_progress_units.py
+      - run: python tests/check_hardware_legacy_selection.py
+      - run: python tests/check_require_loaded_engine.py
+      - run: python tests/check_require_loaded_native.py
+      - run: python tests/check_require_loaded_http.py
+      - run: python tests/check_hub.py
+      - run: python tests/check_hub_local_dir.py
+      - run: python tests/check_model_providers.py
+      - run: python tests/check_model_inspection.py
+      - run: python tests/check_setup_reconcile_loaded.py
+      - run: python tests/check_model_page.py
+      - run: python tests/check_acquisition.py
+      - run: python tests/check_acquisition_interfaces.py
+      - run: python tests/check_acquisition_atomicity.py
+      - run: python tests/check_one_stop_interfaces.py
+      - run: python tests/check_runtime_interfaces.py
+      - run: python tests/check_accelerator_profiles.py
+      - run: python tests/check_native_acquisition_join.py
+      - run: python tests/check_build_resource_bindings.py
+      - run: python -B tests/check_source_package.py
+      - run: python -B tests/check_public_export_hygiene.py
+      - run: python -B tests/check_route_contract_matrix.py
+      - run: python -B tests/check_release_workflow_gates.py
+      - run: python tests/check_assignments.py
+      - run: python tests/check_assignment_collision.py
+      - run: python tests/check_assignment_interfaces.py
+      - run: python tests/check_accelerator_discovery.py
+      - run: python tests/check_accelerator_assignment.py
+      - run: python tests/check_music_provider.py
+      - run: python tests/check_music_process.py
+      - run: python tests/check_music_device.py
+      - run: python tests/check_music_defaults.py
+      - run: python tests/check_music_package.py
+      - run: python tests/check_music_build_inclusion.py
+      - run: python tests/check_remote_pool.py
+      - run: python tests/check_jobs.py
+      - run: python tests/check_job_publication.py
+      - run: python tests/check_protocols.py
+      - run: python tests/check_option_parity.py
+      - run: python tests/check_protocol_deviations.py
+      - run: python tools/render_protocol_deviations.py --check
+      - run: python tests/check_roster.py
+      - run: python tools/render_roster.py --check
+      - run: python -B tests/check_progress.py
+      - run: python tools/render_progress.py --check
+      - run: python tests/check_execution_matrix.py
+      - run: python tools/render_execution_matrix.py --check
+      - run: python tests/check_matrix_kit.py
+      - run: python tests/check_responses.py
+      - run: python tests/check_agent_tools.py
+      - run: python tests/check_genai_request_settings.py
+      - run: python tests/check_vendor_genai_profile.py
+      - run: python tests/check_vendor_genai_vision_profile.py
+      - run: python tests/check_vendor_dml_vision_profile.py
+      - run: python tests/check_vendor_text_profile.py
+      - run: python tests/check_vendor_text_audio_profile.py
+      - run: python tests/check_vendor_text_vision_profile.py
+      - run: python tests/check_sentiment_backend.py
+      - run: python tests/check_sentiment_contract.py
+      - run: python tests/check_sentiment_language.py
+      - run: python tests/check_registration_defaults.py
+      - run: python tests/check_registry_transaction.py
+      - run: python tests/check_cli_registry_errors.py
+      - run: python tests/check_serve_bind_neutrality.py
+      - run: python tests/check_serve_username_environment.py
+      - run: python tests/check_registry_native_smoke.py
+      - run: python tests/check_offline_binary.py
+      - run: python tests/check_worker_faults.py
+      - run: python tests/check_worker_execution_settings.py
+      - run: python tests/check_accelerator_execution.py
+      - run: python -B tests/check_security_cross_site.py
+      - run: python -B tests/check_security_hf_filenames.py
+      - run: python -B tests/check_security_hub_pull.py
+      - run: python -B tests/check_security_persisted_plan.py
+      - run: python -B tests/check_security_public_routes.py
+      - run: python -B tests/check_docs_offline.py
+      - run: python -B tests/check_broker_settings.py
+      - run: python -B tests/check_broker_config.py
+      - run: python -B tests/check_broker_naming.py
+      - run: python -B tests/check_broker_contracts.py
+      - run: python -B tests/check_broker_redact.py
+      - run: python -B tests/check_broker_keys.py
+      - run: python -B tests/check_broker_auth.py
+      - run: python -B tests/check_broker_limits.py
+      - run: python -B tests/check_broker_accounting.py
+      - run: python -B tests/check_broker_audit.py
+      - run: python -B tests/check_broker_mocks.py
+      - run: python -B tests/check_broker_fixtures.py
+      - run: python -B tests/check_broker_fixture_lint.py
+      - run: python -B tests/check_broker_vault.py
+      - run: python -B tests/check_broker_egress.py
+      - run: python -B tests/check_broker_source_scan.py
+      - run: python -B tests/check_broker_adapters.py
+      - run: python -B tests/check_broker_translation_golden.py
+      - run: python -B tests/check_broker_streaming.py
+      - run: python -B tests/check_broker_upstream_errors.py
+      - run: python -B tests/check_broker_routing.py
+      - run: python -B tests/check_broker_breakers.py
+      - run: python -B tests/check_broker_advisor.py
+      - run: python -B tests/check_broker_dispatch.py
+      - run: python -B tests/check_broker_stages.py
+      - run: python -B tests/check_broker_http.py
+      - run: python -B tests/check_broker_auth_http.py
+      - run: python -B tests/check_broker_disabled_regression.py
+      - run: python -B tests/check_broker_roles.py
+      - run: python -B tests/check_broker_plus.py
+      - run: python -B tests/check_broker_jobs.py
+      - run: python -B tests/check_broker_scope_coverage.py
+      - run: python -B tests/check_broker_cli.py
+      - run: python -B tests/check_broker_mcp.py
+      - run: python -B tests/check_broker_client.py
+      - run: python -B tests/check_broker_manifest.py
+      - run: python -B tests/check_broker_e2e.py
+      - run: python -B tests/check_broker_redaction.py
+      - run: python -B tests/check_broker_coverage.py
+      - run: python -B tests/check_broker_matrix.py
+      - run: python -B tests/check_broker_docs_claims.py
+      - run: python -B tests/check_broker_native.py
+      - run: python -B tests/check_broker_native_ws.py
+      - run: python -B tests/check_broker_connect.py
+      - run: python -B tests/check_broker_openai_completeness.py
+      - run: python -B tests/check_broker_anthropic_models.py
+      - run: python -B tests/check_broker_anthropic_platform.py
+      - run: python -B tests/check_broker_elevenlabs.py
+      - run: python -B tests/check_broker_gemini_completeness.py
+      - run: python -B tests/check_broker_compat_family.py
+      - run: python -B tests/check_broker_local_compat.py
+      - run: python -B tests/check_broker_reachability.py
+      - run: python -B tests/check_openai_params.py
+      - run: python -B tests/check_ops_readiness.py
+      - run: python -B tests/check_ops_gateway_bearer.py
+      - run: python -B tests/check_ops_service.py
+      - run: python -B tests/check_ops_default_key.py
+      - run: python -B tests/check_ollama_compat.py
+      - run: python -B tests/check_performance_defaults.py
+      - run: python -B tests/check_tracked_files.py
+      - run: python -B tests/check_build_refusals.py
+      - run: python -B tests/check_gguf_header.py
+      - run: python -B tests/check_native_context.py
+      - run: python -B tests/check_gpu_exclusion.py
+      - run: python -B tests/check_admission.py
+      - run: python -B tests/check_child_env.py
+      - run: python -B tests/check_health_listener.py
+      - run: python -B tests/check_log_rotation.py
+      - run: python -B tests/check_owned_command_race.py
+  extras:
+    # extras tier: numpy and pillow (the `dev` extra) and the node:vm Studio checks on Node 22, then the OpenAI SDK
+    # client checks and the broker SDK lanes (OpenAI, Anthropic, Google GenAI and ElevenLabs SDKs against a real
+    # titanos serve and loopback mocks) from tests/requirements-sdk.txt. Same five legs as the contract job.
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            python: '3.11'
+          - os: ubuntu-latest
+            python: '3.12'
+          - os: ubuntu-latest
+            python: '3.13'
+          - os: windows-latest
+            python: '3.12'
+          - os: macos-latest
+            python: '3.12'
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: python -m pip install '.[dev]'
+      - run: python tests/check_sherpa_tts.py
+      - run: python tests/check_asr_language_hint.py
+      - run: python tests/check_music.py
+      - run: python tests/check_music_limits.py
+      - run: python -B tests/check_limit_boundaries.py
+      - run: python -B tests/check_ace_runner.py
+      - run: python -B tests/check_music_progress_publication.py
+      - run: python tests/check_video_diagnostics.py
+      - run: python tests/check_genai_images.py
+      - run: python tests/check_compiled_auto.py
+      - run: python tests/check_genai_cancellation_evidence.py
+      - run: python tests/check_onnx_images.py
+      - run: python tests/check_onnx_registration.py
+      - run: python tests/check_image_mask.py
+      - run: python tests/check_image_output_cleanup.py
+      - run: python tests/check_image_mask_interfaces.py
+      - run: python tests/check_image_edit_count.py
+      - run: python tests/check_instruction_edit.py
+      - run: node tests/check_image_mask_ui.js
+      - run: python tests/check_depth.py
+      - run: python tests/check_segmentation.py
+      - run: python tests/check_segmentation_interfaces.py
+      - run: python tests/check_retrieval.py
+      - run: python tests/check_pair_classification.py
+      - run: python tests/check_retrieval_workflow.py
+      - run: python tests/check_retrieval_prompt_versions.py
+      - run: python tests/check_retrieval_interfaces.py
+      - run: python tests/check_retrieval_native_context.py
+      - run: python tests/check_native_queue_settings.py
+      - run: python -B tests/check_native_attention_options.py
+      - run: python tests/check_replica_queue_settings.py
+      - run: python tests/check_tensor_storage.py
+      - run: python tests/check_replica_settings_propagation.py
+      - run: node tests/check_retrieval_ui.js
+      - run: python tests/check_audio.py
+      - run: python tests/check_whisper_prompt.py
+      - run: python tests/check_asr_gating.py
+      - run: python tests/check_translation_provenance.py
+      - run: python tests/check_extra_backend_generation.py
+      - run: python tests/check_cpu_vision_controls.py
+      - run: python tests/check_tesseract.py
+      - run: python tests/check_detection_nms.py
+      - run: node tests/check_asr_gating_ui.js
+      - run: node tests/check_studio_pairs_ui.js
+      - run: node tests/check_studio_backends_ui.js
+      - run: node tests/check_studio_extensions_ui.js
+      - run: node tests/check_studio_lifecycle_ui.js
+      - run: node tests/check_studio_creations_persist_ui.js
+      - run: node tests/check_studio_active_acquisition_ui.js
+      - run: node tests/check_acquisition_progress_ui.js
+      - run: node tests/check_studio_design_ui.js
+      - run: node tests/check_studio_modes_i18n.js
+      - run: node tests/check_assignment_ui.js
+      - run: python tests/check_rerank_cancellation.py
+      - run: python tests/check_sentiment_facets.py
+      - run: python tests/check_sentiment_native.py
+      - run: node tests/check_broker_ui.js
+      - run: python -B tests/check_job_contract.py
+      - run: python -m pip install -r tests/requirements-sdk.txt
+      - run: python tests/check_responses_sdk.py
+      - run: python tests/check_retrieval_sdk.py
+      - run: python tests/check_audio_sdk.py
+      - run: python tests/check_broker_sdk.py
+      - run: python tests/check_broker_sdk_vendors.py
+      - run: python tests/check_broker_elevenlabs_sdk.py
+      - run: python tests/check_ollama_sdk.py
+  windows:
+    # Windows Job objects and the native supervisor need a Windows host; the archived GEN-01 controller suite runs
+    # only where its tree is present (the public source copies omit tools/validation/gen01).
+    runs-on: windows-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install .
+      - run: python tests/check_windows_job_cleanup.py
+      - run: python tests/check_windows_job_caller.py
+      - run: python -B tests/check_native_tree_cleanup.py
+      - if: hashFiles('tools/validation/gen01/tests/*.py') != ''
+        name: Inactive GEN-01 control contracts with fake inputs
+        run: python -I -S -B -c "import sys,unittest;sys.path.insert(0,'tools/validation/gen01');r=unittest.TextTestRunner(verbosity=2).run(unittest.defaultTestLoader.discover('tools/validation/gen01/tests'));raise SystemExit(not r.wasSuccessful())"
+  studio-browser:
+    # Playwright 1.62.1 with Chromium against the Studio pages; evidence screenshots are uploaded as an artifact.
+    # The broker lane starts real titanos serve processes, so this job also installs the project.
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install .
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-save --ignore-scripts playwright@1.62.1
+      - run: npx playwright install --with-deps chromium
+      - run: node tests/check_studio_workflow_i18n.js
+        env:
+          TITANOS_I18N_EVIDENCE_DIR: browser-evidence
+      - run: node tests/check_studio_workflow_i18n.js --simple-only
+        env:
+          TITANOS_I18N_EVIDENCE_DIR: browser-evidence/simple-ux
+      - run: node tests/check_studio_accelerators.js
+        env:
+          TITANOS_ACCELERATOR_UI_EVIDENCE: browser-evidence/accelerators
+      - run: node tests/check_model_setup_ui.js
+      - run: node tests/check_studio_broker_browser.js
+        env:
+          TITANOS_BROKER_BROWSER_EVIDENCE: browser-evidence/broker
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: studio-browser-evidence
+          path: browser-evidence/
+  package:
+    # packaging contracts with the `build` extra, then the release directory tools/build_release.py writes, as an artifact.
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install 'setuptools>=78' wheel '.[build]'
+      - run: python -B tests/check_compose_binary.py
+      - run: python -B tests/check_packaged_distributions.py
+      - run: python -B tests/check_ffmpeg_bundle.py
+      - run: python -B tests/check_engine_excludes.py
+      - run: python -B tests/check_notice_supplements.py
+      - run: python -B tests/check_broker_build_inclusion.py
+      - run: python tools/build_release.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: titanos-release
+          path: release/

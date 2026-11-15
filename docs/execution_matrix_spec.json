@@ -1,0 +1,1113 @@
+{
+  "schema_version": 1,
+  "purpose": "Fixed axes and vocabulary for docs/execution_matrix.json: every model that Titanos records ever tried, against every platform slot, with one consistent cell state. Untried and not-applicable cells are explicit so gaps can be built toward.",
+  "cell_states": {
+    "pass": {
+      "symbol": "✅",
+      "meaning": "executed on this slot with the intended modality output verified by a recorded receipt (evidence id required)"
+    },
+    "fail": {
+      "symbol": "❌",
+      "meaning": "executed on this slot and failed or produced unacceptable output; the failure is retained (evidence id required)"
+    },
+    "partial": {
+      "symbol": "◐",
+      "meaning": "executed a narrower gate on this slot: load-only, prepared graph or operator subset, CPU fallback, quality-limited or bounded fixture (evidence id required; note says which gate)"
+    },
+    "untried": {
+      "symbol": "⬜",
+      "meaning": "not executed on this slot with matrix-cited evidence; the note names one of three kinds: `untried: runnable by construction` (the backend has an execution path through an available runtime on the slot, named in the note, and the identity names an acquirable artifact; the artifact may be present or still to be acquired, nothing is claimed about the outcome, and whether a fleet host covers the slot is a host circumstance recorded in named_devices and no_fleet_host, never part of the claim), `untried: no fleet host for slot` (runnable by construction, but no host in the fleet covers the slot today: no_fleet_host, a host circumstance and never a construction na) or `untried: execution recorded by a reader but no evidence id the capability matrix cites` (evidence binding pending)"
+    },
+    "na": {
+      "symbol": "—",
+      "meaning": "not applicable (reason required in the note): a reader recorded Titanos refusing the configuration by design, or the cell cannot exist by construction: the row backend has no execution path on the slot runtimes (backend_runtime_map; a converted artifact is its own row), a runtime the backend needs publishes no package for the slot platform (runtime_availability), the row identity names no acquirable artifact (unrecorded_identity_rule; recorded executions stand), the row names a model variant Titanos's runner rejects before load (unsupported_variant_rule); for multi-GPU mode cells also Titanos's own refusal of the mode for the backend/task (multi_gpu_modes_rule.admission), the refusal shared from the pair's single/replicas receipts, or a slot that cannot form the GPU group or declare the explicit CPU/XPU group through a runtime available for the row's backend. A slot with no fleet host is never na (no_fleet_host is an untried kind)"
+    }
+  },
+  "platform_slots": [
+    {
+      "id": "win-x64-cpu",
+      "os": "Windows",
+      "arch": "x64",
+      "accelerator": "CPU",
+      "runtimes": [
+        "transformers",
+        "onnx CPU",
+        "openvino CPU",
+        "llama.cpp CPU",
+        "sherpa-onnx",
+        "tesseract",
+        "diffusers CPU"
+      ]
+    },
+    {
+      "id": "win-x64-nvidia-cuda",
+      "os": "Windows",
+      "arch": "x64",
+      "accelerator": "NVIDIA dGPU (CUDA)",
+      "runtimes": [
+        "torch CUDA",
+        "llama.cpp CUDA"
+      ],
+      "notes": [
+        "2026-09-25: `onnx CUDA` removed from this slot's runtimes. Titanos's compiled provider map src/titanos/compiled.py:13-14 (PROVIDERS = {cpu: CPUExecutionProvider, qnn: QNNExecutionProvider, dml: DmlExecutionProvider, coreml: CoreMLExecutionProvider, vitisai: VitisAIExecutionProvider}) has no CUDA execution provider, so an ONNX row has no execution path on a CUDA slot by construction; the onnx cells of this slot without a reader-recorded execution (minilm-l6-v2-onnx-1x128, mobilenetv2-12-onnx, uci-digits-8x8-onnx) are na by construction, not untried"
+      ]
+    },
+    {
+      "id": "win-x64-nvidia-directml",
+      "os": "Windows",
+      "arch": "x64",
+      "accelerator": "NVIDIA dGPU (DirectML)",
+      "runtimes": [
+        "onnx DirectML",
+        "onnx-diffusers DirectML"
+      ]
+    },
+    {
+      "id": "win-x64-amd-igpu-directml",
+      "os": "Windows",
+      "arch": "x64",
+      "accelerator": "AMD iGPU (DirectML)",
+      "runtimes": [
+        "onnx DirectML"
+      ]
+    },
+    {
+      "id": "win-x64-amd-dgpu-directml",
+      "os": "Windows",
+      "arch": "x64",
+      "accelerator": "AMD dGPU (DirectML)",
+      "runtimes": [
+        "onnx DirectML"
+      ]
+    },
+    {
+      "id": "win-x64-amd-ryzen-ai-npu",
+      "os": "Windows",
+      "arch": "x64",
+      "accelerator": "AMD Ryzen AI NPU (VitisAI)",
+      "runtimes": [
+        "onnx VitisAI"
+      ]
+    },
+    {
+      "id": "win-x64-intel-dgpu-openvino",
+      "os": "Windows",
+      "arch": "x64",
+      "accelerator": "Intel dGPU Arc (OpenVINO GPU / PyTorch XPU / llama.cpp SYCL, OpenVINO)",
+      "runtimes": [
+        "openvino GPU",
+        "openvino-genai GPU",
+        "torch XPU",
+        "llama.cpp SYCL",
+        "llama.cpp OpenVINO"
+      ],
+      "notes": [
+        "2026-09-25 (round 4): `llama.cpp SYCL` and `llama.cpp OpenVINO` added to this slot's runtimes (round-3 review finding 2). Titanos catalogs native llama.cpp builds for Intel GPUs on Windows x86_64: win-sycl-x64 (src/titanos/data/native-profiles.json:238, llama-b10809-bin-win-sycl-x64.zip 7a21bbda…) and win-openvino-2026.3.1-x64 (:214, 71d39462…); src/titanos/runtime_catalog.py:55 offers every profile whose os/arch match the host and :58-60 classifies the SYCL, OpenVINO, Vulkan and OpenCL flavors as compatible runtimes ('Explicit runtime choice; device support is verified when loading', :62); src/titanos/native.py:96-111 resolves any non-CUDA `native:<name>` device present in `llama-server --list-devices` (one device per replica) and src/titanos/config.py:152-153 admits native:DEVICE placement. That is the standard under which `llama.cpp OpenCL` gives the Adreno slot a path, so the GGUF row here is `untried: runnable by construction` (a declared path no run has executed; the readers' own notes say 'sycl/openvino profiles never executed'), not na. Both profiles are source_only (docs/ROSTER.md:32, 59). The kit probes no llama.cpp native device (backend_runtime_map.tokens_without_kit_runtime), so the builder's untried note carries the tokens; backend_runtime_map.native_llama_cpp_profiles states the rule over every catalogued profile",
+        "2026-09-25: `torch XPU` added to this slot's runtimes. Titanos declares the PyTorch XPU path for Intel GPUs on Windows x86_64 as a candidate: tools/profiles.json `xpu` (platforms linux-x86_64 and windows-x86_64, device xpu:0, torch==2.8.0 and torchvision==0.23.0 from https://download.pytorch.org/whl/xpu; 'Candidate for supported Intel GPUs; native acceptance pending'), docs/HARDWARE.md:46 ('Supported Intel GPUs, Linux/Windows x86_64 | xpu / xpu:N | Candidate; native acceptance required'), docs/roster.json 'rocm64 and xpu PyTorch candidates' (xpu: torch==2.8.0 whl/xpu, linux/windows x86_64); src/titanos/config.py admits xpu devices for transformers and diffusers (WorkerSpec 272-273 even takes an explicit XPU tensor-parallel group). The Linux Intel GPU slot already listed the token; its absence here reflected only tools/matrix_kit/slots.py mapping torch.xpu to a slot on Linux alone, a kit limitation, not a platform or Titanos fact. transformers and diffusers rows on this slot are therefore `untried: runnable by construction` (a declared, unexecuted path; the readers' own notes say 'transformers needs PyTorch XPU, never exercised on Intel'), not na. slots.py now maps torch.xpu devices on Windows x64 to this slot (discrete Arc) or win-x64-intel-igpu (integrated), by the OpenVINO probe's device type when it saw the same GPU, else by name",
+        "2026-09-25 (wave C, E-101): superseded in part - the kit now probes SYCL llama.cpp devices (slots.py probe_native_sycl, kit runtime native-sycl) and the GGUF cell here is a reader-recorded fail of the win-sycl-x64 build on both Arcs; `llama.cpp OpenVINO` stays builder-filled (that build exposes only an anonymous OPENVINO0 device)."
+      ]
+    },
+    {
+      "id": "win-x64-intel-igpu",
+      "os": "Windows",
+      "arch": "x64",
+      "accelerator": "Intel iGPU (OpenVINO GPU / DirectML / PyTorch XPU / llama.cpp SYCL, OpenVINO)",
+      "runtimes": [
+        "openvino GPU",
+        "onnx DirectML",
+        "torch XPU",
+        "llama.cpp SYCL",
+        "llama.cpp OpenVINO"
+      ],
+      "notes": [
+        "2026-09-25 (round 4): `llama.cpp SYCL` and `llama.cpp OpenVINO` added for the same reason as on win-x64-intel-dgpu-openvino: the catalogued win-sycl-x64 (src/titanos/data/native-profiles.json:238) and win-openvino-2026.3.1-x64 (:214) builds are offered on any Windows x86_64 host (runtime_catalog.py:55, :62: device support is verified when loading) and an integrated Intel GPU is a SYCL/OpenVINO GPU device to them, the same GPU the slot's `openvino GPU` token already serves; the GGUF row here is untried (declared, unexecuted), not na",
+        "2026-09-25: `torch XPU` added to this slot's runtimes for the same reason as on win-x64-intel-dgpu-openvino (tools/profiles.json `xpu` covers windows-x86_64; docs/HARDWARE.md:46): an integrated Intel GPU (Iris Xe, UHD 630, Lunar Lake Arc 130V) is an XPU device to PyTorch's xpu build, so transformers and diffusers rows here are untried (runnable by construction, unexecuted), not na"
+      ]
+    },
+    {
+      "id": "win-x64-intel-npu-openvino",
+      "os": "Windows",
+      "arch": "x64",
+      "accelerator": "Intel NPU (OpenVINO NPU)",
+      "runtimes": [
+        "openvino NPU",
+        "openvino-genai NPU"
+      ]
+    },
+    {
+      "id": "win-arm64-cpu",
+      "os": "Windows",
+      "arch": "ARM64",
+      "accelerator": "CPU (Snapdragon)",
+      "runtimes": [
+        "transformers",
+        "onnx CPU",
+        "llama.cpp CPU"
+      ],
+      "notes": [
+        "2026-09-25 (round 4): runtime_availability removes the torch-backed tokens (`transformers`, `diffusers CPU`) on this slot, as it already removed `openvino CPU` and `openvino-genai CPU` (round-3 review finding 1: the same PyPI fact as macos-x64 had two outcomes). torch 2.8.0 through 2.12.1, every PyPI release in the pyproject range torch>=2.8,<2.13, publish no win_arm64 wheel (PyPI JSON API re-verified 2026-09-25: 24/28/28/39/28/28/24 files, 0 win_arm64 in each; runtime_availability.packages.torch), and Titanos's own torch install path agrees: tools/profiles.json `cpu` (index download.pytorch.org/whl/cpu, torch==2.8.0) lists platforms linux-x86_64, linux-aarch64 and windows-x86_64 with no windows-aarch64, and docs/HARDWARE.md:36 files Windows ARM64 CPU under the `onnx-cpu` profile alone. download.pytorch.org itself was not queried (no remote contact beyond PyPI); an index Titanos declares for no ARM64 Windows platform is not a Titanos path there. So transformers, diffusers, ace-step and onnx-diffusers (which imports diffusers and torch, onnx_images.py:123) have no execution path on win-arm64-cpu by construction; the onnx and llama.cpp CPU paths stay (onnxruntime 1.27.0 publishes 4 win_arm64 wheels; two onnx passes are recorded here; the win-cpu-arm64 llama.cpp profile is catalogued), and sherpa-onnx and tesseract are not wheel-checked (runtime_availability.token_packages)",
+        "2026-09-25 (wave D, E-102): superseded in part - the snapdragon-x-laptop-win-arm64 receipts executed torch 2.9.1+cpu (cp312-win_arm64, download.pytorch.org/whl/cpu) on this slot, so runtime_availability now carries the torch tokens as executed deviations and the torch-backed backends have a path here; the PyPI counts in the earlier note stand as PyPI facts. openvino CPU and openvino-genai CPU remain unavailable."
+      ]
+    },
+    {
+      "id": "win-arm64-adreno-directml",
+      "os": "Windows",
+      "arch": "ARM64",
+      "accelerator": "Qualcomm Adreno GPU (DirectML / llama.cpp OpenCL)",
+      "runtimes": [
+        "onnx DirectML",
+        "llama.cpp OpenCL"
+      ],
+      "notes": [
+        "2026-09-25: `llama.cpp OpenCL` added to this slot's runtimes. Titanos catalogs the native llama.cpp profile win-opencl-adreno-arm64 for this GPU (src/titanos/data/native-profiles.json:202-208, llama-b10809-bin-win-opencl-adreno-arm64.zip dd5ddb64…, source_only; docs/ROSTER.md:34 'Windows ARM64 native profiles (win-cpu-arm64, win-cuda-13.4-arm64, win-opencl-adreno-arm64)') and admits native:DEVICE placement for llama-cpp models (src/titanos/config.py:152-153: 'Native devices use auto, cpu, full NVIDIA GPU UUIDs, or native:DEVICE names from llama-server --list-devices'), so a GGUF row has a declared, unexecuted path here: `untried: runnable by construction`, not na. The matrix kit detects no llama.cpp native device (backend_runtime_map.tokens_without_kit_runtime), so no kit run files a cell for this token; the builder's untried note carries it"
+      ]
+    },
+    {
+      "id": "win-arm64-qnn-npu",
+      "os": "Windows",
+      "arch": "ARM64",
+      "accelerator": "Qualcomm Hexagon NPU (QNN HTP)",
+      "runtimes": [
+        "onnx QNN"
+      ]
+    },
+    {
+      "id": "linux-x64-cpu",
+      "os": "Linux",
+      "arch": "x64",
+      "accelerator": "CPU",
+      "runtimes": [
+        "transformers",
+        "onnx CPU",
+        "openvino CPU",
+        "llama.cpp CPU",
+        "sherpa-onnx",
+        "diffusers CPU"
+      ]
+    },
+    {
+      "id": "linux-x64-nvidia-cuda",
+      "os": "Linux",
+      "arch": "x64",
+      "accelerator": "NVIDIA dGPU (CUDA)",
+      "runtimes": [
+        "torch CUDA",
+        "llama.cpp CUDA"
+      ]
+    },
+    {
+      "id": "linux-x64-amd-rocm",
+      "os": "Linux",
+      "arch": "x64",
+      "accelerator": "AMD GPU (ROCm)",
+      "runtimes": [
+        "torch ROCm",
+        "llama.cpp ROCm"
+      ]
+    },
+    {
+      "id": "linux-x64-intel-gpu",
+      "os": "Linux",
+      "arch": "x64",
+      "accelerator": "Intel GPU (OpenVINO / PyTorch XPU / llama.cpp SYCL, OpenVINO)",
+      "runtimes": [
+        "openvino GPU",
+        "torch XPU",
+        "llama.cpp SYCL",
+        "llama.cpp OpenVINO"
+      ],
+      "notes": [
+        "2026-09-25 (round 4): `llama.cpp SYCL` and `llama.cpp OpenVINO` added to this slot's runtimes: Titanos catalogs ubuntu-sycl-fp16-x64 (src/titanos/data/native-profiles.json:67), ubuntu-sycl-fp32-x64 (:79) and ubuntu-openvino-2026.3.1-x64 (:43) for Linux x86_64, offered through the same code path as on Windows (runtime_catalog.py:55-62, native.py:96-111, config.py:152-153). The GGUF row here is `untried: no fleet host for slot linux-x64-intel-gpu` (no_fleet_host), not na"
+      ]
+    },
+    {
+      "id": "linux-arm64-cpu",
+      "os": "Linux",
+      "arch": "ARM64",
+      "accelerator": "CPU",
+      "runtimes": [
+        "transformers",
+        "onnx CPU",
+        "llama.cpp CPU"
+      ]
+    },
+    {
+      "id": "linux-arm64-nvidia",
+      "os": "Linux",
+      "arch": "ARM64",
+      "accelerator": "NVIDIA embedded / Jetson / GB10 Spark (CUDA)",
+      "runtimes": [
+        "torch CUDA aarch64",
+        "llama.cpp CUDA aarch64"
+      ]
+    },
+    {
+      "id": "macos-arm64-cpu",
+      "os": "macOS",
+      "arch": "ARM64",
+      "accelerator": "CPU (Apple Silicon)",
+      "runtimes": [
+        "transformers",
+        "onnx CPU",
+        "llama.cpp CPU"
+      ]
+    },
+    {
+      "id": "macos-arm64-mps",
+      "os": "macOS",
+      "arch": "ARM64",
+      "accelerator": "Apple GPU (MPS / Metal)",
+      "runtimes": [
+        "torch MPS",
+        "llama.cpp Metal"
+      ]
+    },
+    {
+      "id": "macos-arm64-ane",
+      "os": "macOS",
+      "arch": "ARM64",
+      "accelerator": "Apple Neural Engine (Core ML)",
+      "runtimes": [
+        "onnx CoreML EP"
+      ]
+    },
+    {
+      "id": "macos-x64",
+      "os": "macOS",
+      "arch": "x86_64",
+      "accelerator": "CPU / Intel iGPU",
+      "runtimes": [
+        "transformers",
+        "onnx CPU"
+      ],
+      "notes": [
+        "2026-09-25: runtime_availability removes the torch-backed tokens (`transformers`, `diffusers CPU`), `openvino CPU` and `openvino-genai CPU` on this slot (no macosx x86_64 wheels under the pyproject pins; PyPI checked 2026-09-25). The onnx path stays: the E-094 receipts executed ONNX and sherpa-onnx models here on onnxruntime 1.23.2, a recorded deviation from the onnxruntime==1.27.0 pin (1.27.0 publishes no macosx x86_64 wheel, 1.23.2 was the last that did; docs/HARDWARE.md:139, 173)"
+      ]
+    }
+  ],
+  "na_rules": [
+    {
+      "backend_or_runtime_requires": "NVIDIA CUDA",
+      "applies_to_backends": [
+        "qwen3-tts (bfloat16 CUDA path)",
+        "torch CUDA",
+        "llama.cpp CUDA"
+      ],
+      "na_on_slots_without": "NVIDIA GPU",
+      "reason": "CUDA runtime requires an NVIDIA GPU"
+    },
+    {
+      "backend_or_runtime_requires": "DirectML",
+      "na_on_os_other_than": "Windows",
+      "reason": "DirectML exists only on Windows"
+    },
+    {
+      "backend_or_runtime_requires": "MPS/Metal",
+      "na_on_os_other_than": "macOS",
+      "reason": "Metal exists only on macOS"
+    },
+    {
+      "backend_or_runtime_requires": "QNN HTP",
+      "na_on_slots_other_than": [
+        "win-arm64-qnn-npu"
+      ],
+      "reason": "Qualcomm Hexagon NPU only"
+    },
+    {
+      "backend_or_runtime_requires": "OpenVINO NPU",
+      "na_on_slots_other_than": [
+        "win-x64-intel-npu-openvino"
+      ],
+      "reason": "Intel NPU only"
+    },
+    {
+      "backend_or_runtime_requires": "ROCm",
+      "na_on_slots_other_than": [
+        "linux-x64-amd-rocm"
+      ],
+      "reason": "ROCm is Linux + AMD only"
+    },
+    {
+      "backend_or_runtime_requires": "Core ML",
+      "na_on_slots_other_than": [
+        "macos-arm64-ane"
+      ],
+      "reason": "Apple Neural Engine only"
+    },
+    {
+      "backend_or_runtime_requires": "VitisAI",
+      "na_on_slots_other_than": [
+        "win-x64-amd-ryzen-ai-npu"
+      ],
+      "reason": "AMD Ryzen AI NPU only"
+    }
+  ],
+  "backend_runtime_map": {
+    "rule": "a row's catalog backend has an execution path on a slot only when at least one token in the slot's `runtimes` list is in the backend's list below and is available on the slot (runtime_availability). The entry `cpu` stands for the matrix kit's `cpu` runtime: on a slot that lists any token in `cpu_tokens`, the backend's CPU path runs through its own `cpu_path_tokens`, the runtimes the backend imports, and exists only when every one of those is available on the slot (the per-slot lists understate CPU runtimes, so a CPU slot grants every CPU-capable backend its own CPU path unless runtime_availability removes a token it needs; onnx-diffusers needs onnxruntime and torch: src/titanos/onnx_images.py:123 imports diffusers OnnxStableDiffusionPipeline/OnnxRuntimeModel/PNDMScheduler, :193 reports 'Torch CPU PNDM scheduling', and pyproject.toml:24 dml-vision pins torch>=2.8,<2.9, so its CPU path needs `onnx CPU` and `diffusers CPU` together). A cell whose backend has no path on the slot cannot exist by construction and is `na` with the reason; a converted artifact (an ONNX or OpenVINO export, a GGUF) is its own catalog row, never a path for the source row. The builder's untried note names the granting tokens (the slot's available tokens that are in the backend's list, plus all of the backend's cpu_path_tokens when the cpu rule applies and every one is available), never the slot's raw runtime list",
+    "derived_from": "tools/matrix_kit/run_cells.py COMPAT (kit runtime -> backends) joined with platform_slots[].runtimes. 2026-09-25: `openvino GPU` and `openvino NPU` grant the onnx backend a path because OpenVINO reads model.onnx directly and the matrix records exactly that executing (uci-digits-8x8-onnx: pass E-002/E-026/E-028 on win-x64-intel-npu-openvino, partial E-002/E-037 on win-x64-intel-dgpu-openvino); COMPAT['openvino-gpu'] and COMPAT['openvino-npu'] carry `onnx` for the same reason. `onnx CUDA` is no longer a token anywhere: src/titanos/compiled.py:13-14 PROVIDERS maps cpu, qnn, dml, coreml and vitisai only (see the win-x64-nvidia-cuda slot note). 2026-09-25 (round 4): `llama.cpp SYCL` and `llama.cpp OpenVINO` grant llama-cpp a path on the three Intel GPU slots (native_llama_cpp_profiles, the slot notes); cpu_path_tokens are all-of and onnx-diffusers lists `diffusers CPU` beside `onnx CPU`",
+    "kit_runtimes_rule": "tools/matrix_kit/slots.py runtime name -> the slot runtime tokens it stands for (`cpu` is the map entry `cpu`, which cpu_tokens expand). tests/check_matrix_kit.py asserts that for every backend and every kit runtime, membership in run_cells.py COMPAT[runtime] equals holding one of these tokens in the backend's list; a slot token in no kit runtime is listed in tokens_without_kit_runtime with the reason, and every slot token must be a cpu token, a kit-runtime token or listed there 2026-09-25: `native-sycl` added: tools/matrix_kit/slots.py probe_native_sycl runs the catalogued SYCL llama.cpp build's --list-devices (given with run_cells.py --native-sycl) and maps its Intel GPUs to the Intel GPU slots as device native:SYCLn, the address Titanos's native runner verifies against the same inventory (src/titanos/native.py:96-111); COMPAT['native-sycl'] holds llama-cpp only. `llama.cpp SYCL` therefore left tokens_without_kit_runtime (its former entry: \"the kit probes no llama.cpp native device; the path is Titanos's catalogued win-sycl-x64 / ubuntu-sycl-fp16-x64 / ubuntu-sycl-fp32-x64 native profiles on the Intel GPU slots (native_llama_cpp_profiles), executed by no run yet, so the builder fills those cells as untried\").",
+    "kit_runtimes": {
+      "cpu": [
+        "cpu"
+      ],
+      "torch-cuda": [
+        "torch CUDA",
+        "torch CUDA aarch64",
+        "llama.cpp CUDA",
+        "llama.cpp CUDA aarch64"
+      ],
+      "torch-rocm": [
+        "torch ROCm",
+        "llama.cpp ROCm"
+      ],
+      "torch-mps": [
+        "torch MPS",
+        "llama.cpp Metal"
+      ],
+      "torch-xpu": [
+        "torch XPU"
+      ],
+      "openvino-gpu": [
+        "openvino GPU",
+        "openvino-genai GPU"
+      ],
+      "openvino-npu": [
+        "openvino NPU",
+        "openvino-genai NPU"
+      ],
+      "onnx-dml": [
+        "onnx DirectML",
+        "onnx-diffusers DirectML"
+      ],
+      "onnx-qnn": [
+        "onnx QNN"
+      ],
+      "onnx-coreml": [
+        "onnx CoreML EP"
+      ],
+      "onnx-vitisai": [
+        "onnx VitisAI"
+      ],
+      "native-sycl": [
+        "llama.cpp SYCL"
+      ]
+    },
+    "tokens_without_kit_runtime": {
+      "llama.cpp OpenCL": "the kit detects CPU, torch (CUDA, ROCm, MPS, XPU), ONNX Runtime providers and OpenVINO devices, not llama.cpp native devices; the path is Titanos's catalogued win-opencl-adreno-arm64 native profile (win-arm64-adreno-directml slot note), executed by no run yet, so the builder fills the cell as untried",
+      "llama.cpp OpenVINO": "the kit probes no llama.cpp OpenVINO device: the catalogued win-openvino-2026.3.1-x64 build lists a single anonymous 'OPENVINO0: OpenVINO Runtime' device sized to host RAM (device chosen by an environment variable), which cannot satisfy the named-device contract; the path is Titanos's catalogued win-openvino-2026.3.1-x64 / ubuntu-openvino-2026.3.1-x64 native profiles on the Intel GPU slots (native_llama_cpp_profiles), executed by no run, so the builder fills those cells as untried. (The SYCL sibling became the kit runtime native-sycl on 2026-09-25.)"
+    },
+    "cpu_tokens": [
+      "transformers",
+      "onnx CPU",
+      "openvino CPU",
+      "openvino-genai CPU",
+      "llama.cpp CPU",
+      "sherpa-onnx",
+      "tesseract",
+      "diffusers CPU"
+    ],
+    "cpu_path_tokens": {
+      "transformers": [
+        "transformers"
+      ],
+      "diffusers": [
+        "diffusers CPU"
+      ],
+      "ace-step": [
+        "transformers",
+        "diffusers CPU"
+      ],
+      "qwen3-tts": [
+        "transformers"
+      ],
+      "xtts": [
+        "transformers"
+      ],
+      "llama-cpp": [
+        "llama.cpp CPU"
+      ],
+      "onnx": [
+        "onnx CPU"
+      ],
+      "onnx-diffusers": [
+        "onnx CPU",
+        "diffusers CPU"
+      ],
+      "openvino": [
+        "openvino CPU"
+      ],
+      "openvino-genai": [
+        "openvino-genai CPU"
+      ],
+      "sherpa-onnx": [
+        "sherpa-onnx"
+      ],
+      "tesseract": [
+        "tesseract"
+      ]
+    },
+    "backends": {
+      "transformers": [
+        "cpu",
+        "torch CUDA",
+        "torch CUDA aarch64",
+        "torch ROCm",
+        "torch MPS",
+        "torch XPU"
+      ],
+      "diffusers": [
+        "cpu",
+        "torch CUDA",
+        "torch CUDA aarch64",
+        "torch ROCm",
+        "torch MPS",
+        "torch XPU"
+      ],
+      "ace-step": [
+        "cpu",
+        "torch CUDA",
+        "torch CUDA aarch64"
+      ],
+      "qwen3-tts": [
+        "cpu",
+        "torch CUDA",
+        "torch CUDA aarch64"
+      ],
+      "xtts": [
+        "cpu",
+        "torch CUDA",
+        "torch CUDA aarch64"
+      ],
+      "llama-cpp": [
+        "cpu",
+        "llama.cpp CUDA",
+        "llama.cpp CUDA aarch64",
+        "llama.cpp ROCm",
+        "llama.cpp Metal",
+        "llama.cpp OpenCL",
+        "llama.cpp SYCL",
+        "llama.cpp OpenVINO"
+      ],
+      "onnx": [
+        "cpu",
+        "openvino GPU",
+        "openvino NPU",
+        "onnx DirectML",
+        "onnx QNN",
+        "onnx CoreML EP",
+        "onnx VitisAI"
+      ],
+      "onnx-diffusers": [
+        "cpu",
+        "onnx DirectML",
+        "onnx-diffusers DirectML"
+      ],
+      "openvino": [
+        "cpu",
+        "openvino GPU",
+        "openvino NPU"
+      ],
+      "openvino-genai": [
+        "cpu",
+        "openvino GPU",
+        "openvino-genai GPU",
+        "openvino NPU",
+        "openvino-genai NPU"
+      ],
+      "sherpa-onnx": [
+        "cpu"
+      ],
+      "tesseract": [
+        "cpu"
+      ]
+    },
+    "native_llama_cpp_profiles": {
+      "rule": "One rule for every native llama.cpp profile Titanos catalogs (src/titanos/data/native-profiles.json, release b10809; all source_only per docs/ROSTER.md:59): a profile is a declared llama-cpp execution path on the matrix slots whose OS and architecture it is built for and whose accelerator its flavor targets (src/titanos/runtime_catalog.py:58-60 flavors: CPU, CUDA, Vulkan, OpenVINO, ROCm, SYCL, OpenCL), through the token named in `mapped`; Titanos offers a profile on any host whose os/arch match (runtime_catalog.py:55; 'Explicit runtime choice; device support is verified when loading', :62) and places a non-CUDA device as native:<name> from llama-server --list-devices (src/titanos/native.py:96-111, one device per replica; src/titanos/config.py:152-153). A declared path no run has executed is `untried`, never na (the standard already applied to `torch XPU` on the Windows Intel slots and `llama.cpp OpenCL` on the Adreno slot). A profile built for an accelerator API the matrix defines no slot around is listed in `unmapped` with the reason: mapping it would widen a slot defined by another API or add a slot, a slot-axis decision for the owner, not a rule the builder applies. Slot tokens that predate this rule and rest on Titanos's own packages rather than this catalog (`llama.cpp CUDA` on linux-x64-nvidia-cuda, `llama.cpp CUDA aarch64`) are outside it. tests/check_execution_matrix.py asserts every catalogued profile appears exactly once in mapped or unmapped, every mapped token is in backends.llama-cpp or is the cpu token, and every mapped slot has the profile's platform and lists the token",
+      "since": "2026-09-25",
+      "platforms": {
+        "darwin": "macOS",
+        "linux": "Linux",
+        "windows": "Windows",
+        "x86_64": [
+          "x64",
+          "x86_64"
+        ],
+        "aarch64": [
+          "ARM64"
+        ]
+      },
+      "mapped": {
+        "macos-arm64": {
+          "line": 7,
+          "tokens": [
+            "llama.cpp Metal",
+            "llama.cpp CPU"
+          ],
+          "slots": [
+            "macos-arm64-mps",
+            "macos-arm64-cpu"
+          ]
+        },
+        "macos-x64": {
+          "line": 19,
+          "tokens": [
+            "llama.cpp CPU"
+          ],
+          "slots": [
+            "macos-x64"
+          ]
+        },
+        "ubuntu-arm64": {
+          "line": 31,
+          "tokens": [
+            "llama.cpp CPU"
+          ],
+          "slots": [
+            "linux-arm64-cpu"
+          ]
+        },
+        "ubuntu-openvino-2026.3.1-x64": {
+          "line": 43,
+          "tokens": [
+            "llama.cpp OpenVINO"
+          ],
+          "slots": [
+            "linux-x64-intel-gpu"
+          ]
+        },
+        "ubuntu-rocm-10.0-x64": {
+          "line": 55,
+          "tokens": [
+            "llama.cpp ROCm"
+          ],
+          "slots": [
+            "linux-x64-amd-rocm"
+          ]
+        },
+        "ubuntu-sycl-fp16-x64": {
+          "line": 67,
+          "tokens": [
+            "llama.cpp SYCL"
+          ],
+          "slots": [
+            "linux-x64-intel-gpu"
+          ]
+        },
+        "ubuntu-sycl-fp32-x64": {
+          "line": 79,
+          "tokens": [
+            "llama.cpp SYCL"
+          ],
+          "slots": [
+            "linux-x64-intel-gpu"
+          ]
+        },
+        "ubuntu-x64": {
+          "line": 115,
+          "tokens": [
+            "llama.cpp CPU"
+          ],
+          "slots": [
+            "linux-x64-cpu"
+          ]
+        },
+        "win-cpu-arm64": {
+          "line": 127,
+          "tokens": [
+            "llama.cpp CPU"
+          ],
+          "slots": [
+            "win-arm64-cpu"
+          ]
+        },
+        "win-cpu-x64": {
+          "line": 139,
+          "tokens": [
+            "llama.cpp CPU"
+          ],
+          "slots": [
+            "win-x64-cpu"
+          ]
+        },
+        "win-cuda-12.4-x64": {
+          "line": 151,
+          "tokens": [
+            "llama.cpp CUDA"
+          ],
+          "slots": [
+            "win-x64-nvidia-cuda"
+          ]
+        },
+        "win-cuda-13.3-x64": {
+          "line": 168,
+          "tokens": [
+            "llama.cpp CUDA"
+          ],
+          "slots": [
+            "win-x64-nvidia-cuda"
+          ]
+        },
+        "win-opencl-adreno-arm64": {
+          "line": 202,
+          "tokens": [
+            "llama.cpp OpenCL"
+          ],
+          "slots": [
+            "win-arm64-adreno-directml"
+          ]
+        },
+        "win-openvino-2026.3.1-x64": {
+          "line": 214,
+          "tokens": [
+            "llama.cpp OpenVINO"
+          ],
+          "slots": [
+            "win-x64-intel-dgpu-openvino",
+            "win-x64-intel-igpu"
+          ]
+        },
+        "win-sycl-x64": {
+          "line": 238,
+          "tokens": [
+            "llama.cpp SYCL"
+          ],
+          "slots": [
+            "win-x64-intel-dgpu-openvino",
+            "win-x64-intel-igpu"
+          ]
+        }
+      },
+      "unmapped": {
+        "win-cuda-13.4-arm64": "line 185: CUDA on Windows ARM64. The matrix has no Windows ARM64 NVIDIA slot (its Windows ARM64 slots are the Snapdragon CPU, Adreno and Hexagon; no Windows ARM64 host with an NVIDIA GPU is in the fleet), so the profile names a path on no existing slot; adding one is a slot-axis decision",
+        "win-vulkan-x64": "line 250: Vulkan on Windows x86_64 reaches NVIDIA, AMD and Intel GPUs, but the matrix defines no Vulkan slot: its Windows GPU slots are the CUDA API on NVIDIA (where llama.cpp is recorded executing, E-069), the DirectML API on NVIDIA and AMD (llama.cpp has no DirectML backend; the AMD slots' llama-cpp cells are reader-recorded na, which stands over any rule) and the Intel slots (which carry the SYCL/OpenVINO tokens). Mapping Vulkan would widen the DirectML-defined slots or add a slot; left to the owner",
+        "ubuntu-vulkan-x64": "line 103: Vulkan on Linux x86_64. The Linux x64 GPU slots are CUDA (llama.cpp recorded executing), ROCm (`llama.cpp ROCm`) and Intel (SYCL/OpenVINO tokens); a Vulkan slot would be new",
+        "ubuntu-vulkan-arm64": "line 91: Vulkan on Linux aarch64. The only Linux ARM64 GPU slot is the CUDA-defined linux-arm64-nvidia; a Vulkan slot would be new",
+        "win-rocm-10.0-x64": "line 226: ROCm on Windows x86_64 (AMD GPUs). The matrix's AMD Windows slots are the DirectML API and their llama-cpp cells are reader-recorded na (na_rules 'NVIDIA CUDA'; 'llama.cpp has no DirectML backend'), which stands over any rule, so mapping would change no cell; whether to widen win-x64-amd-dgpu-directml with a ROCm token as the Adreno slot was widened with OpenCL is an open slot-axis decision recorded here"
+      }
+    }
+  },
+  "unrecorded_identity_rule": {
+    "rule": "a row is identity-unrecorded only when its catalog identity text both matches trigger_regex and names no acquirable artifact at all: no repository slug (owner/name; Titanos tree paths and document references such as docs/X.md are excluded by slug_exclude, as are version-like owners), no URL, no local filesystem path and no content digest. A row that names any of those (for example wan2.1-t2v-1.3b: repository slug plus a local D: path; tiny-random-bert-export-fixture: repository slug, revision f171d7ba in the E-001 note) is acquirable and its cells stay untried or reader-provided. A reader-recorded execution (pass, fail, partial) always stands; the na reason names it",
+    "trigger_regex": "not recorded|named only|no repository|no checkpoint|no revision",
+    "trigger_flags": "i",
+    "acquirable_regexes": {
+      "repository_slug": "(?<![\\w./-])[A-Za-z0-9][\\w.-]*/[A-Za-z0-9][\\w.-]*(?![\\w./-])",
+      "slug_exclude": "^(?:docs|src|tools|tests|control|work|run)/|\\.(?:md|py|json|txt|toml|ya?ml|csv|html)$|^[\\d.]+/",
+      "url": "https?://|\\bgithub\\.com/|\\bhuggingface\\.co/",
+      "local_path": "\\b[A-Za-z]:[\\\\/][^\\s;,)]+|(?<![\\w.:])/[A-Za-z0-9_.-]+/[^\\s;,)]+",
+      "digest": "\\b(?=[0-9a-f]*\\d)(?=\\d*[a-f])[0-9a-f]{7,64}\\b"
+    },
+    "applies_to": "the row's catalog identity text; tests/check_execution_matrix.py applies the same regexes and asserts the derived row set equals `rows` below",
+    "rows": [
+      {
+        "model_id": "cached-tinyllama-spark",
+        "reason": "'CachedTinyLlama' as named in docs/VALIDATION_0.5.0.md:12; no repository, revision, path or digest. Its linux-arm64-nvidia execution is reader-recorded without a cited E-id and stays untried"
+      },
+      {
+        "model_id": "qwen-7b-retrieval-answer-candidate",
+        "reason": "named only as 'native Qwen7B roster'; no repository, revision or GGUF file"
+      },
+      {
+        "model_id": "bge-reranker-candidate",
+        "reason": "named only as 'BGE reranker admission'; no repository or revision"
+      },
+      {
+        "model_id": "e004-text-pair-classifier-unnamed",
+        "reason": "not recorded in the public tree or any reachable receipt root; the E-004 partial on win-x64-cpu stands"
+      },
+      {
+        "model_id": "e003-sentiment-three-class-classifier",
+        "reason": "not recorded; described only as a three-class checkpoint; the E-003 partial on win-x64-cpu stands"
+      },
+      {
+        "model_id": "e003-sentiment-two-class-classifier",
+        "reason": "not recorded; the E-003 partial on win-x64-cpu stands"
+      },
+      {
+        "model_id": "e003-llm-sentiment-selected-unnamed",
+        "reason": "not recorded; the 'selected LLM sentiment' chat model; the E-003 partial on win-x64-cpu stands"
+      },
+      {
+        "model_id": "xtts-coqui",
+        "reason": "no checkpoint or revision recorded; only the backend name"
+      },
+      {
+        "model_id": "minimax-music-3",
+        "reason": "named only in docs/MUSIC.md and IMPLEMENTATION_PLAN.md; no repository, revision or adapter"
+      },
+      {
+        "model_id": "heartmula-3b",
+        "reason": "named only in docs/MUSIC.md and IMPLEMENTATION_PLAN.md; no repository, revision or adapter"
+      }
+    ],
+    "reason": "identity unrecorded: the checkpoint cannot be re-acquired for another slot; recorded executions stand",
+    "since": "2026-09-24",
+    "narrowed": "2026-09-25: the round-1 regex alone turned wan2.1-t2v-1.3b (present on D:) and tiny-random-bert-export-fixture (public repository) na; the acquirable-artifact exclusion returns them to untried"
+  },
+  "unsupported_variant_rule": {
+    "rule": "a row whose catalog identity names a model variant that the row's Titanos runner rejects before load is not applicable by construction on every slot: the refusal is a code fact of the checked-in tree (cited per variant), the same standard the multi_gpu_modes_rule applies to Titanos's mode refusals; it needs no receipt because no runtime, device or weight is consulted before the rejection. The family's supported variant is untouched by this rule and stays untried until executed. A reader-recorded execution of such a row would contradict the citation and always stands (the builder ranks it above na), which is the signal to fix the rule",
+    "since": "2026-09-25",
+    "variants": [
+      {
+        "row_id_regex": "^ace-step-1\\.5-xl-(turbo|base)$",
+        "identity_regex": "ACE-Step/acestep-v15-xl-(turbo|base)@",
+        "reason": "Titanos's ACE-Step runner implements the xl-sft variant only: src/titanos/music_backend.py:27 ACE_SUPPORTED_VARIANTS=(\"xl-sft\",), the runner itself refuses the variant at src/titanos/music_backend.py:438 (AceStepModel.__init__: 'The installed Titanos music adapter supports XL SFT; this variant remains a discovery candidate') before any runtime or weight is consulted, and src/titanos/providers.py:59-64 runtime_recommendation returns status unsupported_adapter ('the current trusted Titanos adapter implements XL SFT only') for any other identifier before the managed runtime or any weight is consulted",
+        "citations": [
+          "src/titanos/music_backend.py:27",
+          "src/titanos/music_backend.py:438",
+          "src/titanos/providers.py:59-64"
+        ]
+      }
+    ]
+  },
+  "no_fleet_host": {
+    "kind": "untried",
+    "rule": "a slot with no host in the fleet is a host circumstance, not a fact about the platform, the catalog identity or Titanos's own code, so it is never a construction na. A cell on such a slot that is otherwise runnable by construction (backend path through an available runtime, acquirable identity) is `untried: no fleet host for slot <slot> (since <date>)` with the reason below; a cell that is na by identity or by backend path is na for that reason as on any other slot; a reader-recorded state always wins. tests/check_execution_matrix.py enforces that no na note cites a missing fleet host and that every no-fleet-host untried cell is on a listed slot and runnable by construction",
+    "changed": "2026-09-25: rounds 1 and 2 filed these cells as na by construction; round 3 makes no_fleet_host an untried kind (round-2 review finding 1) and drops the 'a fleet host exists' clause from those cells' notes",
+    "slots": [
+      {
+        "slot": "linux-x64-amd-rocm",
+        "since": "2026-09-24",
+        "reason": "no Linux host with an AMD GPU is in the fleet (HW-08 open, named_devices 'none in the fleet'); the slot's runnable cells wait for such a host"
+      },
+      {
+        "slot": "linux-x64-intel-gpu",
+        "since": "2026-09-24",
+        "reason": "no Linux host with an Intel GPU is in the fleet (HARDWARE.md:46 XPU candidate only; the Intel Arc hosts run Windows); the slot's runnable cells wait for such a host"
+      }
+    ]
+  },
+  "runtime_availability": {
+    "rule": "a slot runtime token gives a backend an execution path only when the package behind it is published for the slot platform under Titanos's pyproject pins (available). An entry below with available=false removes that token from the slot in the builder's has_path and, through backend_runtime_map.cpu_path_tokens, removes the CPU path of every backend any of whose cpu_path_tokens is unavailable on the slot (the CPU path needs every runtime the backend imports). These are facts about published wheels for a platform (true by construction for the platform), never about what a host has installed: the matrix kit records what is installed in HOST_DETECTION.json and needs no change. A reader-recorded pass, fail or partial on the slot always stands, and tests/check_execution_matrix.py reports any executed cell an entry here would contradict instead of accepting the entry (a kit fail that is only an import or install error is not an execution: the kit files such cells as untried when its host probe finds the runtime absent, tools/matrix_kit/run_cells.py missing_runtime_cell). The explicit CPU/XPU tensor-parallel group of multi_gpu_modes_rule likewise exists only through an available token for the row's backend",
+    "source": "PyPI JSON API https://pypi.org/pypi/<package>/<version>/json and https://pypi.org/pypi/torch/json (release file lists); measured 2026-09-25 and re-verified the same day from this workstation (urllib; the per-version file counts recorded below are what the re-verification saw); re-verified again with the same method (workstation date 2026-09-24; identical file counts and platform tags for torch 2.8.0, 2.9.0, 2.9.1, 2.10.0, 2.11.0, 2.12.0, 2.12.1, 2.2.2 and 2.3.0, openvino 2026.3.1, openvino-genai 2026.3.1.0, onnxruntime 1.27.0 and 1.23.2; PyPI lists exactly those seven torch releases in [2.8, 2.13)); re-verified a third time on 2026-09-25 (same method, same file counts; the per-platform wheel counts in `packages` are from that run, which also counted win_arm64: 0 for every torch release in range, 0 for openvino and openvino-genai, 4 for onnxruntime 1.27.0). download.pytorch.org (Titanos's tools/profiles.json index for torch) was not queried; its profiles declare their platforms explicitly and are cited where they decide 2026-09-25 (wave D): the win-arm64-cpu torch entries were converted to deviations after the snapdragon-x-laptop-win-arm64 receipts executed torch 2.9.1+cpu (cp312-cp312-win_arm64 from download.pytorch.org/whl/cpu): the PyPI counts were right and incomplete; download.pytorch.org publishes win_arm64 CPU wheels",
+    "checked": "2026-09-25",
+    "platform_tags": {
+      "rule": "the wheel platform family a slot's platform installs from (platform_slots os/arch -> family); a token's package is `available` on a slot only when the family is in the package's published_platforms; tests/check_execution_matrix.py derives from these tables that every token in token_packages on a slot (the slot's runtimes plus, on a CPU slot, every cpu token) whose package publishes no wheel for the slot family is either declared unavailable in `slots` or carries an executed-deviation exception in `deviations`, and that every declared-unavailable entry agrees with the package table",
+      "Windows/x64": "win_amd64",
+      "Windows/ARM64": "win_arm64",
+      "Linux/x64": "manylinux x86_64",
+      "Linux/ARM64": "manylinux aarch64",
+      "macOS/ARM64": "macosx arm64",
+      "macOS/x86_64": "macosx x86_64"
+    },
+    "token_packages": {
+      "rule": "runtime token -> the measured package it installs; tokens absent here are not wheel-checked: llama.cpp tokens are Titanos's catalogued native binaries (native_llama_cpp_profiles), tesseract is a host binary, sherpa-onnx (sherpa-onnx==1.13.8) and the DirectML/QNN/Core ML/VitisAI ONNX providers (onnxruntime-directml, onnxruntime-windowsml, onnxruntime-qnn) were not measured",
+      "transformers": "torch",
+      "diffusers CPU": "torch",
+      "torch CUDA": "torch",
+      "torch CUDA aarch64": "torch",
+      "torch ROCm": "torch",
+      "torch MPS": "torch",
+      "torch XPU": "torch",
+      "openvino CPU": "openvino",
+      "openvino GPU": "openvino",
+      "openvino NPU": "openvino",
+      "openvino-genai CPU": "openvino-genai",
+      "openvino-genai GPU": "openvino-genai",
+      "openvino-genai NPU": "openvino-genai",
+      "onnx CPU": "onnxruntime"
+    },
+    "packages": {
+      "torch": {
+        "pin": "torch>=2.8,<2.13 (pyproject.toml extras models, vision, sentiment; dml-vision and xtts pin the 2.8 line)",
+        "checked": "2026-09-25",
+        "published_platforms": [
+          "win_amd64",
+          "macosx arm64",
+          "manylinux aarch64",
+          "manylinux x86_64"
+        ],
+        "versions_checked": {
+          "2.8.0": "24 files: win_amd64 6, macosx arm64 6, manylinux aarch64 6, manylinux x86_64 6; 0 win_arm64, 0 macosx x86_64",
+          "2.9.0": "28 files: 7 each of win_amd64, macosx arm64, manylinux aarch64, manylinux x86_64; 0 win_arm64, 0 macosx x86_64",
+          "2.9.1": "28 files: 7 each of win_amd64, macosx arm64, manylinux aarch64, manylinux x86_64; 0 win_arm64, 0 macosx x86_64",
+          "2.10.0": "39 files: win_amd64 7, macosx arm64 11, manylinux aarch64 7, manylinux x86_64 14; 0 win_arm64, 0 macosx x86_64",
+          "2.11.0": "28 files: 7 each of win_amd64, macosx arm64, manylinux aarch64, manylinux x86_64; 0 win_arm64, 0 macosx x86_64",
+          "2.12.0": "28 files: 7 each of win_amd64, macosx arm64, manylinux aarch64, manylinux x86_64; 0 win_arm64, 0 macosx x86_64",
+          "2.12.1": "24 files: 6 each of win_amd64, macosx arm64, manylinux aarch64, manylinux x86_64; 0 win_arm64, 0 macosx x86_64"
+        },
+        "outside_pin": "torch 2.2.2: 25 files, 5 macosx x86_64 (the last release with one), 0 win_arm64; torch 2.3.0: 20 files, 0 macosx x86_64, 0 win_arm64",
+        "titanos_profiles": "tools/profiles.json cpu (download.pytorch.org/whl/cpu, torch==2.8.0): platforms linux-x86_64, linux-aarch64, windows-x86_64; xpu (whl/xpu): linux-x86_64, windows-x86_64; no profile lists windows-aarch64 or darwin-x86_64 for torch (docs/HARDWARE.md:36 files Windows ARM64 CPU under onnx-cpu)"
+      },
+      "openvino": {
+        "pin": "openvino==2026.3.1 (pyproject.toml extra openvino)",
+        "checked": "2026-09-25",
+        "published_platforms": [
+          "win_amd64",
+          "macosx arm64",
+          "manylinux aarch64",
+          "manylinux x86_64"
+        ],
+        "versions_checked": {
+          "2026.3.1": "24 files; platform tags macosx_11_0_arm64, manylinux_2_28_x86_64, manylinux_2_35_aarch64, win_amd64; 0 macosx x86_64, 0 win_arm64"
+        }
+      },
+      "openvino-genai": {
+        "pin": "openvino-genai==2026.3.1.0 (pyproject.toml extras genai, genai-vision)",
+        "checked": "2026-09-25",
+        "published_platforms": [
+          "win_amd64",
+          "macosx arm64",
+          "manylinux aarch64",
+          "manylinux x86_64"
+        ],
+        "versions_checked": {
+          "2026.3.1.0": "24 files; platform tags macosx_11_0_arm64, manylinux_2_28_x86_64, manylinux_2_31_aarch64, win_amd64; 0 macosx x86_64, 0 win_arm64"
+        }
+      },
+      "onnxruntime": {
+        "pin": "onnxruntime==1.27.0 (pyproject.toml extras onnx, vad)",
+        "checked": "2026-09-25",
+        "published_platforms": [
+          "win_amd64",
+          "win_arm64",
+          "macosx arm64",
+          "manylinux aarch64",
+          "manylinux x86_64"
+        ],
+        "versions_checked": {
+          "1.27.0": "24 files; platform tags macosx_14_0_arm64, manylinux_2_27_aarch64.manylinux_2_28_aarch64, manylinux_2_27_x86_64.manylinux_2_28_x86_64, win_amd64, win_arm64 (4); 0 macosx x86_64",
+          "1.23.2": "22 files; 4 macosx_13_0_x86_64 (the deviation the E-094 receipts ran), 0 win_arm64"
+        }
+      }
+    },
+    "slots": {
+      "macos-x64": {
+        "transformers": {
+          "available": false,
+          "package": "torch",
+          "pin": "torch>=2.8,<2.13 (pyproject.toml extras models, vision, sentiment; dml-vision and xtts pin the 2.8 line)",
+          "versions_checked": {
+            "2.8.0": "24 files, 0 macosx x86_64 (6 macosx arm64)",
+            "2.9.0": "28 files, 0 macosx x86_64",
+            "2.9.1": "28 files, 0 macosx x86_64",
+            "2.10.0": "39 files, 0 macosx x86_64",
+            "2.11.0": "28 files, 0 macosx x86_64",
+            "2.12.0": "28 files, 0 macosx x86_64",
+            "2.12.1": "24 files, 0 macosx x86_64 (6 macosx arm64)"
+          },
+          "last_with_wheel": "torch 2.2.2: 25 files, 5 macosx x86_64 wheels; torch 2.3.0: 20 files, 0. PyTorch ended x86_64 macOS builds at 2.2.2",
+          "checked": "2026-09-25",
+          "summary": "torch 2.8.0 through 2.12.1 publish no macosx x86_64 wheel (PyTorch ended x86_64 macOS builds at 2.2.2), so no torch in the pinned range installs on macOS x86_64",
+          "reason": "the `transformers` runtime token is the torch-backed Transformers path; no torch release in the pinned range publishes a macosx x86_64 wheel, so the torch-backed backends (transformers, qwen3-tts, xtts, and with `diffusers CPU` also diffusers and ace-step) have no execution path on macos-x64 by construction"
+        },
+        "diffusers CPU": {
+          "available": false,
+          "package": "torch",
+          "pin": "torch>=2.8,<2.13 (pyproject.toml extras models, vision, sentiment; dml-vision and xtts pin the 2.8 line)",
+          "versions_checked": {
+            "2.8.0": "24 files, 0 macosx x86_64 (6 macosx arm64)",
+            "2.9.0": "28 files, 0 macosx x86_64",
+            "2.9.1": "28 files, 0 macosx x86_64",
+            "2.10.0": "39 files, 0 macosx x86_64",
+            "2.11.0": "28 files, 0 macosx x86_64",
+            "2.12.0": "28 files, 0 macosx x86_64",
+            "2.12.1": "24 files, 0 macosx x86_64 (6 macosx arm64)"
+          },
+          "last_with_wheel": "torch 2.2.2: 25 files, 5 macosx x86_64 wheels; torch 2.3.0: 20 files, 0. PyTorch ended x86_64 macOS builds at 2.2.2",
+          "checked": "2026-09-25",
+          "summary": "torch 2.8.0 through 2.12.1 publish no macosx x86_64 wheel (PyTorch ended x86_64 macOS builds at 2.2.2), so no torch in the pinned range installs on macOS x86_64",
+          "reason": "the `diffusers CPU` runtime token runs on torch; no torch release in the pinned range publishes a macosx x86_64 wheel"
+        },
+        "openvino CPU": {
+          "available": false,
+          "package": "openvino",
+          "pin": "openvino==2026.3.1 (pyproject.toml extra openvino)",
+          "versions_checked": {
+            "2026.3.1": "24 files; platform tags macosx_11_0_arm64, manylinux_2_28_x86_64, manylinux_2_35_aarch64, win_amd64; 0 macosx x86_64, 0 win_arm64"
+          },
+          "checked": "2026-09-25",
+          "summary": "openvino 2026.3.1 publishes no macosx x86_64 and no win_arm64 wheel",
+          "reason": "openvino 2026.3.1 publishes no macosx x86_64 wheel, so the openvino backend has no execution path on macos-x64 by construction"
+        },
+        "openvino-genai CPU": {
+          "available": false,
+          "package": "openvino-genai",
+          "pin": "openvino-genai==2026.3.1.0 (pyproject.toml extras genai, genai-vision)",
+          "versions_checked": {
+            "2026.3.1.0": "24 files; platform tags macosx_11_0_arm64, manylinux_2_28_x86_64, manylinux_2_31_aarch64, win_amd64; 0 macosx x86_64, 0 win_arm64"
+          },
+          "checked": "2026-09-25",
+          "summary": "openvino-genai 2026.3.1.0 publishes no macosx x86_64 and no win_arm64 wheel",
+          "reason": "openvino-genai 2026.3.1.0 publishes no macosx x86_64 wheel, so the openvino-genai backend has no execution path on macos-x64 by construction"
+        }
+      },
+      "win-arm64-cpu": {
+        "openvino CPU": {
+          "available": false,
+          "package": "openvino",
+          "pin": "openvino==2026.3.1 (pyproject.toml extra openvino)",
+          "versions_checked": {
+            "2026.3.1": "24 files; platform tags macosx_11_0_arm64, manylinux_2_28_x86_64, manylinux_2_35_aarch64, win_amd64; 0 macosx x86_64, 0 win_arm64"
+          },
+          "checked": "2026-09-25",
+          "summary": "openvino 2026.3.1 publishes no macosx x86_64 and no win_arm64 wheel",
+          "reason": "openvino 2026.3.1 publishes no win_arm64 wheel, so the openvino backend has no execution path on win-arm64-cpu by construction"
+        },
+        "openvino-genai CPU": {
+          "available": false,
+          "package": "openvino-genai",
+          "pin": "openvino-genai==2026.3.1.0 (pyproject.toml extras genai, genai-vision)",
+          "versions_checked": {
+            "2026.3.1.0": "24 files; platform tags macosx_11_0_arm64, manylinux_2_28_x86_64, manylinux_2_31_aarch64, win_amd64; 0 macosx x86_64, 0 win_arm64"
+          },
+          "checked": "2026-09-25",
+          "summary": "openvino-genai 2026.3.1.0 publishes no macosx x86_64 and no win_arm64 wheel",
+          "reason": "openvino-genai 2026.3.1.0 publishes no win_arm64 wheel, so the openvino-genai backend has no execution path on win-arm64-cpu by construction"
+        }
+      }
+    },
+    "deviations": [
+      {
+        "slot": "macos-x64",
+        "token": "onnx CPU",
+        "package": "onnxruntime",
+        "pin": "onnxruntime==1.27.0 (pyproject.toml extras onnx, vad)",
+        "versions_checked": {
+          "1.27.0": "24 files; platform tags macosx_14_0_arm64, manylinux x86_64 and aarch64, win_amd64, win_arm64; 0 macosx x86_64",
+          "1.23.2": "22 files; 4 macosx_13_0_x86_64 wheels"
+        },
+        "checked": "2026-09-25",
+        "note": "onnxruntime 1.27.0 publishes no macosx x86_64 wheel; the E-094 receipts on intel-macbook-pro-macos-x64 ran onnxruntime 1.23.2 (docs/HARDWARE.md:139, 173), recorded as a deviation from the pin. The onnx path on macos-x64 stays available because it executed (seven verifier-upheld passes); the deviation is a fact about those receipts, carried on the slot note, not a cell state"
+      },
+      {
+        "slot": "win-arm64-cpu",
+        "token": "transformers",
+        "package": "torch",
+        "pin": "torch>=2.8,<2.13 (pyproject.toml extras models, vision, sentiment; dml-vision and xtts pin the 2.8 line)",
+        "versions_checked": {
+          "2.8.0": "24 files, 0 win_arm64 (6 win_amd64)",
+          "2.9.0": "28 files, 0 win_arm64",
+          "2.9.1": "28 files, 0 win_arm64",
+          "2.10.0": "39 files, 0 win_arm64",
+          "2.11.0": "28 files, 0 win_arm64",
+          "2.12.0": "28 files, 0 win_arm64",
+          "2.12.1": "24 files, 0 win_arm64 (6 win_amd64)"
+        },
+        "checked": "2026-09-25",
+        "note": "PyPI publishes no win_arm64 torch wheel in the pinned range (the measurement above stands), but download.pytorch.org/whl/cpu does: the snapdragon-x-laptop-win-arm64 receipts (E-102) ran torch 2.9.1+cpu, wheel tag cp312-cp312-win_arm64, installed from that index (titanos-kit setup.log: 'win_arm64 CPU wheels: 2.8.0 has no torchvision partner on win_arm64, so the in-range pair 2.9.1 / 0.24.1 is used'), 42 verifier-upheld passes across the transformers and diffusers rows. Recorded as a deviation from the PyPI-only measurement, the same standard as the macos-x64 onnxruntime entry: the torch-backed paths on win-arm64-cpu stay available because they executed. Titanos's own tools/profiles.json cpu profile still lists no windows-aarch64 platform, a documentation gap for the owner, not a matrix fact",
+        "superseded_unavailable_entry": {
+          "summary": "torch 2.8.0 through 2.12.1 publish no win_arm64 wheel and Titanos's cpu profile lists no windows-aarch64 platform, so no torch in the pinned range installs on Windows ARM64 through a path Titanos declares",
+          "reason": "the `transformers` runtime token is the torch-backed Transformers path; no torch release in the pinned range publishes a win_arm64 wheel and Titanos's own torch profile excludes the platform, so the torch-backed backends (transformers, and with `diffusers CPU` also diffusers, ace-step and onnx-diffusers) have no execution path on win-arm64-cpu by construction; the same fact and outcome as macos-x64",
+          "titanos_profile": "tools/profiles.json `cpu` (torch==2.8.0 from download.pytorch.org/whl/cpu) lists platforms linux-x86_64, linux-aarch64, windows-x86_64 and no windows-aarch64; docs/HARDWARE.md:36 files Windows ARM64 CPU under `onnx-cpu`; download.pytorch.org not queried"
+        }
+      },
+      {
+        "slot": "win-arm64-cpu",
+        "token": "diffusers CPU",
+        "package": "torch",
+        "pin": "torch>=2.8,<2.13 (pyproject.toml extras models, vision, sentiment; dml-vision and xtts pin the 2.8 line)",
+        "versions_checked": {
+          "2.8.0": "24 files, 0 win_arm64 (6 win_amd64)",
+          "2.9.0": "28 files, 0 win_arm64",
+          "2.9.1": "28 files, 0 win_arm64",
+          "2.10.0": "39 files, 0 win_arm64",
+          "2.11.0": "28 files, 0 win_arm64",
+          "2.12.0": "28 files, 0 win_arm64",
+          "2.12.1": "24 files, 0 win_arm64 (6 win_amd64)"
+        },
+        "checked": "2026-09-25",
+        "note": "PyPI publishes no win_arm64 torch wheel in the pinned range (the measurement above stands), but download.pytorch.org/whl/cpu does: the snapdragon-x-laptop-win-arm64 receipts (E-102) ran torch 2.9.1+cpu, wheel tag cp312-cp312-win_arm64, installed from that index (titanos-kit setup.log: 'win_arm64 CPU wheels: 2.8.0 has no torchvision partner on win_arm64, so the in-range pair 2.9.1 / 0.24.1 is used'), 42 verifier-upheld passes across the transformers and diffusers rows. Recorded as a deviation from the PyPI-only measurement, the same standard as the macos-x64 onnxruntime entry: the torch-backed paths on win-arm64-cpu stay available because they executed. Titanos's own tools/profiles.json cpu profile still lists no windows-aarch64 platform, a documentation gap for the owner, not a matrix fact",
+        "superseded_unavailable_entry": {
+          "summary": "torch 2.8.0 through 2.12.1 publish no win_arm64 wheel and Titanos's cpu profile lists no windows-aarch64 platform, so no torch in the pinned range installs on Windows ARM64 through a path Titanos declares",
+          "reason": "the `diffusers CPU` runtime token runs on torch; no torch release in the pinned range publishes a win_arm64 wheel and Titanos's own torch profile excludes the platform",
+          "titanos_profile": "tools/profiles.json `cpu` lists no windows-aarch64 platform; download.pytorch.org not queried"
+        }
+      }
+    ]
+  },
+  "multi_gpu_modes_rule": {
+    "admission": {
+      "rule": "Titanos's own admission of the matrix kit's multi-GPU modes (the kit sets ModelSpec.parallelism = mode and WorkerSpec.mode = mode, docs/MATRIX_KIT.md). A mode is admitted for a row only when: the backend is not a one-device backend; the task is not a single-device task (single_device_tasks, each cited to its refusing line in single_device_task_lines); for tensor_parallel the backend and task are in the tensor_parallel lists; for model_sharding the backend is in the model_sharding list. A mode Titanos refuses by design is na for the row on every slot (never 'untried: runnable by construction'); an admitted mode is then judged by the slot's group rule (modes below). When a (model, slot) pair's receipt-backed cells (single, replicas) are all na by refusal, its builder-filled multi-GPU cells are na with the same refusal",
+      "source": "src/titanos/config.py, read 2026-09-25: ModelSpec validator 80-82 (ace-step refuses parallelism other than single), 97-100 (sherpa-onnx), 117-118 (image-segmentation), 150-151 (llama-cpp: 'Use native options for llama-cpp placement'; llama.cpp's own native split modes take device=native:... with native.split_mode and are not a matrix mode), 74-77 (diarization: the validator calls src/titanos/diarization.py prepare, whose lines 33-38 refuse any parallelism other than single: 'Diarization requires a reviewed local Sherpa ONNX bundle on one CPU'), 170-172 (vad: 'VAD requires the single-device CPU ONNX adapter'), 190-191 (onnx, openvino, openvino-genai: 'Compiled model sharding is not implemented'), 211-212 (translation, image-to-text, object-detection, sentiment, rerank, pair-classification, depth-estimation: 'API Plus adapters currently use one device per worker'), 233-234 (tensor_parallel requires backend transformers and task in {chat, vision, embeddings}), 237-238 (xtts and qwen3-tts: 'This speech backend uses one device per worker'); onnx_images.py:19 (onnx-diffusers) and tesseract.py:57 (tesseract) refuse parallelism other than single; Config validator 334-335 (diarization: worker.mode other than single refused, 'Diarization replicas require one CPU worker'), 336-337 (translation, image-to-text, object-detection, sentiment, rerank, depth-estimation, image-segmentation, music: 'API Plus adapters require single-device workers'), 345-346 ('This model adapter does not implement tensor parallelism' unless transformers chat/vision/embeddings), 347-348 ('Model sharding requires Transformers or Diffusers'); WorkerSpec validator 272-275 (tensor_parallel needs two assigned GPUs or an explicit CPU/XPU group; model_sharding needs at least two assigned GPUs)",
+      "one_device_backends": [
+        "xtts",
+        "qwen3-tts"
+      ],
+      "single_device_tasks": [
+        "translation",
+        "image-to-text",
+        "object-detection",
+        "sentiment",
+        "rerank",
+        "pair-classification",
+        "depth-estimation",
+        "image-segmentation",
+        "music",
+        "diarization",
+        "vad"
+      ],
+      "single_device_task_lines": {
+        "translation": "src/titanos/config.py:211-212, 336-337",
+        "image-to-text": "src/titanos/config.py:211-212, 336-337",
+        "object-detection": "src/titanos/config.py:211-212, 336-337",
+        "sentiment": "src/titanos/config.py:211-212, 336-337",
+        "rerank": "src/titanos/config.py:211-212, 336-337",
+        "pair-classification": "src/titanos/config.py:211-212",
+        "depth-estimation": "src/titanos/config.py:211-212, 336-337",
+        "image-segmentation": "src/titanos/config.py:117-118, 336-337",
+        "music": "src/titanos/config.py:80-82, 336-337",
+        "diarization": "src/titanos/config.py:74-77 (diarization.py:33-38), 334-335",
+        "vad": "src/titanos/config.py:170-172"
+      },
+      "added": "2026-09-25 (round 4): diarization and vad added (round-3 review finding 5); harmless for today's sherpa-onnx and onnx rows, which mode_refusal already refuses by backend, but a future transformers diarization row must not be filed 'untried: runnable by construction' for model_sharding",
+      "tensor_parallel": {
+        "backends": [
+          "transformers"
+        ],
+        "tasks": [
+          "chat",
+          "vision",
+          "embeddings"
+        ]
+      },
+      "model_sharding": {
+        "backends": [
+          "transformers",
+          "diffusers"
+        ]
+      },
+      "refusal_lines": {
+        "ace-step": "config.py:80-82",
+        "sherpa-onnx": "config.py:97-100",
+        "llama-cpp": "config.py:150-151",
+        "onnx": "config.py:190-191",
+        "openvino": "config.py:190-191",
+        "openvino-genai": "config.py:190-191",
+        "onnx-diffusers": "onnx_images.py:19",
+        "tesseract": "tesseract.py:57",
+        "xtts": "config.py:237-238",
+        "qwen3-tts": "config.py:237-238"
+      }
+    },
+    "group_runtimes": [
+      "torch CUDA",
+      "torch CUDA aarch64",
+      "torch ROCm"
+    ],
+    "modes": {
+      "model_sharding": {
+        "explicit_group_runtimes": [],
+        "reason": "model sharding requires at least two assigned GPUs (src/titanos/config.py WorkerSpec); a slot whose runtimes cannot form a homogeneous CUDA or ROCm GPU group (tools/matrix_kit/slots.py forms groups only from torch CUDA/ROCm devices) has no such group by construction"
+      },
+      "tensor_parallel": {
+        "explicit_group_runtimes": [
+          "cpu",
+          "torch XPU"
+        ],
+        "reason": "tensor parallel needs two assigned GPUs or an explicit CPU Gloo / XPU XCCL rank group (docs/MULTIGPU.md); a groupless slot other than a CPU or XPU slot has no such group by construction, while the explicit CPU/XPU group is a runnable configuration the matrix kit has not run, so those cells stay untried; the explicit group exists only through a runtime available on the slot for the row's backend (an available cpu_path_token for `cpu`, or `torch XPU` not removed by runtime_availability), so a transformers row on macos-x64, where no torch wheel exists, would get na by construction, not untried"
+      }
+    },
+    "applies_to": "mode_cells pairs (model, slot) that have a receipt for some mode but none for a multi-GPU mode; a receipt-backed state always wins; the kit (tools/matrix_kit/run_cells.py missing_group_cell, mode_refusal) applies the same admission and group rules when it has no group to run; the builder's mode_gap_reason(row, slot, mode) and the test's slot_forms_group(row, slot, mode) take the row because the explicit CPU group depends on the backend's available cpu_path_tokens"
+  },
+  "row_identity_rule": "one row per individual model: repository@revision (full or 7+ hex), or content sha256, or a named release asset; combined roster rows (fixture sets, historical sets) are split into their members; task and backend are separate columns, never folded into the name",
+  "evidence_rule": "pass/fail/partial cells cite E-ids that exist in docs/CAPABILITY_MATRIX.md and, where available, a receipt path; a cell may not be pass unless the cited receipt records execution of that model on that slot (OS, arch, accelerator)",
+  "execution_modes": [
+    "single",
+    "replicas",
+    "model_sharding",
+    "tensor_parallel",
+    "multi_host_pool"
+  ],
+  "generated_by": "docs/execution_matrix.json is assembled by tools/build_execution_matrix.py from reviewed reader output; tests/check_execution_matrix.py asserts coverage, vocabulary and evidence binding; tools/render_execution_matrix.py renders EXECUTION_MATRIX.md, .html and .csv"
+}

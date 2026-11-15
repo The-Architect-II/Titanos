@@ -1,0 +1,73 @@
+{
+  "url": "https://api.nuget.org/v3-flatcontainer/microsoft.ai.directml/1.15.4/microsoft.ai.directml.1.15.4.nupkg",
+  "sha256": "4e7cb7ddce8cf837a7a75dc029209b520ca0101470fcdf275c1f49736a3615b9",
+  "native_dlls": {
+    "bin/arm64-win/DirectML.dll": "77b0db83ff903f2323f5caf538499d75af6038bbea23b7959f7d232d9a4ab9d4",
+    "bin/x64-xbox-scarlett-230603/DirectML.dll": "4472539d4078b853e471f1f365fc1267a3b183091ecea3081fe04b54b729e882",
+    "bin/x64-xbox-scarlett-230307/DirectML.dll": "66a091756661900ab24f83a501562816d015dc13e97495667f305005a05bf99e",
+    "bin/x86-win/DirectML.dll": "965033351a0b9987dbc6288bdca823a6778aeaec9bf210c166af765b2450d8c7",
+    "bin/arm64ec-win/DirectML.dll": "98f39fb17bbe997019d5a090aa3d1db32479e59dd6372cb3958e3c0f5e71c071",
+    "bin/x64-win/DirectML.dll": "9c9e6d822561c6c41b90e6994b3e8857cf1d66dbfb1e0c4c799c7c89b4e92da1",
+    "bin/x64-xbox-scarlett-231000/DirectML.dll": "1e278017761b95427612bfd48197742700b1f462b8839e5ca44cf623eb4b2f1d",
+    "bin/arm-win/DirectML.dll": "2986a4b88ebc23d394580352494a4d3bd7f595bd5ba40c55072f056ca15423c9"
+  },
+  "native_pe_sections": {
+    "bin/arm64-win/DirectML.dll": {
+      "machine": "0xaa64",
+      "sections": {
+        ".text": "f0e972ae69e9da3af326637954f968eedcf00c491c1cd7850c044e58aa8de999",
+        ".rdata": "4704e90415eda5195bbf573efc8e3b34f1ed49951cdf9f9cb3c7ff31b082a05a",
+        ".data": "fa1327f4fa9a2e184912889c99d2633d35fcfeb1ecef48e9fbfd8351fc5df05d",
+        ".pdata": "76a36660ad7ff7021eb2c38e4302cf3e1340887ba7a4702820e663450da7b9c3",
+        ".rsrc": "f5d0615072a68a1218b7fe844ad5493611bd53cb2c16e6e6790d96d5fe1aaf19",
+        ".reloc": "3c10493357cb15da5968e06761387611842378f3882fe7e7d14b0a899d7ad69b"
+      }
+    },
+    "bin/x86-win/DirectML.dll": {
+      "machine": "0x14c",
+      "sections": {
+        ".text": "a453429b96c36043c31356036f5c0ccb78424c9210f8dd79cb97d01cbe77ddc0",
+        ".rdata": "6ce17f390553a038ba93cf2afe289740695bf67cdf4d917fca50c12cc827e77c",
+        ".data": "d2cc1c3d5913ed6bf1f430bbd08f12ef4972475d64dca5604665c50f8af06843",
+        ".rsrc": "9b64205435cd1261c2ea0445d03a0a7d60fcc9232b123595a9771372e7cd8dce",
+        ".reloc": "1d3a6f30528fcca645c011a77d8bda9140e9b316da1ffcdf24af867f1424f9b0"
+      }
+    },
+    "bin/arm64ec-win/DirectML.dll": {
+      "machine": "0x8664",
+      "sections": {
+        ".text": "5bd6bc5d817eb5ce07cd7a2588b498107eeaa56246214ba25291854c6a4bdebe",
+        ".hexpthk": "b4fa938f9f4da41a307b68c446f669a0b94ca9873c87e8036044cee892d12c89",
+        ".rdata": "a6ce5a1bf02ccbce0a51aaf542b8f6edc86137dcb26b3136e60a3f0b92ecc978",
+        ".data": "b80d21275a2a9accb8a607f2adca3b5ad80f2893dfc41d19aba00dc42f98ed62",
+        ".pdata": "b00f4de70f2847b7bd88e78958dab03978e866e6417bc10a25d8d59261986dfc",
+        ".a64xrm": "1f0dcc28197c93063c57af3fb6458ddc1b9a6ea7662de7a41d4cd674264dfd68",
+        ".rsrc": "01164091e73c14dee8ccc0b2ee24e735254c5dc16f343f8ed1a0f06322e327e6",
+        ".reloc": "0cf805fb96cad8b818299950e014cc8a919c82a89dbcc81c879ae28e10551928"
+      }
+    },
+    "bin/x64-win/DirectML.dll": {
+      "machine": "0x8664",
+      "sections": {
+        ".text": "2b6769e33b135d29abe159cbfca35822922fe82bfa7fa22a7a64c13ba83770f1",
+        ".rdata": "3b697fbe1cdd2fb00baa7d659cdf2f037e2630da0efb678610ccf75dfc3050c2",
+        ".data": "55156054296a4ab2cfcef4d719a9de6177b3b392643c4587a62757931022ec13",
+        ".pdata": "bd72e6b84494be7307ba135a6310c0d01def6702204528e8905cf81f30f3b388",
+        ".rsrc": "27e2fdfc7491e52008e38c985c3ad00bd9df972d5ee54c5ef035029ed6d41684",
+        ".reloc": "79722ea1236a0a6b8dc98c38016210921fed1eb0f75cad9e7f8cc3c852e5b83d"
+      }
+    },
+    "bin/arm-win/DirectML.dll": {
+      "machine": "0x1c4",
+      "sections": {
+        ".text": "74e139c8c5859e4c70ce79f336cc92fad01fa6feae90ecbd0b23ea796d19734d",
+        ".rdata": "46b52cbaacccd595a6a039d64ab48b9d5d3a1b9e6144d3b665cdd8219c5781a2",
+        ".data": "9e74f81d1e8247afd920de143a9995c1d66f72446578419dde7407be144b6d5f",
+        ".pdata": "c716cdc81fb9d06008fc2c3a3a2db0f3019f8b713d31e24b5d4946061bb95a30",
+        ".rsrc": "693c1a1b110adf8a1ace545eac854c5ce44aa156cc6ce27f3ea103da74b3e1ab",
+        ".reloc": "2f1e9758eae4571bfaea63c7d9c26c41cada9faca592c7914a1090cb0e828b2c"
+      }
+    }
+  },
+  "validation_note": "Some official Python wheels alter PE signing/header bytes. Verify complete section hashes and machine identity against the matching official NuGet DLL; retain packaged whole-file hashes separately."
+}

@@ -1,0 +1,282 @@
+{
+  "cpu": {
+    "platforms": [
+      "linux-x86_64",
+      "linux-aarch64",
+      "windows-x86_64"
+    ],
+    "device": "cpu",
+    "index_url": "https://download.pytorch.org/whl/cpu",
+    "packages": [
+      "torch==2.8.0",
+      "torchvision==0.23.0"
+    ],
+    "validation": "Linux x86_64 and Windows x64 CPU passes are recorded in the execution matrix (docs/EXECUTION_MATRIX.md); other listed platforms need their own acceptance"
+  },
+  "cu126": {
+    "platforms": [
+      "linux-x86_64",
+      "windows-x86_64"
+    ],
+    "device": "cuda:0",
+    "index_url": "https://download.pytorch.org/whl/cu126",
+    "packages": [
+      "torch==2.8.0",
+      "torchvision==0.23.0"
+    ],
+    "capability_min": 5.0,
+    "capability_max": 10.0,
+    "validation": "Upstream wheel and architecture matrix checked; which cards ran is recorded per slot in the execution matrix (docs/EXECUTION_MATRIX.md); acceptance is per model, card and driver"
+  },
+  "cu128": {
+    "platforms": [
+      "linux-x86_64",
+      "windows-x86_64"
+    ],
+    "device": "cuda:0",
+    "index_url": "https://download.pytorch.org/whl/cu128",
+    "packages": [
+      "torch==2.8.0",
+      "torchvision==0.23.0"
+    ],
+    "capability_min": 7.0,
+    "capability_max": 13.0,
+    "validation": "Upstream wheel and Blackwell matrix checked; Blackwell (RTX PRO 6000, RTX 5070) and Turing (RTX 2070 Max-Q) passes on Windows x64 are recorded in the execution matrix (docs/EXECUTION_MATRIX.md); the bound covers all of 12.x because sm_120 binaries run on sm_121 (CUDA binary compatibility within a major version), with no 12.1 card run recorded; acceptance is per model, card and driver"
+  },
+  "cu130": {
+    "platforms": [
+      "linux-aarch64"
+    ],
+    "device": "cuda:0",
+    "index_url": "https://download.pytorch.org/whl/cu130",
+    "packages": [
+      "torch==2.10.0",
+      "torchvision==0.25.0"
+    ],
+    "capability_min": 9.0,
+    "capability_max": 13.0,
+    "validation": "Candidate: linux-aarch64 (SBSA) cu130 wheels for torch 2.10.0 and torchvision 0.25.0 for cp311-cp313 are listed on the index (the first cu130 torchvision with aarch64 wheels); the wheel's architecture list is not verified here and doctor records it as cuda_architectures; Jetson Orin (8.7) stays on the vendor build; no hardware run recorded"
+  },
+  "rocm64": {
+    "platforms": [
+      "linux-x86_64"
+    ],
+    "device": "cuda:0",
+    "index_url": "https://download.pytorch.org/whl/rocm6.4",
+    "packages": [
+      "torch==2.8.0",
+      "torchvision==0.23.0"
+    ],
+    "validation": "Candidate for ROCm 6.4 supported GPUs and distributions; native acceptance pending"
+  },
+  "xpu": {
+    "platforms": [
+      "linux-x86_64",
+      "windows-x86_64"
+    ],
+    "device": "xpu:0",
+    "index_url": "https://download.pytorch.org/whl/xpu",
+    "packages": [
+      "torch==2.8.0",
+      "torchvision==0.23.0"
+    ],
+    "validation": "Windows x86_64 source execution recorded on Intel Arc B580 and Arc 130V with torch 2.8.0+xpu (E-099, E-101); Linux candidate, native acceptance pending; not Intel NPU"
+  },
+  "mps": {
+    "platforms": [
+      "darwin-aarch64"
+    ],
+    "device": "mps",
+    "index_url": "https://pypi.org/simple",
+    "packages": [
+      "torch==2.8.0",
+      "torchvision==0.23.0"
+    ],
+    "validation": "Bounded native MPS passes for MiniLM and SmolLM2 chat on an Apple M4 Max (E-031, E-038; HW-13); not Apple Neural Engine; other models need their own acceptance"
+  },
+  "onnx-cpu": {
+    "index_url": "https://pypi.org/simple",
+    "backend": "onnx",
+    "extra": "compiled",
+    "device": "cpu",
+    "packages": [
+      "onnxruntime==1.27.0"
+    ],
+    "platforms": [
+      "linux-x86_64",
+      "linux-aarch64",
+      "windows-x86_64",
+      "windows-aarch64",
+      "darwin-aarch64"
+    ],
+    "validation": "Prepared-graph CPU execution validated on Linux x86_64 and native Windows ARM64 (MiniLM/digit graphs); other listed platforms await native qualification"
+  },
+  "qnn": {
+    "index_url": "https://pypi.org/simple",
+    "backend": "onnx",
+    "extra": "compiled",
+    "device": "qnn",
+    "packages": [
+      "onnxruntime==1.27.0",
+      "onnxruntime-qnn==2.6.0"
+    ],
+    "platforms": [
+      "windows-aarch64"
+    ],
+    "validation": "Native Windows ARM64 QNN HTP trained-classifier execution validated; compatible Snapdragon driver and model preparation required"
+  },
+  "coreml": {
+    "index_url": "https://pypi.org/simple",
+    "backend": "onnx",
+    "extra": "compiled",
+    "device": "coreml",
+    "packages": [
+      "onnxruntime==1.27.0"
+    ],
+    "platforms": [
+      "darwin-aarch64"
+    ],
+    "validation": "Candidate: Core ML provider; CPU use inside Core ML is permitted by Apple and is not ANE-only proof"
+  },
+  "openvino-cpu": {
+    "index_url": "https://pypi.org/simple",
+    "backend": "openvino",
+    "extra": "compiled",
+    "device": "CPU",
+    "packages": [
+      "openvino==2026.3.1"
+    ],
+    "platforms": [
+      "linux-x86_64",
+      "windows-x86_64"
+    ],
+    "validation": "CPU Linux x86_64 runtime validated; Intel GPU/NPU targets await native qualification"
+  },
+  "openvino-gpu": {
+    "index_url": "https://pypi.org/simple",
+    "backend": "openvino",
+    "extra": "compiled",
+    "device": "GPU",
+    "packages": [
+      "openvino==2026.3.1"
+    ],
+    "platforms": [
+      "linux-x86_64",
+      "windows-x86_64"
+    ],
+    "validation": "Trained-model native Windows execution validated on Intel Iris Xe, Arc B580/A770 and integrated Intel GPUs; compatible system drivers remain required"
+  },
+  "openvino-npu": {
+    "index_url": "https://pypi.org/simple",
+    "backend": "openvino",
+    "extra": "compiled",
+    "device": "NPU",
+    "packages": [
+      "openvino==2026.3.1"
+    ],
+    "platforms": [
+      "linux-x86_64",
+      "windows-x86_64"
+    ],
+    "validation": "Native Intel AI Boost NPU trained-model execution validated; driver and prepared-graph compatibility still required"
+  },
+  "genai-cpu": {
+    "index_url": "https://pypi.org/simple",
+    "backend": "openvino-genai",
+    "extra": "genai",
+    "device": "CPU",
+    "packages": [
+      "openvino-genai==2026.3.1.0"
+    ],
+    "platforms": [
+      "linux-x86_64",
+      "windows-x86_64"
+    ],
+    "validation": "OpenVINO graph check; LLM model qualification is separate"
+  },
+  "onnx-intel-mac": {
+    "index_url": "https://pypi.org/simple",
+    "backend": "onnx",
+    "extra": "compiled",
+    "device": "cpu",
+    "packages": [
+      "onnxruntime==1.23.2"
+    ],
+    "platforms": [
+      "darwin-x86_64"
+    ],
+    "validation": "Recorded from source on an Intel MacBook Pro with onnxruntime 1.23.2 (E-094, E-098): prepared ONNX embeddings, VAD and tensor graphs; macOS 13+ x86_64 wheels for Python 3.11\u20133.13; sherpa, tesseract and GGUF rows are separate installs; no PyTorch modality stack on this platform; target-native package open (HW-15)"
+  },
+  "genai-gpu": {
+    "index_url": "https://pypi.org/simple",
+    "backend": "openvino-genai",
+    "extra": "genai",
+    "device": "GPU",
+    "packages": [
+      "openvino-genai==2026.3.1.0"
+    ],
+    "platforms": [
+      "linux-x86_64",
+      "windows-x86_64"
+    ],
+    "validation": "Candidate: OpenVINO GenAI prepared LLM adapter; requires Intel GPU drivers and native model qualification"
+  },
+  "genai-npu": {
+    "index_url": "https://pypi.org/simple",
+    "backend": "openvino-genai",
+    "extra": "genai",
+    "device": "NPU",
+    "packages": [
+      "openvino-genai==2026.3.1.0"
+    ],
+    "platforms": [
+      "linux-x86_64",
+      "windows-x86_64"
+    ],
+    "validation": "Candidate: OpenVINO GenAI prepared LLM adapter; requires Intel NPU drivers and native model qualification"
+  },
+  "engine": {
+    "platforms": [
+      "linux-x86_64",
+      "linux-aarch64",
+      "windows-x86_64",
+      "windows-aarch64",
+      "darwin-x86_64",
+      "darwin-aarch64"
+    ],
+    "device": "cpu",
+    "backend": "engine",
+    "index_url": "https://pypi.org/simple",
+    "packages": [
+      "filelock>=3.18,<4"
+    ],
+    "extra": "",
+    "validation": "Core engine import only; install a native runtime separately and qualify the actual model/device"
+  },
+  "dml": {
+    "platforms": [
+      "windows-x86_64"
+    ],
+    "device": "dml",
+    "backend": "onnx",
+    "extra": "compiled",
+    "index_url": "https://pypi.org/simple",
+    "packages": [
+      "onnxruntime-directml==1.24.4"
+    ],
+    "validation": "Native trained-model DirectML execution validated on AMD Radeon 840M/Raphael, Intel Iris Xe and NVIDIA RTX 3500 Ada; model operators, memory and drivers still limit support"
+  },
+  "dml-arm64": {
+    "platforms": [
+      "windows-aarch64"
+    ],
+    "device": "dml",
+    "backend": "onnx",
+    "extra": "compiled",
+    "index_url": "https://pypi.org/simple",
+    "packages": [
+      "onnxruntime-windowsml==1.25.2.202605110140"
+    ],
+    "validation": "Native Windows ARM64 Adreno trained-classifier execution validated via the wheel DirectML provider; no system Windows App SDK install was required by that path"
+  }
+}

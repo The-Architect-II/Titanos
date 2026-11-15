@@ -1,0 +1,148 @@
+{
+  "status": "SHIPPED_ONNX_EXTENSION_AND_TARGETED_METADATA_MATCH_OFFICIAL_WHEEL",
+  "created_utc": "2026-09-22T17:04:15.775480+00:00",
+  "component": {
+    "name": "onnx",
+    "version": "1.22.0",
+    "declared_license": "Apache-2.0",
+    "wheel_tag": "cp312-abi3-win_amd64"
+  },
+  "record": {
+    "bytes": 1279884,
+    "sha256": "220689e1fbdd33fc11dee4d333dbe3cc161b4cb8fa084806a3902887893cc567",
+    "rows": 9561
+  },
+  "files": [
+    {
+      "member": "onnx-1.22.0.dist-info/METADATA",
+      "bytes": 8483,
+      "sha256": "05e268109e1131e7e33ceeb1525934de515d1e32ed327dcc70b21793e0a2e760",
+      "RECORD_match": true,
+      "sealed_manifest_entry": {
+        "bytes": 8483,
+        "sha256": "05e268109e1131e7e33ceeb1525934de515d1e32ed327dcc70b21793e0a2e760"
+      },
+      "official_wheel_bytes_match": true
+    },
+    {
+      "member": "onnx-1.22.0.dist-info/WHEEL",
+      "bytes": 105,
+      "sha256": "0790745f85c0aa54643f60ef656e28fb95925d41aeb364b3dd236d9b1ebd7e1f",
+      "RECORD_match": true,
+      "sealed_manifest_entry": {
+        "bytes": 105,
+        "sha256": "0790745f85c0aa54643f60ef656e28fb95925d41aeb364b3dd236d9b1ebd7e1f"
+      },
+      "official_wheel_bytes_match": true
+    },
+    {
+      "member": "onnx-1.22.0.dist-info/licenses/LICENSE",
+      "bytes": 11560,
+      "sha256": "3ddf9be5c28fe27dad143a5dc76eea25222ad1dd68934a047064e56ed2fa40c5",
+      "RECORD_match": true,
+      "sealed_manifest_entry": {
+        "bytes": 11560,
+        "sha256": "3ddf9be5c28fe27dad143a5dc76eea25222ad1dd68934a047064e56ed2fa40c5"
+      },
+      "official_wheel_bytes_match": true
+    },
+    {
+      "member": "onnx-1.22.0.dist-info/licenses/NOTICE",
+      "bytes": 2192,
+      "sha256": "62c2c7bb3be2833f5e2c8a2576ac10666cf26aa09b7b631b55fed77bc7dc91c7",
+      "RECORD_match": true,
+      "sealed_manifest_entry": {
+        "bytes": 2192,
+        "sha256": "62c2c7bb3be2833f5e2c8a2576ac10666cf26aa09b7b631b55fed77bc7dc91c7"
+      },
+      "official_wheel_bytes_match": true
+    },
+    {
+      "member": "onnx-1.22.0.dist-info/sboms/sbom.cdx.json",
+      "bytes": 2217,
+      "sha256": "aa541e9c522d5c1e9942baed6234d51475410899eff5c58aec32ac39a94cf66a",
+      "RECORD_match": true,
+      "sealed_manifest_entry": {
+        "bytes": 2217,
+        "sha256": "aa541e9c522d5c1e9942baed6234d51475410899eff5c58aec32ac39a94cf66a"
+      },
+      "official_wheel_bytes_match": true
+    },
+    {
+      "member": "onnx/onnx_cpp2py_export.pyd",
+      "bytes": 3374592,
+      "sha256": "a5e6a9415ec7b041d1c8ae29cf90698875af6c04f53cc2c9d2d00d72f30e04fa",
+      "RECORD_match": true,
+      "sealed_manifest_entry": {
+        "bytes": 3374592,
+        "sha256": "a5e6a9415ec7b041d1c8ae29cf90698875af6c04f53cc2c9d2d00d72f30e04fa"
+      },
+      "official_wheel_bytes_match": true
+    }
+  ],
+  "errors": [],
+  "official_PyPI": {
+    "url": "https://pypi.org/pypi/onnx/1.22.0/json",
+    "metadata_bytes": 29768,
+    "metadata_sha256": "1a4ca3029cd8caff2e44259b8c6f441ad02f2cc8416e43ab38eccfde4a0876fe",
+    "wheel": {
+      "filename": "onnx-1.22.0-cp312-abi3-win_amd64.whl",
+      "url": "https://files.pythonhosted.org/packages/13/a8/734725bb703c5fabb687f79c79e51249475212b3eb37771ac4a4ac9b487f/onnx-1.22.0-cp312-abi3-win_amd64.whl",
+      "size": 17213290,
+      "digests": {
+        "blake2b_256": "13a8734725bb703c5fabb687f79c79e51249475212b3eb37771ac4a4ac9b487f",
+        "md5": "0084284615c811c5a029ead48903d13c",
+        "sha256": "72ccebab3bac07215c204ce8848d42e78eaaa666badbf72d25cd359b9f269e3a"
+      },
+      "upload_time_iso_8601": "2026-06-15T12:49:45.933600Z"
+    },
+    "archive_hash_verified_in_memory": true,
+    "archive_saved": false,
+    "source_distributions": [
+      {
+        "filename": "onnx-1.22.0.tar.gz",
+        "url": "https://files.pythonhosted.org/packages/04/19/8ea73a64b368b75fe339771a20a02bc61ea1f551484c9e3d9d0bfbd0450f/onnx-1.22.0.tar.gz",
+        "size": 12024721,
+        "digests": {
+          "blake2b_256": "04198ea73a64b368b75fe339771a20a02bc61ea1f551484c9e3d9d0bfbd0450f",
+          "md5": "687250d36ed8d2536b7edf383ff56202",
+          "sha256": "ef40c0aaf0b643857ea9306fc7eddce17eaf9fb0407e4801f1fc5758443a38e0"
+        },
+        "upload_time_iso_8601": "2026-06-15T12:50:05.354150Z"
+      }
+    ]
+  },
+  "upstream_record": {
+    "bytes": 1235319,
+    "sha256": "784f947aa9c108c96b78686f0ab9c3b251c2e6e8a280f98b58043b00ca934867",
+    "targeted_entries_match_installed_record": true,
+    "complete_record_equal": false
+  },
+  "protobuf_primary_license": {
+    "url": "https://raw.githubusercontent.com/protocolbuffers/protobuf/v25.1/LICENSE",
+    "source_ref": "v25.1",
+    "bytes": 1732,
+    "sha256": "6e5e117324afd944dcf67f36cf329843bc1a92229a8cd9bb573d7a83130fea7d",
+    "observed_terms": "BSD-3-Clause wording; Copyright2008 Google Inc.; includes generated-code/support-library clarification",
+    "tag_not_independently_resolved_to_commit": true
+  },
+  "findings": [
+    {
+      "component": "protobuf",
+      "version": "25.1",
+      "NOTICE_label": "Apache-2.0",
+      "included_SBOM_label": "BSD-3-Clause",
+      "discrepancy_retained": true,
+      "amendment": "Preserve original ONNX NOTICE/SBOM; add an explicit correction with separately retained protobuf v25.1 license. Do not rewrite upstream files or relabel all dependencies Apache-2.0."
+    }
+  ],
+  "scope_limits": [
+    "Only listed six shipped members were byte-joined; not every ONNX file or all RECORD rows were rehashed.",
+    "Wheel SHA is matched to official PyPI release JSON; no publisher signature, attestation or reproducible native-build claim.",
+    "Installed RECORD may differ from wheel RECORD due installer-generated entries; targeted entries were compared exactly.",
+    "No ONNX import, native extension load, package install, model, GUI, serving or D/E operation.",
+    "ONNX format/graph library is distinct from onnxruntime inference provider.",
+    "Bundled third-party versions come from retained ONNX wheel NOTICE/SBOM; no independent static-link binary attribution."
+  ],
+  "retained_for_builds": "tools/licenses/supplements.json applies this attribution whenever onnx 1.22.0 is packaged; the build binds the packaged metadata hash at build time"
+}

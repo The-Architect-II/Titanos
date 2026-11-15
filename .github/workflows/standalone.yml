@@ -1,0 +1,35 @@
+name: Standalone contracts
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  contracts:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -e . pillow
+      - run: python tests/check.py
+      - run: python tests/check_client.py
+      - run: python tests/check_settings.py
+      - run: python tests/check_tesseract.py
+      - run: python tests/check_jobs.py
+      - run: python tests/check_lifecycle.py
+      - run: python tests/check_studio.py
+      - run: python tests/check_mcp.py
+      - run: python tests/check_api_plus.py
+      - run: python tests/check_protocols.py
+      - run: python tests/check_hub.py

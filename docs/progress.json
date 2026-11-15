@@ -1,0 +1,2087 @@
+{
+  "schema_version": 1,
+  "updated": "2026-11-14",
+  "source_version": "0.5.28",
+  "scope": "Development acceptance checklist with separate ENGINE_CONTRACT, MODEL_QUALITY and HUMAN_PRESENTATION layers; totals are not a universal-support or percentage-complete claim.",
+  "totals": {
+    "items": 95,
+    "closed": 32,
+    "open": 63
+  },
+  "evidence_index": "CAPABILITY_MATRIX.md#evidence-summaries",
+  "maintenance": "Preserve stable IDs. Change closure only with named model/runtime/package/device evidence, request/output identity, failure/cleanup results and remaining exclusions. Retain failed results; new source does not inherit old binary qualification.",
+  "items": [
+    {
+      "id": "EVID-01",
+      "category": "Evidence procedure",
+      "closed": false,
+      "status": "active",
+      "condition": "Freeze representative model/platform/workload rosters and acceptance criteria before closing a family.",
+      "evidence_ids": [
+        "E-087",
+        "E-089",
+        "E-090",
+        "E-091",
+        "E-092"
+      ],
+      "acceptance_layer": "ENGINE_CONTRACT",
+      "remaining_condition": "The representative roster and per-family gates are frozen and test-bound (docs/roster.json, E-087); the required-versus-deferred assignment of its owner_call rows is still the owner's call, so no family may close on the roster alone.",
+      "next_action": "The project owner marks each owner_call roster row required or deferred (edit docs/roster.json, re-render, run tests/check_roster.py); then each family closes only when its required rows are qualified_bounded at the stated layer and its remaining condition is met.",
+      "action_category": "source_or_local_contract_work"
+    },
+    {
+      "id": "APP-01",
+      "category": "Standalone application",
+      "closed": true,
+      "status": "validated_bounded",
+      "condition": "Recorded native profiles run without a separate Python installation or router dependency.",
+      "evidence_ids": [
+        "E-001",
+        "E-002",
+        "E-013",
+        "E-028",
+        "E-029",
+        "E-030",
+        "E-033",
+        "E-036",
+        "E-038",
+        "E-040",
+        "E-046",
+        "E-047",
+        "E-050"
+      ],
+      "acceptance_layer": "ENGINE_CONTRACT",
+      "qualification_note": "New vendor portables and the independent extracted x64 binary add real inference without an ambient Python dependency. The CUDA binary run explicitly removed ambient Python from its environment. Additional bounded evidence: E-033, E-036, E-038, E-040, E-046, E-047, E-050. Existing closure scope is unchanged."
+    },
+    {
+      "id": "APP-02",
+      "category": "Standalone application",
+      "closed": false,
+      "status": "partial",
+      "condition": "Qualify the complete beginner installation-to-first-use flow for each intended platform.",
+      "evidence_ids": [
+        "E-033",
+        "E-034",
+        "E-036",
+        "E-043",
+        "E-045",
+        "E-056",
+        "E-058",
+        "E-068",
+        "E-079",
+        "E-083",
+        "E-084",
+        "E-088"
+      ],
+      "acceptance_layer": "ENGINE_CONTRACT",
+      "remaining_condition": "Complete clean-user extraction, discovery/acquisition/runtime preparation, first request and recovery are not qualified on every intended platform.",
+      "next_action": "Qualify clean-user native extraction, model discovery, runtime preparation, first request and recovery for each intended platform; reuse the named Linux API and Windows UI results within their exact scope.",
+      "action_category": "native_ui_or_capture_validation",
+      "qualification_note": "Later bounded evidence: E-033, E-034, E-036, E-043, E-045. Their recorded source/runtime/native/presentation limits remain explicit. E-056 qualifies the Windows ENGINE clean extraction and local first-use registry/defaults/removal steps only; discovery, acquisition, runtime preparation, first request and recovery remain open. E-058 improves the novice first-use errors in the frozen ENGINE (runtime-profile explanation, named option files); discovery, acquisition, runtime preparation and first inference remain open. E-068 fixes model acquisition on a stock Windows account (plain directories, no symlink privilege); the complete clean-user flow per platform remains open. 2026-09-25: bounded native proof on the b9 binary b9a0a63b5b59 recorded under E-083/E-084 (one native Load/Generate with Verified-at-load in the rendered DOM and HTTP-only unload; eight-view Completed/Open persistence with a native Open returning the retained WAV); one binary, one job; clean-user extraction, discovery, first request and recovery per platform remain unqualified."
+    },
+    {
+      "id": "MOD-01",
+      "category": "Model management",
+      "closed": true,
+      "status": "validated_bounded",
+      "condition": "Keep model weights external and register/load selected model directories without rebuilding.",
+      "evidence_ids": [
+        "E-001",
+        "E-002",
+        "E-028",
+        "E-029",
+        "E-033",
+        "E-034",
+        "E-036",
+        "E-038",
+        "E-040",
+        "E-044",
+        "E-047",
+        "E-050"
+      ],
+      "acceptance_layer": "ENGINE_CONTRACT",
+      "qualification_note": "Portable inference used external pinned MiniLM/digit directories. Live register/replace/unregister left all seven external prepared-model file pins unchanged. Additional bounded evidence: E-033, E-034, E-036, E-038, E-040, E-044, E-047, E-050. Existing closure scope is unchanged."
+    },
+    {
+      "id": "MOD-02",
+      "category": "Model management",
+      "closed": false,
+      "status": "partial",
+      "condition": "Discover compatible models and explain missing files, architecture and preprocessing.",
+      "evidence_ids": [
+        "E-033",
+        "E-034",
+        "E-035",
+        "E-043",
+        "E-044"
+      ],
+      "acceptance_layer": "ENGINE_CONTRACT",
+      "remaining_condition": "Unknown architecture, missing processor/component and incompatible task explanations lack real packaged novice-path coverage across provider families.",
+      "next_action": "Use the delivered bundle with controlled local incomplete model folders to verify passive compatibility errors and actionable preparation plans without loading a model.",
+      "action_category": "source_or_local_contract_work",
+      "qualification_note": "Later bounded evidence: E-033, E-034, E-035, E-043, E-044. Their recorded source/runtime/native/presentation limits remain explicit."
+    },
+    {
+      "id": "MOD-03",
+      "category": "Model management",
+      "closed": true,
+      "status": "validated_bounded",
+      "condition": "Complete pinned downloads, integrity, progress, cancellation/resume and offline reuse.",
+      "evidence_ids": [
+        "E-033",
+        "E-034",
+        "E-035",
+        "E-036",
+        "E-076",
+        "E-079",
+        "E-081",
+        "E-083",
+        "E-088"
+      ],
+      "acceptance_layer": "ENGINE_CONTRACT",
+      "qualification_note": "The stated acquisition condition is met by complementary real provider records: HF pinned files/embedding/offline restart and Sherpa pinned archive/progress/partial-download cancel/resume/activation/reuse. Named HF MiniLM-L3 and GitHub Sherpa/LJSpeech paths only. A fresh native download for every provider, arbitrary model compatibility and all-platform beginner installation are not inferred.",
+      "closure_reconciliation": {
+        "date": "2026-09-22",
+        "basis": "The stated acquisition condition is met by complementary real provider records: HF pinned files/embedding/offline restart and Sherpa pinned archive/progress/partial-download cancel/resume/activation/reuse.",
+        "evidence_ids": [
+          "E-033",
+          "E-034",
+          "E-036"
+        ],
+        "exclusions": "Named HF MiniLM-L3 and GitHub Sherpa/LJSpeech paths only. A fresh native download for every provider, arbitrary model compatibility and all-platform beginner installation are not inferred."
+      }
+    },
+    {
+      "id": "MOD-04",
+      "category": "Model management",
+      "closed": false,
+      "status": "partial",
+      "condition": "Qualify live registration replacement and rollback with in-flight work and cleanup failures.",
+      "evidence_ids": [
+        "E-013",
+        "E-029",
+        "E-051"
+      ],
+      "acceptance_layer": "ENGINE_CONTRACT",
+      "qualification_note": "E-029 retains quiescent native replacement. E-051 adds source/in-process ASGI with a real inert Windows child/grandchild: active replacement 409 preserves old bytes/spec; injected CloseHandle failure 500 retains old registration and uncertain Job, exposes 503 unavailable, and explicit reload recovers and physically closes the owned tree/handles. The fault is a deliberate test injection, not an OS access refusal.",
+      "remaining_condition": "The source/ASGI in-flight and cleanup-failure invariant is qualified; its frozen listening-service/native trained-worker integration and other cleanup-fault combinations remain unqualified.",
+      "next_action": "Reuse E-051 instead of repeating its source case. Qualify only the remaining packaged-service/worker registry boundary and preserve the same rollback, uncertainty and physical-closure criteria.",
+      "action_category": "native_registry_lifecycle_validation"
+    },
+    {
+      "id": "MOD-05",
+      "category": "Model management",
+      "closed": true,
+      "status": "validated_bounded",
+      "condition": "Report observed checkpoint/runtime/device identity distinctly from configured aliases.",
+      "evidence_ids": [
+        "E-021",
+        "E-022",
+        "E-023",
+        "E-024",
+        "E-025",
+        "E-026",
+        "E-027",
+        "E-028",
+        "E-029",
+        "E-030",
+        "E-031",
+        "E-032",
+        "E-033",
+        "E-034",
+        "E-036",
+        "E-037",
+        "E-038",
+        "E-039",
+        "E-040",
+        "E-041",
+        "E-042",
+        "E-047",
+        "E-050"
+      ],
+      "qualification_note": "Named checkpoint/prepared-graph pins, native executable identities, backend/device details and request-to-host mappings distinguish configured aliases from observed execution. Tensor placement is not a kernel trace. Additional bounded evidence: E-033, E-034, E-036, E-037, E-038, E-039, E-040, E-041, E-042, E-047, E-050. Existing closure scope is unchanged.",
+      "acceptance_layer": "ENGINE_CONTRACT"
+    },
+    {
+      "id": "MOD-06",
+      "category": "Model management",
+      "closed": false,
+      "status": "partial",
+      "condition": "Maintain explicit compatible-model adapters, examples and unsupported-model rejection.",
+      "evidence_ids": [
+        "E-033",
+        "E-034",
+        "E-035",
+        "E-044"
+      ],
+      "acceptance_layer": "ENGINE_CONTRACT",
+      "remaining_condition": "Model-specific compatibility/support examples are incomplete for new music variants and additional intended architectures.",
+      "next_action": "Publish an adapter capability table in staged docs from actual registry/provider/runtime declarations, with unsupported variants and required external components made explicit.",
+      "action_category": "source_or_local_contract_work",
+      "qualification_note": "Later bounded evidence: E-033, E-034, E-035, E-044. Their recorded source/runtime/native/presentation limits remain explicit."
+    },
+    {
+      "id": "MOD-07",
+      "category": "Model management",
+      "closed": false,
+      "status": "partial",
+      "condition": "Preserve safe checkpoint defaults and explicit controls for code, conversion and legacy weights.",
+      "evidence_ids": [
+        "E-035",
+        "E-044"
+      ],
+      "acceptance_layer": "ENGINE_CONTRACT",
+      "remaining_condition": "Safe extension/code defaults are implemented; corrupt/symlinked/legacy checkpoint and conversion boundaries lack a complete packaged negative-case matrix.",
+      "next_action": "Use tiny inert local model directories to verify rejected Python/pickle/escaping paths and explicit opt-ins through the native registration/acquisition boundary.",
+      "action_category": "source_or_local_contract_work",
+      "qualification_note": "Later bounded evidence: E-035, E-044. Their recorded source/runtime/native/presentation limits remain explicit."
+    },
+    {
+      "id": "INT-01",
+      "category": "Interfaces",
+      "closed": false,
+      "status": "partial",
+      "condition": "Complete the declared extended OpenAI-style inference contract, including required semantics.",
+      "evidence_ids": [
+        "E-015",
+        "E-016",
+        "E-017",
+        "E-018",
+        "E-025",
+        "E-029",
+        "E-034",
+        "E-036",
+        "E-044",
+        "E-067"
+      ],
+      "acceptance_layer": "ENGINE_CONTRACT",
+      "qualification_note": "Later bounded evidence: E-034, E-036, E-044. Their recorded source/runtime/native/presentation limits remain explicit. E-067 exercises the depth, segmentation, rerank, text-pair, sentiment and VAD routes with typed results and declared refusals on the frozen successor; The route-to-typed-contract matrix now exists: docs/ROUTE_CONTRACT_MATRIX.md and docs/route_contract_matrix.json are generated in-process from app.openapi(), the MCP registry and the source by tools/build_route_contract_matrix.py (86 operations over 76 paths, 60 MCP tools, 63 CLI subcommands, 62 client methods) and every declared control is classed implemented / ignored / rejected / rejected-in-job / declared-only with a source citation that tests/check_route_contract_matrix.py verifies (fixed point, coverage, known gaps); two independent refute-by-default review rounds corrected the classifications.",
+      "remaining_condition": "The declared extended API still includes unexecuted modality/control combinations, especially music and anonymous diarization; the matrix marks them (declared-only and rejected-in-job rows) but marking is not execution.",
+      "next_action": "Pick one low-cost declared-only or rejected-in-job row from docs/ROUTE_CONTRACT_MATRIX.md and either implement its typed semantics with a contract test or make the refusal an HTTP-visible typed error; keep the matrix a fixed point of the generator.",
+      "action_category": "source_or_local_contract_work"
+    },
+    {
+      "id": "INT-02",
+      "category": "Interfaces",
+      "closed": true,
+      "status": "validated_bounded",
+      "condition": "Expose implemented operations and constraints through discoverable typed schemas.",
+      "evidence_ids": [
+        "E-015",
+        "E-025",
+        "E-029",
+        "E-035",
+        "E-044",
+        "E-046"
+      ],
+      "qualification_note": "Native portable discovery exposes 37 typed tools,5 resources, 5 templates and 2 prompts on tested HTTP/stdio modes, with real inference. This does not execute every tool. Additional bounded evidence: E-035, E-044, E-046. Existing closure scope is unchanged.",
+      "acceptance_layer": "ENGINE_CONTRACT"
+    },
+    {
+      "id": "INT-03",
+      "category": "Interfaces",
+      "closed": true,
+      "status": "validated_bounded",
+      "condition": "Qualify typed MCP operations/resources/prompts over HTTP and stdio, including failure paths.",
+      "evidence_ids": [
+        "E-001",
+        "E-007",
+        "E-015",
+        "E-025",
+        "E-029",
+        "E-036",
+        "E-038",
+        "E-046",
+        "E-078"
+      ],
+      "qualification_note": "Bounded portable qualification: modern and legacy MCP HTTP plus packaged stdio discover 37 tools, 5 resources, 5 templates and 2 prompts; actual model-resource/prompt retrieval, embedding inference and structured unknown-model failures pass. Full execution of every modality/tool is not implied. Additional bounded evidence: E-036, E-038, E-046. Existing closure scope is unchanged.",
+      "acceptance_layer": "ENGINE_CONTRACT"
+    },
+    {
+      "id": "INT-04",
+      "category": "Interfaces",
+      "closed": false,
+      "status": "partial",
+      "condition": "Keep CLI and Python controls, lifecycle and job behavior consistent with HTTP.",
+      "evidence_ids": [
+        "E-009",
+        "E-014",
+        "E-015",
+        "E-025",
+        "E-029",
+        "E-032",
+        "E-033",
+        "E-034",
+        "E-035",
+        "E-036",
+        "E-044",
+        "E-056",
+        "E-072",
+        "E-078",
+        "E-080",
+        "E-088"
+      ],
+      "qualification_note": "Later bounded evidence: E-033, E-034, E-035, E-036, E-044. Their recorded source/runtime/native/presentation limits remain explicit. E-056 covers local CLI registry/defaults/worker-assignment error contracts against the frozen ENGINE package; HTTP/MCP/Python parity for those and for acquisition/runtime/job semantics remains open. E-072 shows the MCP job lifecycle (submit/idempotency/status/artifact/cancel-path refusals) consistent with the HTTP job routes on the frozen package; CLI/Python parity for jobs remains open.",
+      "acceptance_layer": "ENGINE_CONTRACT",
+      "remaining_condition": "New acquisition/runtime/music/job cancellation and timeout semantics lack complete HTTP/MCP/CLI/Python parity.",
+      "next_action": "Run the existing interfaces against one inert asynchronous job and compare terminal/error/timeout envelopes and no-duplicate counters in the packaged service.",
+      "action_category": "source_or_local_contract_work"
+    },
+    {
+      "id": "INT-05",
+      "category": "Interfaces",
+      "closed": false,
+      "status": "partial",
+      "condition": "Qualify complete browser actions, rendering, progress, cancellation and downloads.",
+      "evidence_ids": [
+        "E-043",
+        "E-045",
+        "E-070",
+        "E-079",
+        "E-081",
+        "E-083",
+        "E-084",
+        "E-088"
+      ],
+      "acceptance_layer": "ENGINE_CONTRACT",
+      "remaining_condition": "Full browser acquisition/cancel/download/media playback and all-modality controls are not established by the real two-chat journey.",
+      "next_action": "Complete native browser acquisition, cancellation, artifact download/playback and remaining modality controls with source-bound capture; reuse accepted generated outputs.",
+      "action_category": "native_ui_or_capture_validation",
+      "qualification_note": "Later bounded evidence: E-043, E-045. Their recorded source/runtime/native/presentation limits remain explicit. E-070 runs eleven static Studio UI checks against the real assets under Node; browser rendering, capture and download flows remain open (Playwright absent). 2026-09-25: bounded native browser actions on the b9 binary b9a0a63b5b59 recorded under E-083/E-084 (native Load, Generate and Open; rendered-DOM verification; eight Simple/Advanced × locale views); cancellation, download, media playback beyond the opened Blob and all-modality controls remain unqualified."
+    },
+    {
+      "id": "INT-06",
+      "category": "Interfaces",
+      "closed": false,
+      "status": "partial",
+      "condition": "Maintain documented provider-compatible subsets and explicit unsupported behavior.",
+      "evidence_ids": [
+        "E-086"
+      ],
+      "acceptance_layer": "ENGINE_CONTRACT",
+      "remaining_condition": "The code-bound parity/deviation map (docs/PROTOCOL_DEVIATIONS.md, asserted by tests/check_protocol_deviations.py) is maintained and now covers the broker routes. Since the broker work (2026-10-01 to 2026-10-03) the vendor authentication headers are read on their own route families when keys are enforced (accepted_auth rows), the client-default routes /v1/messages/count_tokens, /v1/voices* and GET /api/version (managed role) exist, and the stock OpenAI, Anthropic, google-genai and elevenlabs Python SDKs run unmodified against a real titanos serve in the sdk tier (tests/check_broker_sdk.py, check_broker_sdk_vendors.py), routed to loopback mocks and local CPU fixture models. Since the local-model work (2026-10-05) GET /api/version answers in every role, POST /api/show describes a registered model from the registry and passive inspection without loading, the Ollama tool loop completes in Ollama's own shape (tool results bound by tool_name to the synthesized tool_call ids) and the stock ollama client runs against a real serve in the sdk tier (tests/check_ollama_sdk.py). Since 2026-10-06 the stock OpenAI SDK's responses.stream() helper and typed legacy completions logprobs, and the stock ollama client's streaming tool loop, run against a real titanos serve on the Qwen2.5-0.5B GGUF (openai 2.54.0 and 3.24.0, ollama 0.6.3; tests/check_ollama_sdk.py in the sdk tier, the OpenAI lane in the integrator proofs), and the Ollama embedding routes name the ignored user field in X-Titanos-Ignored as /v1/embeddings does. The SDK lanes still prove protocol shape against mocks and fixtures rather than against any provider, and no stock client outcome is bound to an evidence row of the capability matrix.",
+      "next_action": "Bind one stock-client lane per adapter to a dated evidence row (model, server, SDK version, outcome, limits) and keep the deviation map regenerated with each adapter change.",
+      "action_category": "source_or_local_contract_work"
+    },
+    {
+      "id": "INT-07",
+      "category": "Interfaces",
+      "closed": false,
+      "status": "partial",
+      "condition": "Keep machine-facing IDs, content types, errors, status and artifact references stable.",
+      "evidence_ids": [
+        "E-009",
+        "E-015",
+        "E-016",
+        "E-017",
+        "E-018",
+        "E-025",
+        "E-029",
+        "E-032",
+        "E-036",
+        "E-072"
+      ],
+      "qualification_note": "Later bounded evidence: E-036. Their recorded source/runtime/native/presentation limits remain explicit. E-072 exercises stable job IDs, artifact identifiers, MIME-typed binary resources, 404/409 errors and idempotency semantics through the public MCP surface.",
+      "acceptance_layer": "ENGINE_CONTRACT",
+      "remaining_condition": "Cross-interface acquisition/runtime/music job states, typed failures and artifact references need unified boundary coverage.",
+      "next_action": "Use controlled terminal/failure records through actual HTTP/MCP/CLI serialization; verify IDs/content types and stable errors while keeping external diagnostics verbatim.",
+      "action_category": "source_or_local_contract_work"
+    },
+    {
+      "id": "CFG-01",
+      "category": "Configuration",
+      "closed": true,
+      "status": "validated_bounded",
+      "condition": "Recorded controls follow request over model over process-default precedence.",
+      "evidence_ids": [
+        "E-001",
+        "E-002",
+        "E-029",
+        "E-044",
+        "E-045",
+        "E-056"
+      ],
+      "acceptance_layer": "ENGINE_CONTRACT",
+      "qualification_note": "Actual portable token counts prove request > model defaults > TITANOS environment, including explicit false overriding a true model truncation default. CLI threads override the process environment. Additional bounded evidence: E-044, E-045. Existing closure scope is unchanged. E-056 adds frozen `settings --json` proof that TITANOS_PORT/THREADS/LOG_LEVEL environment values are effective with defaults reported separately and an invalid value refused. Existing closure scope is unchanged."
+    },
+    {
+      "id": "CFG-02",
+      "category": "Configuration",
+      "closed": false,
+      "status": "partial",
+      "condition": "Document and qualify meaningful generation, load, queue, media and resource controls.",
+      "evidence_ids": [
+        "E-015",
+        "E-016",
+        "E-043",
+        "E-044",
+        "E-045",
+        "E-085"
+      ],
+      "acceptance_layer": "ENGINE_CONTRACT",
+      "remaining_condition": "Real precedence is bounded; every advertised generation/load/queue/media/resource control is not mapped to supported runtime behavior.",
+      "next_action": "Build a setting-to-backend/request map from Settings and capability declarations; add focused inert contract checks only for unsupported or dropped fields found.",
+      "action_category": "source_or_local_contract_work",
+      "qualification_note": "Later bounded evidence: E-043, E-044, E-045. Their recorded source/runtime/native/presentation limits remain explicit."
+    },
+    {
+      "id": "CFG-03",
+      "category": "Configuration",
+      "closed": false,
+      "status": "partial",
+      "condition": "Maintain an option-parity map with honest backend-specific differences.",
+      "evidence_ids": [
+        "E-085"
+      ],
+      "acceptance_layer": "ENGINE_CONTRACT",
+      "remaining_condition": "The Ollama/llama.cpp option-parity map exists (docs/OPTION_PARITY.md, 17 source checks, reconciled 2026-09-23); target-native all-options qualification on a named runtime/model remains open.",
+      "next_action": "Qualify the documented load-time/native rows (context, batch/microbatch, threads, split mode) against one owned native workload and bind the observed argv.",
+      "action_category": "source_or_local_contract_work"
+    },
+    {
+      "id": "LIFE-01",
+      "category": "Lifecycle",
+      "closed": false,
+      "status": "partial",
+      "condition": "Qualify owned process/worker start, readiness, load, unload, crash, restart and stop.",
+      "evidence_ids": [
+        "E-001",
+        "E-011",
+        "E-012",
+        "E-015",
+        "E-016",
+        "E-017",
+        "E-018",
+        "E-028",
+        "E-029",
+        "E-030",
+        "E-031",
+        "E-032",
+        "E-033",
+        "E-036",
+        "E-037",
+        "E-038",
+        "E-040",
+        "E-042",
+        "E-044",
+        "E-045",
+        "E-046",
+        "E-047",
+        "E-050",
+        "E-051",
+        "E-057",
+        "E-060",
+        "E-061",
+        "E-064",
+        "E-066",
+        "E-067",
+        "E-069",
+        "E-071",
+        "E-072"
+      ],
+      "acceptance_layer": "ENGINE_CONTRACT",
+      "qualification_note": "Later bounded evidence: E-033, E-036, E-037, E-038, E-040, E-042, E-044, E-045, E-046, E-047, E-050. Their recorded source/runtime/native/presentation limits remain explicit. E-051 separately proves controlled source/ASGI registry failure and recovery with actual owned inert Windows processes; it does not execute a frozen server or trained provider. E-057 adds an owned frozen-server start, ownership-first readiness, passive validation and Job stop on the previously failed 127.0.0.1:49515 with the exact f36e executable; crash/restart and provider paths remain open. E-060 adds owned frozen speech-runtime start, model load/unload on an exposed GPU UUID and planned Job stop with resident foreign GPU workloads preserved. E-061 records the username-environment defect exposed by the frozen speech path and its serve-side fix with regression; the sealed cohort still needs USERNAME. E-064/E-066/E-067 add cross-modality eviction, unload, reload, readiness and stream-disconnect release on source and the frozen successor. E-069 adds native worker start, two-slot processing, unload/shutdown and abrupt Titanos death releasing the native child; E-071/E-072 add frozen-package composition and MCP-driven load/unload.",
+      "remaining_condition": "Historical native crash/restart, compiled inert tree cleanup, normal model lifecycle and E-051 source registry recovery are recorded; real-provider failure/restart and frozen-service registry recovery under the added backend paths remain incomplete.",
+      "next_action": "Reuse the completed normal lifecycle, compiled tree and source registry cases. Target a specifically uncovered packaged worker readiness/crash/recovery path with exact ownership and no costly replay.",
+      "action_category": "native_worker_lifecycle_validation"
+    },
+    {
+      "id": "LIFE-02",
+      "category": "Lifecycle",
+      "closed": false,
+      "status": "partial",
+      "condition": "Qualify bounded queues, resident resources and scheduling under conflicting work.",
+      "evidence_ids": [
+        "E-015"
+      ],
+      "acceptance_layer": "ENGINE_CONTRACT",
+      "remaining_condition": "Finite native slot concurrency exists, but cross-backend queue fairness, overflow and conflicting resident budgets remain unproved.",
+      "next_action": "Use slow inert workers with bounded queues to verify admission, FIFO/error semantics and retained ownership without consuming GPU/model resources.",
+      "action_category": "source_or_local_contract_work"
+    },
+    {
+      "id": "LIFE-03",
+      "category": "Lifecycle",
+      "closed": false,
+      "status": "partial",
+      "condition": "Qualify job states, retention, restart, idempotency and explicit no-duplicate execution.",
+      "evidence_ids": [
+        "E-009",
+        "E-010",
+        "E-011",
+        "E-072"
+      ],
+      "acceptance_layer": "ENGINE_CONTRACT",
+      "remaining_condition": "Real completed replay exists; original restart wrapper and some interrupted/active job reconciliation remain failed or unknown.",
+      "next_action": "Repair only the historical reporting-wrapper assumption, then use retained completed artifacts to verify restart/read-only retrieval and zero new generation; add inert interrupted-record recovery.",
+      "action_category": "source_or_local_contract_work",
+      "qualification_note": "E-072 adds idempotent job resubmission (same job, no duplicate work), conflict detection and terminal failure of an invalid-control job; restart/retention remain open."
+    },
+    {
+      "id": "LIFE-04",
+      "category": "Lifecycle",
+      "closed": true,
+      "status": "validated_bounded",
+      "condition": "Qualify explicit worker/device placement and advertised automatic request distribution.",
+      "evidence_ids": [
+        "E-015",
+        "E-016",
+        "E-017",
+        "E-018",
+        "E-032",
+        "E-043",
+        "E-090",
+        "E-091",
+        "E-092"
+      ],
+      "acceptance_layer": "ENGINE_CONTRACT",
+      "qualification_note": "The existing Pool explicitly pinned and automatically distributed independent MiniLM requests across matching x64 CPUs and mixed x64 OpenVINO CPU/ARM64 DirectML endpoints. Each topology included concurrent leases with exact host/model/device attribution; all leases released. This is not model sharding, remote-load discovery or automatic failover. Additional bounded evidence: E-043. Existing closure scope is unchanged."
+    },
+    {
+      "id": "LIFE-05",
+      "category": "Lifecycle",
+      "closed": false,
+      "status": "partial",
+      "condition": "Qualify replicas, model sharding and tensor parallelism as separate execution modes.",
+      "evidence_ids": [
+        "E-090",
+        "E-092"
+      ],
+      "acceptance_layer": "ENGINE_CONTRACT",
+      "remaining_condition": "Independent replicas are proven; representative model-sharding and tensor-parallel modes need separate device/rank/operator evidence.",
+      "next_action": "Select one already-supported device group from current inventory, establish ownership/resources, and qualify one mode per explicit assignment; do not use routing proof as sharding proof.",
+      "action_category": "target_runtime_qualification"
+    },
+    {
+      "id": "LIFE-06",
+      "category": "Lifecycle",
+      "closed": true,
+      "status": "validated_bounded",
+      "condition": "Maintain ownership and retention for requests, temporary files, models and artifacts.",
+      "evidence_ids": [
+        "E-009",
+        "E-010",
+        "E-011",
+        "E-015",
+        "E-016",
+        "E-017",
+        "E-018",
+        "E-021",
+        "E-022",
+        "E-023",
+        "E-024",
+        "E-025",
+        "E-026",
+        "E-027",
+        "E-028",
+        "E-029",
+        "E-030",
+        "E-031",
+        "E-032",
+        "E-036",
+        "E-037",
+        "E-038",
+        "E-039",
+        "E-040",
+        "E-041",
+        "E-042",
+        "E-045",
+        "E-046",
+        "E-047",
+        "E-050"
+      ],
+      "qualification_note": "Bounded normal-completion ownership/input preservation and empty unload catalogs passed. All pool leases and owned transport/server resources closed. Earlier failed recovery/reporting paths remain failed and do not become graceful-shutdown proof. Additional bounded evidence: E-036, E-037, E-038, E-039, E-040, E-041, E-042, E-045, E-046, E-047, E-050. Existing closure scope is unchanged.",
+      "acceptance_layer": "ENGINE_CONTRACT"
+    },
+    {
+      "id": "TEXT-01",
+      "category": "Language",
+      "closed": false,
+      "status": "partial",
+      "condition": "Qualify trained-model text generation, token/stop controls, roles, streaming and cancellation; assess factual intelligence separately.",
+      "evidence_ids": [
+        "E-001",
+        "E-016",
+        "E-017",
+        "E-018",
+        "E-022",
+        "E-036",
+        "E-038",
+        "E-040",
+        "E-045",
+        "E-064",
+        "E-066",
+        "E-069"
+      ],
+      "qualification_note": "Later bounded evidence: E-036, E-038, E-040, E-045. Their recorded source/runtime/native/presentation limits remain explicit. E-064/E-066 add live chat with true SSE, usage and completions from source and from the frozen successor on Blackwell with a pinned tiny model; stop controls, roles breadth and factual quality remain open. E-069 adds native llama.cpp chat with tool calls, streamed tool arguments, grammar-constrained JSON, Responses streaming and the token cap on Windows CUDA; factual quality remains unscored.",
+      "acceptance_layer": "ENGINE_CONTRACT",
+      "engine_contract_observation": "passed_for_recorded_text_generation_and_token_limit",
+      "model_quality_note": "Both retained outputs incorrectly call the Moon the dark side of Earth; factual quality failed. The original responses are unchanged.",
+      "model_quality_status": "factual_answer_failed",
+      "remaining_condition": "Historical/native streamed chat is real, but intended backend/model token-stop-role/cancellation matrix remains incomplete.",
+      "next_action": "Map reusable Linux native and macOS/Windows chat proofs to supported backends; target only a missing stop/control case using an existing local trained model after CPU headroom check.",
+      "action_category": "source_or_local_contract_work"
+    },
+    {
+      "id": "TEXT-02",
+      "category": "Language",
+      "closed": true,
+      "status": "validated_bounded",
+      "condition": "Qualify supported structured output and tool calls without confusing prompts with constraints.",
+      "evidence_ids": [
+        "E-001",
+        "E-040"
+      ],
+      "acceptance_layer": "ENGINE_CONTRACT",
+      "qualification_note": "The exact retained E001 eleven-check real native Linux run includes function-call/result ID/argument preservation, incremental SSE tool arguments and native grammar-constrained JSON. Current capability declarations limit tools/structured_output to llama-cpp. Historical named Qwen GGUF/llama.cpp b10809 Linux CPU path only. No new Windows tool/schema run, arbitrary schema/model correctness or prompt-only enforcement claim. Other backend capabilities remain explicitly unsupported.",
+      "closure_reconciliation": {
+        "date": "2026-09-22",
+        "basis": "The exact retained E001 eleven-check real native Linux run includes function-call/result ID/argument preservation, incremental SSE tool arguments and native grammar-constrained JSON. Current capability declarations limit tools/structured_output to llama-cpp.",
+        "evidence_ids": [
+          "E-001"
+        ],
+        "exclusions": "Historical named Qwen GGUF/llama.cpp b10809 Linux CPU path only. No new Windows tool/schema run, arbitrary schema/model correctness or prompt-only enforcement claim. Other backend capabilities remain explicitly unsupported."
+      }
+    },
+    {
+      "id": "TEXT-03",
+      "category": "Language",
+      "closed": false,
+      "status": "partial",
+      "condition": "Keep Responses and SDK capabilities explicit about stateless, stateful and tool behavior.",
+      "evidence_ids": [
+        "E-001",
+        "E-014"
+      ],
+      "acceptance_layer": "ENGINE_CONTRACT",
+      "remaining_condition": "Historical stateless Responses create/SSE pass (E-001, E-014). Local Responses stay stateless by design: store:true, previous_response_id and background:true answer 400 unsupported_capability (docs/RESPONSES.md, docs/PROTOCOL_DEVIATIONS.md). Since 2026-10-02 the cloud broker serves stateful Responses only for cloud targets that own the handle (/v1/responses/{id} retrieve, delete, cancel and input items; stored background responses resumable with ?stream=true), proven against loopback mocks in docs/broker_matrix.json, not against a provider and not for local models. Wider SDK/tool semantics on local models remain unqualified.",
+      "next_action": "Document the exact stateless Responses contract and explicit unsupported stateful calls, then check only uncovered schema/error forwarding with existing inert protocol tests.",
+      "action_category": "source_or_local_contract_work"
+    },
+    {
+      "id": "SENT-01",
+      "category": "Sentiment",
+      "closed": true,
+      "status": "validated_bounded",
+      "condition": "Recorded three-class sentiment preserves native labels, uncalibrated scores and input identity.",
+      "evidence_ids": [
+        "E-003"
+      ],
+      "acceptance_layer": "ENGINE_CONTRACT"
+    },
+    {
+      "id": "SENT-07",
+      "category": "Sentiment",
+      "closed": true,
+      "status": "validated_bounded",
+      "condition": "Recorded two-class sentiment preserves binary labels without inventing a neutral class.",
+      "evidence_ids": [
+        "E-003"
+      ],
+      "acceptance_layer": "ENGINE_CONTRACT"
+    },
+    {
+      "id": "SENT-02",
+      "category": "Sentiment",
+      "closed": true,
+      "status": "validated_bounded",
+      "condition": "Selected LLM sentiment passes its bounded clear/uncertain input procedure, with retained misses.",
+      "evidence_ids": [
+        "E-003"
+      ],
+      "acceptance_layer": "MODEL_QUALITY"
+    },
+    {
+      "id": "SENT-03",
+      "category": "Sentiment",
+      "closed": true,
+      "status": "validated_bounded",
+      "condition": "Recorded classifier-plus-LLM agreement composition exposes attributable stage outcomes.",
+      "evidence_ids": [
+        "E-003"
+      ],
+      "acceptance_layer": "ENGINE_CONTRACT"
+    },
+    {
+      "id": "SENT-04",
+      "category": "Sentiment",
+      "closed": false,
+      "status": "partial",
+      "condition": "Qualify shared budgets, cancellation and declared workers for sentiment composition.",
+      "evidence_ids": [
+        "E-003"
+      ],
+      "acceptance_layer": "ENGINE_CONTRACT",
+      "remaining_condition": "Shared sentiment-composition deadlines, cancellation and declared worker propagation lack full integrated coverage.",
+      "next_action": "Exercise the existing composition with slow/failing inert stages and verify the original deadline, explicit worker attribution and no second-stage replay after cancellation.",
+      "action_category": "source_or_local_contract_work"
+    },
+    {
+      "id": "SENT-05",
+      "category": "Sentiment",
+      "closed": true,
+      "status": "validated_bounded",
+      "condition": "Keep text/transcript sentiment separate from acoustic affect and a person's actual feelings.",
+      "evidence_ids": [
+        "E-003"
+      ],
+      "acceptance_layer": "ENGINE_CONTRACT"
+    },
+    {
+      "id": "SENT-06",
+      "category": "Sentiment",
+      "closed": true,
+      "status": "validated_bounded",
+      "condition": "Recorded sentiment procedure separates format, coverage, semantic agreement and abstention.",
+      "evidence_ids": [
+        "E-003"
+      ],
+      "acceptance_layer": "ENGINE_CONTRACT"
+    },
+    {
+      "id": "RET-01",
+      "category": "Retrieval",
+      "closed": true,
+      "status": "validated_bounded",
+      "condition": "Recorded trained embeddings distinguish selected related and unrelated inputs.",
+      "evidence_ids": [
+        "E-002",
+        "E-033",
+        "E-038",
+        "E-039"
+      ],
+      "acceptance_layer": "MODEL_QUALITY",
+      "qualification_note": " Additional bounded evidence: E-033, E-038, E-039. Existing closure scope is unchanged."
+    },
+    {
+      "id": "RET-02",
+      "category": "Retrieval",
+      "closed": true,
+      "status": "validated_bounded",
+      "condition": "Recorded embedding input controls preserve or explicitly report truncation and pooling.",
+      "evidence_ids": [
+        "E-004",
+        "E-026",
+        "E-027",
+        "E-029"
+      ],
+      "acceptance_layer": "ENGINE_CONTRACT",
+      "qualification_note": "Actual token counts and explicit truncation reporting prove portable request/model/environment controls; HTTP, CLI, MCP and base64 vectors agree. This is input/output fidelity, not population retrieval accuracy."
+    },
+    {
+      "id": "RET-03",
+      "category": "Retrieval",
+      "closed": true,
+      "status": "validated_bounded",
+      "condition": "Selected trained cross-encoder reranking meets its bounded ordering/input-fidelity gate.",
+      "evidence_ids": [
+        "E-004"
+      ],
+      "acceptance_layer": "MODEL_QUALITY"
+    },
+    {
+      "id": "RET-04",
+      "category": "Retrieval",
+      "closed": false,
+      "status": "partial",
+      "condition": "Qualify retrieval/answer stage and citation provenance, supported abstention envelopes and explicit uncertainty; assess factual entailment separately.",
+      "evidence_ids": [
+        "E-004"
+      ],
+      "acceptance_layer": "ENGINE_CONTRACT",
+      "qualification_note": "Citation/reference integrity and enforced output schema are engine obligations. Whether a model reasons correctly about contradiction, entailment or abstention is model quality; retained reasoning misses remain visible.",
+      "remaining_condition": "Retrieval/citation provenance and abstention remain partial; model entailment is a separate quality gate.",
+      "next_action": "Use fixed passage/stage fixtures to check citation IDs, truncation/budget/abstention envelopes and cancellation, preserving all passage/answer text and earlier semantic misses.",
+      "action_category": "source_or_local_contract_work"
+    },
+    {
+      "id": "RET-05",
+      "category": "Retrieval",
+      "closed": false,
+      "status": "partial",
+      "condition": "Extend classification, extraction and moderation with task-specific output contracts and input/model attribution.",
+      "evidence_ids": [
+        "E-004"
+      ],
+      "acceptance_layer": "ENGINE_CONTRACT",
+      "qualification_note": "Preserve task-native labels, scores and output shape. Population accuracy or moderation judgment is a separate model-quality evaluation.",
+      "remaining_condition": "Task-specific extraction/moderation/classification contracts and model attribution are incomplete beyond current pair-classification evidence.",
+      "next_action": "Choose the next justified typed text task from the API standard, define its explicit output/input provenance and implement through the existing extension path.",
+      "action_category": "source_or_local_contract_work"
+    },
+    {
+      "id": "AUD-01",
+      "category": "Audio",
+      "closed": false,
+      "status": "partial",
+      "condition": "Qualify ASR formats/languages, silence/noise, metadata and cancellation.",
+      "evidence_ids": [
+        "E-005",
+        "E-019",
+        "E-024",
+        "E-040",
+        "E-041",
+        "E-047",
+        "E-063",
+        "E-064",
+        "E-066",
+        "E-067",
+        "E-071",
+        "E-076",
+        "E-080"
+      ],
+      "qualification_note": "Later bounded evidence: E-040, E-041, E-047. Their recorded source/runtime/native/presentation limits remain explicit. E-063 fixes the transcription language hint for English-only Whisper checkpoints (English hint satisfied, other languages refused clearly, multilingual unchanged) with a regression; ASR silence/noise, encodings and language breadth remain open. E-064/E-066 add the TTS→ASR round trip and malformed-audio rejection; E-067 adds VAD speech/silence intervals on the frozen successor; silence/noise ASR and language breadth remain open. E-071 adds the ASR+diarization+sentiment composition and anonymous two-speaker diarization on the frozen successor; ASR breadth remains open.",
+      "acceptance_layer": "ENGINE_CONTRACT",
+      "remaining_condition": "ASR includes native Windows and Linux clear English cases, but silence/noise, alternate encodings/languages and caller cancellation remain incomplete.",
+      "next_action": "Preselect one unproved silence/noise or format/cancellation gate using existing immutable audio and the qualified local CPU model; keep expected text out of requests and reuse the passed clear-speech case.",
+      "action_category": "source_or_local_contract_work"
+    },
+    {
+      "id": "AUD-02",
+      "category": "Audio",
+      "closed": true,
+      "status": "validated_bounded",
+      "condition": "Recorded nonstreaming VAD has explicit sample-rate, reset, timestamp and noise semantics.",
+      "evidence_ids": [
+        "E-005"
+      ],
+      "acceptance_layer": "ENGINE_CONTRACT"
+    },
+    {
+      "id": "AUD-03",
+      "category": "Audio",
+      "closed": true,
+      "status": "validated_bounded",
+      "condition": "Implement and qualify anonymous diarization and overlapping speech without identity inference.",
+      "evidence_ids": [
+        "E-052",
+        "E-053",
+        "E-054"
+      ],
+      "acceptance_layer": "ENGINE_CONTRACT",
+      "qualification_note": "Anonymous CPU diarization and overlap on the named pyannote 3.0/ERes2Net pair, Sherpa 1.13.8/native ORT 1.28.2, corrected Windows x64 executable 90c50ae8/source acd122. One licensed reconstructed AMI 25.2099375 s clip, explicitly known two-speaker count; complete-clip overlap F1 .8405443215 exceeded the unchanged .35 floor and .1738504479 always-overlap baseline. Anonymous per-request labels and real simultaneous intervals were preserved.",
+      "qualification_limits": "Automatic speaker-count accuracy, other models/languages/recording conditions, benchmark DER, diarization/ASR accuracy beyond this fixture, real speaker identity, GPU and human UI are not closed. Native callback cancellation is separately source-Python E-053, with segmentation/clustering blind spots."
+    },
+    {
+      "id": "AUD-04",
+      "category": "Audio",
+      "closed": false,
+      "status": "partial",
+      "condition": "Qualify coherent speech output, completeness, declared voice controls, formats and supported TTS streaming; assess voice naturalness separately.",
+      "evidence_ids": [
+        "E-009",
+        "E-011",
+        "E-034",
+        "E-041",
+        "E-050",
+        "E-060",
+        "E-062"
+      ],
+      "acceptance_layer": "ENGINE_CONTRACT",
+      "qualification_note": "Later bounded evidence: E-034, E-041, E-050. Their recorded source/runtime/native/presentation limits remain explicit. E-060 adds one frozen exact-Vega PCM16 24 kHz take from the sealed Windows speech runtime on shared GPU0 with unprompted CPU ASR verification; streaming, formats, voice controls, human listening and broad speech quality remain open. An informal owner listening remark on the E-060 take was recorded on 2026-09-22 (one take); it is not human acceptance, and the row's broad voice-quality acceptance remains open. E-062 exercises every declared speech control on the frozen successor (seed determinism, language code/name/omitted, Spanish, longer paragraph) with unprompted CPU ASR; wav-only output and fixed speed remain the declared contract; streaming is not declared.",
+      "remaining_condition": "Exact voice and Sherpa coherent WAVs are proved; requested streaming, broader formats/voice controls and physical capture are not.",
+      "next_action": "Audit advertised TTS stream/format controls against existing adapters, implement explicit unsupported errors or streaming where supported, and reuse existing WAVs for format/export checks.",
+      "action_category": "source_or_local_contract_work"
+    },
+    {
+      "id": "AUD-05",
+      "category": "Audio",
+      "closed": false,
+      "status": "partial",
+      "condition": "Qualify text/audio translation input/output contracts, direction controls and model/stage provenance; assess translation accuracy separately.",
+      "evidence_ids": [
+        "E-005",
+        "E-040",
+        "E-065"
+      ],
+      "acceptance_layer": "ENGINE_CONTRACT",
+      "qualification_note": "Later bounded evidence: E-040. Their recorded source/runtime/native/presentation limits remain explicit. E-065 adds a real T5 English→French translation on CUDA with explicit language binding; direction/provenance breadth remains open.",
+      "remaining_condition": "Recorded text/audio translation cases do not cover declared direction, language, budgeting and all stage provenance combinations.",
+      "next_action": "Exercise direction/provenance/cancellation envelopes with existing translation fixtures; select a new trained-language case only after the contract gap is identified.",
+      "action_category": "source_or_local_contract_work"
+    },
+    {
+      "id": "AUD-06",
+      "category": "Audio",
+      "closed": true,
+      "status": "validated_bounded",
+      "condition": "Complete budgeted ASR/VAD/diarization/text-analysis composition and overlap handling.",
+      "evidence_ids": [
+        "E-005",
+        "E-052",
+        "E-053",
+        "E-054"
+      ],
+      "acceptance_layer": "ENGINE_CONTRACT",
+      "qualification_note": "Named four-stage CPU VAD→ASR→diarization→transcript-text-analysis composition completed through the corrected native HTTP contract in 19.125 s, preserving full original bytes and 403359 decoded samples. One shared-deadline request returned HTTP 504. Of 10 ASR units, 9 were processed for interval intersection, 8 received nonempty speaker assignments, and 2 remained unassigned: unit 5 at 17.68–18.52 s had no matching detected speaker; unit 9 at 24.8–25.64 s extended beyond the 25.2099375 s audio and retained its original timing/text. Text analysis actually executed with native JSON-schema controls and explicitly abstained. All models unloaded; planned server termination and forced remaining-owned-descendant cleanup reached 0 active with handles closed.",
+      "qualification_limits": "No sentiment correctness, vocal affect, fabricated per-speaker transcript, benchmark ASR quality, all-language/format breadth, automatic count, hard native preemption, graceful shutdown or human/visible-UI acceptance. Post-inference package membership matches; it is not a fresh all-payload-byte rehash."
+    },
+    {
+      "id": "AUD-07",
+      "category": "Audio",
+      "closed": false,
+      "status": "partial",
+      "condition": "Add justified audio-event/quality, music/sound and separately disclosed acoustic-affect families.",
+      "evidence_ids": [
+        "E-044",
+        "E-107"
+      ],
+      "acceptance_layer": "ENGINE_CONTRACT",
+      "remaining_condition": "Music generation ran once from packaged bytes (E-107) without any quality qualification; audio-event/quality and disclosed acoustic-affect adapters remain absent.",
+      "next_action": "Keep the ACE native qualification lane separate; define one justified audio-event/quality output contract using existing extension infrastructure, without claiming personal feelings or music quality.",
+      "action_category": "source_or_local_contract_work",
+      "qualification_note": "Later bounded evidence: E-044. Their recorded source/runtime/native/presentation limits remain explicit."
+    },
+    {
+      "id": "VIS-01",
+      "category": "Vision",
+      "closed": false,
+      "status": "partial",
+      "condition": "Qualify image-bearing multimodal input handling, coherent intended text output, controls and lifecycle across supported inputs; assess grounding accuracy separately.",
+      "evidence_ids": [
+        "E-001",
+        "E-023",
+        "E-040",
+        "E-064",
+        "E-066"
+      ],
+      "qualification_note": "Later bounded evidence: E-040. Their recorded source/runtime/native/presentation limits remain explicit. E-064/E-066 add image-conditioned vision generation from source and the frozen successor with SmolVLM-256M; malformed/oversized/multi-image cases remain open.",
+      "acceptance_layer": "ENGINE_CONTRACT",
+      "remaining_condition": "Two SmolVLM cases establish image-bearing requests, not intended varied input/control/cancellation coverage.",
+      "next_action": "Prepare a small fixed varied-input/control matrix and first exercise malformed/oversized/multiple-image rejection without model work; reserve new inference for an unproved supported case.",
+      "action_category": "source_or_local_contract_work"
+    },
+    {
+      "id": "VIS-02",
+      "category": "Vision",
+      "closed": false,
+      "status": "partial",
+      "condition": "Qualify OCR input handling, reading-order/coordinate contracts and cropped-line versus full-page mode behavior; report recognition accuracy separately.",
+      "evidence_ids": [
+        "E-006",
+        "E-040",
+        "E-065"
+      ],
+      "acceptance_layer": "ENGINE_CONTRACT",
+      "qualification_note": "Later bounded evidence: E-040. Their recorded source/runtime/native/presentation limits remain explicit. E-065 adds a real TrOCR line recognition on CUDA (HELLO WORLD read without its space, retained as a quality observation); full-page and reading-order contracts remain open.",
+      "remaining_condition": "Native Tesseract lines and trained TrOCR single-line proof do not establish full-page reading order/coordinates or varied image handling.",
+      "next_action": "Define and verify the cropped-line versus full-page contract with existing immutable page/line fixtures and local CPU OCR, keeping recognition accuracy separate from geometry.",
+      "action_category": "source_or_local_contract_work"
+    },
+    {
+      "id": "VIS-03",
+      "category": "Vision",
+      "closed": false,
+      "status": "partial",
+      "condition": "Qualify detector label/score/box contracts and configured postprocessing across supported inputs; report missed objects and recognition accuracy separately.",
+      "evidence_ids": [
+        "E-006",
+        "E-040",
+        "E-065"
+      ],
+      "acceptance_layer": "ENGINE_CONTRACT",
+      "qualification_note": "Later bounded evidence: E-040. Their recorded source/runtime/native/presentation limits remain explicit. E-065 adds real YOLOS detection on CUDA meeting the fixture criterion; score/NMS/empty-image bounds remain open.",
+      "remaining_condition": "DETR/NMS boxes and B580 digit graphs are different tasks; detector postprocessing/input coverage remains limited to recorded scenes.",
+      "next_action": "Exercise score/NMS/empty-image/coordinate bounds with fixed detector outputs; use a new real scene only where required to close the supported input gate.",
+      "action_category": "source_or_local_contract_work"
+    },
+    {
+      "id": "VIS-04",
+      "category": "Vision",
+      "closed": false,
+      "status": "partial",
+      "condition": "Expand prompted-segmentation input, output-mask and control qualification beyond the recorded masks, probes and single-scene scope.",
+      "evidence_ids": [
+        "E-006",
+        "E-067"
+      ],
+      "acceptance_layer": "ENGINE_CONTRACT",
+      "qualification_note": "Invalid mask shape, prompt-coordinate mapping or ignored explicit controls remains an engine defect. Segmentation accuracy is a separate model-quality measure. E-067 adds SAM point and box prompts on the frozen successor with PNG masks at image size and the combined box-plus-points refusal; mask/encoding breadth remains open.",
+      "remaining_condition": "SAM mask/probe proof is single-scene and does not cover multi-prompt, output choice and cancellation boundaries.",
+      "next_action": "Prepare fixed point/box/mask prompt and encoding/error cases through the existing segmentation API; avoid repeating the accepted mask generation.",
+      "action_category": "source_or_local_contract_work"
+    },
+    {
+      "id": "VIS-05",
+      "category": "Vision",
+      "closed": false,
+      "status": "partial",
+      "condition": "Expand relative-depth proof; metric depth needs explicit calibration and new qualification.",
+      "evidence_ids": [
+        "E-006",
+        "E-067"
+      ],
+      "acceptance_layer": "ENGINE_CONTRACT",
+      "qualification_note": "Relative-depth output/scale contracts remain engineering work; depth accuracy is model quality. Metric-depth claims still require calibrated provenance. E-067 adds a relative inverse-depth map from the frozen successor with dimensions, finiteness and uncalibrated declaration checked; metric depth stays unsupported.",
+      "remaining_condition": "Relative-depth proof is bounded; calibrated metric units are not implemented/qualified.",
+      "next_action": "Document relative-only units and reject unsupported metric claims; add fixture checks for dimensions/scaling/encoding, treating metric calibration as a separate future model contract.",
+      "action_category": "source_or_local_contract_work"
+    },
+    {
+      "id": "VIS-06",
+      "category": "Vision",
+      "closed": false,
+      "status": "missing",
+      "condition": "Add video understanding/tracking with frame/time identity and supported track semantics.",
+      "evidence_ids": [],
+      "acceptance_layer": "ENGINE_CONTRACT",
+      "remaining_condition": "No finished video-understanding/tracking adapter with frame/time/track identity is qualified.",
+      "next_action": "Implement an explicit frame/time and anonymous track schema through the existing typed extension path before selecting and qualifying a supported local model.",
+      "action_category": "source_or_local_contract_work"
+    },
+    {
+      "id": "GEN-01",
+      "category": "Asset generation",
+      "closed": false,
+      "status": "partial",
+      "condition": "Qualify trained image generation, coherent image artifacts, declared request controls and cancellation; assess cosmetic prompt adherence separately.",
+      "evidence_ids": [
+        "E-007",
+        "E-008",
+        "E-021",
+        "E-040",
+        "E-064",
+        "E-066"
+      ],
+      "qualification_note": "Later bounded evidence: E-040. Their recorded source/runtime/native/presentation limits remain explicit. E-064/E-066 add tiny diffusion image generation from source and the frozen successor (contract only); trained-model controls and cancellation remain open.",
+      "acceptance_layer": "ENGINE_CONTRACT",
+      "engine_contract_observation": "passed_for_recorded_image_generation_and_completion_lifecycle",
+      "model_quality_note": "Both outputs missed the requested pure-white background;0 of 31,744 outer-band pixels passed that cosmetic criterion. The images and original metric are retained.",
+      "model_quality_status": "cosmetic_prompt_criterion_failed",
+      "remaining_condition": "Trained native SD1.5/SDXL artifacts are proved; per-backend controls and queued/active cancellation remain incomplete.",
+      "next_action": "Reuse accepted PNGs and manifests for export/metadata tests; extend inert job cancellation/control tests at the exact missing boundary before requesting any new generation.",
+      "action_category": "source_or_local_contract_work"
+    },
+    {
+      "id": "GEN-02",
+      "category": "Asset generation",
+      "closed": false,
+      "status": "partial",
+      "condition": "Qualify image-edit inputs, conditioning controls, valid intended-modality outputs and explicit preservation guarantees without hiding prior artifacts.",
+      "evidence_ids": [
+        "E-008",
+        "E-040",
+        "E-064",
+        "E-066"
+      ],
+      "acceptance_layer": "ENGINE_CONTRACT",
+      "qualification_note": "Later bounded evidence: E-040. Their recorded source/runtime/native/presentation limits remain explicit. E-064/E-066 add image edit with strength on the tiny pipeline from source and the frozen successor; preservation contract remains open.",
+      "remaining_condition": "Trained edit outputs exist; exact conditioning, preservation/mask guarantees and supported input combinations remain incomplete.",
+      "next_action": "Bind the actual model-specific preservation contract and test masks/strength/invalid-input forwarding with fixtures; do not infer unchanged pixels from a decoded edited image.",
+      "action_category": "source_or_local_contract_work"
+    },
+    {
+      "id": "GEN-03",
+      "category": "Asset generation",
+      "closed": false,
+      "status": "partial",
+      "condition": "Qualify playable trained-model video for supported text/image conditioning and declared frame/timing controls; assess visual fidelity and motion quality separately.",
+      "evidence_ids": [
+        "E-008",
+        "E-042",
+        "E-064",
+        "E-066"
+      ],
+      "acceptance_layer": "ENGINE_CONTRACT",
+      "qualification_note": "Later bounded evidence: E-042. Their recorded source/runtime/native/presentation limits remain explicit. E-064/E-066 add a 5-frame MP4 from the tiny video pipeline with frame-count verification from source and the frozen successor; trained-model timing/cancellation remain open.",
+      "remaining_condition": "Trained Wan I2V is real; text-only video, broader timing/frame controls and native cancellation remain unqualified.",
+      "next_action": "Reuse the completed Wan clip for artifact/timing UI work; prepare the next missing control/cancellation case and run only on a currently owned compatible device after fresh resources.",
+      "action_category": "target_runtime_qualification"
+    },
+    {
+      "id": "GEN-04",
+      "category": "Asset generation",
+      "closed": false,
+      "status": "partial",
+      "condition": "Add justified music/audio, 3D, mesh, texture or other explicitly typed asset families.",
+      "evidence_ids": [
+        "E-043",
+        "E-044",
+        "E-107"
+      ],
+      "acceptance_layer": "ENGINE_CONTRACT",
+      "remaining_condition": "One 10-second instrumental completed from the portable ACE runtime on candidate H (E-107); song quality, other durations, controls and devices remain open; 3D/mesh/texture families remain unimplemented.",
+      "next_action": "Build and relocate the optional ACE runtime, then qualify the declared XL-SFT model and supported device modes, actual output controls, cancellation and unload using external weights.",
+      "action_category": "music_runtime_qualification",
+      "qualification_note": "Later bounded evidence: E-043, E-044. Their recorded source/runtime/native/presentation limits remain explicit."
+    },
+    {
+      "id": "MEDIA-01",
+      "category": "Demonstration",
+      "closed": false,
+      "status": "partial",
+      "condition": "Tie demo claims to dated model/runtime/device requests and visible results.",
+      "evidence_ids": [
+        "E-041",
+        "E-042",
+        "E-045",
+        "E-048",
+        "E-074",
+        "E-082"
+      ],
+      "acceptance_layer": "HUMAN_PRESENTATION",
+      "remaining_condition": "The completed map still lacks accepted continuous Studio and CLI captures, clean hardware/routing demonstration coverage and actual routed non-text proof/capture; final media QA and human acceptance remain separate.",
+      "next_action": "Use the existing 25-segment map to assemble qualified retained sections and fill its named proof/capture gaps. Keep cards as explanatory material, preserve source labels, and do not replay accepted inference merely to repair continuity.",
+      "action_category": "qualified_visible_coverage_completion",
+      "qualification_note": "The sealed 25-segment edit map binds exact narration intervals/text and existing source/device/output material, with per-segment usable excerpts and missing-capture slots. Mapping is complete; qualified visible coverage is not. E-074 integrates the 25-scene edit bindings through the existing preparer/verifier/assembler as a separate board with verified narration and chapters; required captures and the render remain open."
+    },
+    {
+      "id": "MEDIA-02",
+      "category": "Demonstration",
+      "closed": false,
+      "status": "partial",
+      "condition": "Qualify media integrity and content/quality separately from file decoding or ASR agreement.",
+      "evidence_ids": [
+        "E-021",
+        "E-023",
+        "E-024",
+        "E-041",
+        "E-042",
+        "E-045",
+        "E-048",
+        "E-074",
+        "E-082"
+      ],
+      "qualification_note": "Later bounded evidence: E-041, E-042, E-045, E-048. Their recorded source/runtime/native/presentation limits remain explicit. E-074 verifies the 25-take narration immutability (exact sample boundaries, zero clipping) through the shared media QA; content/quality review remains human.",
+      "acceptance_layer": "HUMAN_PRESENTATION",
+      "remaining_condition": "Audio/MP4 decode and automated words pass, but final full-film visual/audio/privacy and human listening review are incomplete.",
+      "next_action": "Review and assemble only existing private assets at original speed with explicit source bindings; keep interrupted status and pending exact-voice human listening unchanged.",
+      "action_category": "source_or_local_contract_work"
+    },
+    {
+      "id": "MEDIA-03",
+      "category": "Demonstration",
+      "closed": false,
+      "status": "partial",
+      "condition": "Deliver a human-reviewed engine demonstration with explicit coverage and exclusions.",
+      "evidence_ids": [
+        "E-048"
+      ],
+      "qualification_note": "Later bounded evidence: E-048. Their recorded source/runtime/native/presentation limits remain explicit.",
+      "acceptance_layer": "HUMAN_PRESENTATION",
+      "remaining_condition": "The requested human-reviewed overview plus uninterrupted evidence cut has not been delivered.",
+      "next_action": "Assemble the overview from retained exact narration and accepted results, capture the remaining uninterrupted evidence workflow, and complete human watch/listen review.",
+      "action_category": "native_ui_or_capture_validation"
+    },
+    {
+      "id": "HW-01",
+      "category": "Hardware",
+      "closed": true,
+      "status": "validated_bounded",
+      "condition": "Extend native Windows x64 CPU package and workload qualification.",
+      "evidence_ids": [
+        "E-003",
+        "E-004",
+        "E-005",
+        "E-006",
+        "E-016",
+        "E-017",
+        "E-018",
+        "E-026",
+        "E-028",
+        "E-029",
+        "E-030",
+        "E-045",
+        "E-046",
+        "E-047",
+        "E-050"
+      ],
+      "qualification_note": "The new x64 OpenVINO portable passed native CPU HTTP inference and independent CLI/MCP/lifecycle tests; the separate current CUDA portable also passed CPU MiniLM. This closes the named successor-package/workload scope, not every Windows CPU/backend/model. Additional bounded evidence: E-045, E-046, E-047, E-050. Existing closure scope is unchanged.",
+      "acceptance_layer": "ENGINE_CONTRACT"
+    },
+    {
+      "id": "HW-02",
+      "category": "Hardware",
+      "closed": true,
+      "status": "validated_bounded",
+      "condition": "Requalify native Linux x64 CPU successors and added model families.",
+      "evidence_ids": [
+        "E-001",
+        "E-022",
+        "E-036",
+        "E-040"
+      ],
+      "qualification_note": "Current source 9b98 ran the named chat and MiniLM models on native Linux x86-64 CPU, with request/input identity, placement and cleanup proof. Chat semantics failed separately. This closure covers source execution in the existing runtime, not a new standalone binary or every Linux model. Additional bounded evidence: E-036, E-040. Existing closure scope is unchanged.",
+      "acceptance_layer": "ENGINE_CONTRACT"
+    },
+    {
+      "id": "HW-03",
+      "category": "Hardware",
+      "closed": false,
+      "status": "partial",
+      "condition": "Extend native Windows ARM64 CPU beyond its recorded prepared-model subsets.",
+      "evidence_ids": [
+        "E-002",
+        "E-027",
+        "E-028",
+        "E-032"
+      ],
+      "qualification_note": "A new ARM64 DirectML portable now passes native CPU/DML prepared-graph inference and mixed-machine requests. Extension beyond the recorded prepared MiniLM/digit subsets remains open.",
+      "acceptance_layer": "ENGINE_CONTRACT",
+      "remaining_condition": "Native ARM64 DirectML prepared graphs pass; broader trained language/media and portable QNN packaging remain unqualified.",
+      "next_action": "Reuse existing Qualcomm package/graph proof; select one new supported ARM64 model family and confirm present host/resource ownership before its native run.",
+      "action_category": "target_runtime_qualification"
+    },
+    {
+      "id": "HW-04",
+      "category": "Hardware",
+      "closed": false,
+      "status": "partial",
+      "condition": "Qualify an intended native Linux ARM64 CPU target and package.",
+      "evidence_ids": [],
+      "acceptance_layer": "ENGINE_CONTRACT",
+      "remaining_condition": "A current intended Linux ARM64 CPU native package/workload is not bound.",
+      "next_action": "Select an intended Linux ARM64 CPU target and self-contained runtime profile; qualify that named package and workload or explicitly retain it as unverified.",
+      "action_category": "target_runtime_qualification"
+    },
+    {
+      "id": "HW-05",
+      "category": "Hardware",
+      "closed": false,
+      "status": "partial",
+      "condition": "Qualify NVIDIA CUDA on Windows/Linux x64 across intended Maxwell, Pascal, Volta, Turing, Ampere, Ada, Hopper and Blackwell model/package combinations; catalog fit is not native execution.",
+      "evidence_ids": [
+        "E-002",
+        "E-008",
+        "E-009",
+        "E-020",
+        "E-022",
+        "E-023",
+        "E-024",
+        "E-030",
+        "E-040",
+        "E-041",
+        "E-042",
+        "E-064",
+        "E-066",
+        "E-067",
+        "E-069",
+        "E-077",
+        "E-080",
+        "E-109"
+      ],
+      "qualification_note": "Later bounded evidence: E-040, E-041, E-042. Their recorded source/runtime/native/presentation limits remain explicit. E-064/E-066/E-067 add Blackwell (RTX PRO 6000) Windows x64 coverage of chat, vision, embeddings, speech, ASR, image, video, depth, segmentation, rerank, pairs and sentiment; other architectures remain open. E-069 adds Blackwell Windows x64 native llama.cpp (CUDA 12.4 runtime) coverage. E-109 adds the pinned llama.cpp b12284 catalog on the same Blackwell card with the CUDA 12.4 and CUDA 13.5 runtimes (route matrix, streamed Responses and accounting; complete() with tools failed until 17dc447, retested on CPU only); one host and one small model, kernel execution not verified.",
+      "acceptance_layer": "ENGINE_CONTRACT",
+      "remaining_condition": "Recorded Ada/Blackwell cases do not qualify the enumerated older CUDA architectures/OS/model combinations.",
+      "next_action": "Map actual available NVIDIA cards to compatible pinned runtime profiles, then qualify the first missing architecture/model combination; catalog entries alone remain source evidence.",
+      "action_category": "target_runtime_qualification"
+    },
+    {
+      "id": "HW-06",
+      "category": "Hardware",
+      "closed": false,
+      "status": "partial",
+      "condition": "Qualify intended NVIDIA ARM64/embedded targets with platform-specific runtimes.",
+      "evidence_ids": [],
+      "acceptance_layer": "ENGINE_CONTRACT",
+      "remaining_condition": "No intended NVIDIA ARM64/embedded native model/package proof is recorded for this successor.",
+      "next_action": "Select an intended supported NVIDIA ARM64 or embedded profile and qualify its native package/model execution with platform-specific driver and runtime evidence.",
+      "action_category": "target_delivery_qualification"
+    },
+    {
+      "id": "HW-07",
+      "category": "Hardware",
+      "closed": false,
+      "status": "partial",
+      "condition": "Extend AMD Windows GPU coverage beyond recorded DirectML graph subsets.",
+      "evidence_ids": [
+        "E-002",
+        "E-008",
+        "E-039"
+      ],
+      "acceptance_layer": "ENGINE_CONTRACT",
+      "remaining_condition": "Fresh integrated Radeon DirectML embeddings pass; native AMD portable and discrete-GPU image coverage remain incomplete.",
+      "next_action": "Reuse prepared embedding parity; choose the already-inventoried AMD target and a supported native DirectML profile after ownership/headroom check, preserving the prior image failure.",
+      "action_category": "target_runtime_qualification",
+      "qualification_note": "Later bounded evidence: E-039. Their recorded source/runtime/native/presentation limits remain explicit."
+    },
+    {
+      "id": "HW-08",
+      "category": "Hardware",
+      "closed": false,
+      "status": "partial",
+      "condition": "Qualify supported AMD Linux ROCm devices and native packages.",
+      "evidence_ids": [],
+      "acceptance_layer": "ENGINE_CONTRACT",
+      "remaining_condition": "No named native Linux ROCm model/package pass is bound.",
+      "next_action": "Identify a currently available supported AMD Linux host and ROCm/runtime/model fit, then build and qualify one owned native workload; do not count DirectML as ROCm.",
+      "action_category": "target_runtime_qualification"
+    },
+    {
+      "id": "HW-09",
+      "category": "Hardware",
+      "closed": true,
+      "status": "validated_bounded",
+      "condition": "Extend Intel discrete/integrated GPU model and runtime coverage from recorded paths.",
+      "evidence_ids": [
+        "E-002",
+        "E-007",
+        "E-021",
+        "E-026",
+        "E-028",
+        "E-037",
+        "E-091"
+      ],
+      "qualification_note": "Intel Arc B580/A770 trained image execution and Intel portable CPU/GPU/NPU prepared-graph execution passed within their separate package/model scope. Cosmetic image misses remain MODEL_QUALITY. Arbitrary models and other runtimes are not implied. Additional bounded evidence: E-037. Existing closure scope is unchanged.",
+      "acceptance_layer": "ENGINE_CONTRACT"
+    },
+    {
+      "id": "HW-10",
+      "category": "Hardware",
+      "closed": true,
+      "status": "validated_bounded",
+      "condition": "Extend Intel NPU prepared-model/operator qualification without hidden CPU execution.",
+      "evidence_ids": [
+        "E-002",
+        "E-026",
+        "E-028"
+      ],
+      "qualification_note": "Current source plus the native x64 OpenVINO portable pass pinned NPU MiniLM/digit requests with explicit NPU device and no CPU fallback. Label accuracy 28/30 remains model quality; reference agreement30/30 is engine fidelity. Separate source profiling is not a trace of every binary request.",
+      "acceptance_layer": "ENGINE_CONTRACT"
+    },
+    {
+      "id": "HW-11",
+      "category": "Hardware",
+      "closed": true,
+      "status": "validated_bounded",
+      "condition": "Extend Qualcomm Windows ARM64 GPU/NPU prepared-model qualification.",
+      "evidence_ids": [
+        "E-002",
+        "E-027",
+        "E-028",
+        "E-032"
+      ],
+      "qualification_note": "Native ARM64 DirectML portable inference and mixed-machine routing now add packaging proof for the prepared CPU/Adreno graphs. QNN HTP retains separate source/profile evidence and is absent from the DirectML ZIP. Arbitrary models and vendor redistribution remain separate.",
+      "acceptance_layer": "ENGINE_CONTRACT"
+    },
+    {
+      "id": "HW-12",
+      "category": "Hardware",
+      "closed": false,
+      "status": "partial",
+      "condition": "Resolve AMD Ryzen AI NPU packaging/provenance and qualify intended model families.",
+      "evidence_ids": [
+        "E-002"
+      ],
+      "acceptance_layer": "ENGINE_CONTRACT",
+      "remaining_condition": "Ryzen AI NPU graph evidence does not settle vendor runtime/preparation redistribution or full packaged provenance.",
+      "next_action": "Inventory the retained vendor artifacts, licenses and preparation recipes; state a private runtime/driver prerequisite until the specific redistribution gap is resolved.",
+      "action_category": "source_or_local_contract_work"
+    },
+    {
+      "id": "HW-13",
+      "category": "Hardware",
+      "closed": true,
+      "status": "validated_bounded",
+      "condition": "Requalify Apple Silicon GPU/MPS successor packages and model families.",
+      "evidence_ids": [
+        "E-002",
+        "E-031",
+        "E-038",
+        "E-108"
+      ],
+      "acceptance_layer": "ENGINE_CONTRACT",
+      "qualification_note": "The relocated macOS ARM64 full successor actually ran CPU/MPS MiniLM, stdio MCP and streamed trained MPS chat with ambient Python removed, model unload, normal exit 0 and protected-owner preservation. Executable 5270d444 and its bound MiniLM/SmolLM2 models only. No ANE, every model family, new 9e795 macOS package or current host availability claim. E-108 adds the Apple M1 MacBook Air matrix-kit run from the source tree (kit e93f066): 16 MPS-slot passes across single and two-replica workers with parameters resident on mps:0 (the two GGUF cells through llama.cpp Metal, 25/25 layers offloaded), refute-by-default review upheld; storage-level device evidence only, kernel execution on Metal not verified, no packaged-candidate claim.",
+      "closure_reconciliation": {
+        "date": "2026-09-22",
+        "basis": "The relocated macOS ARM64 full successor actually ran CPU/MPS MiniLM, stdio MCP and streamed trained MPS chat with ambient Python removed, model unload, normal exit 0 and protected-owner preservation.",
+        "evidence_ids": [
+          "E-038"
+        ],
+        "exclusions": "Executable 5270d444 and its bound MiniLM/SmolLM2 models only. No ANE, every model family, new 9e795 macOS package or current host availability claim."
+      }
+    },
+    {
+      "id": "HW-14",
+      "category": "Hardware",
+      "closed": false,
+      "status": "partial",
+      "condition": "Qualify model-specific Apple Neural Engine execution without universal ANE-only claims.",
+      "evidence_ids": [
+        "E-002",
+        "E-108"
+      ],
+      "acceptance_layer": "ENGINE_CONTRACT",
+      "remaining_condition": "Core ML provider activation is evidenced on the M1 (E-108) but no receipt shows which compute unit ran a kernel; historical Core ML model paths still do not prove every operator runs on the ANE or qualify arbitrary models.",
+      "next_action": "Define a model-specific Core ML compute-unit/operator evidence gate from retained exports; plan native ANE proof only where the vendor exposes meaningful evidence.",
+      "action_category": "source_or_local_contract_work",
+      "qualification_note": "E-108 adds four Core ML execution-provider passes on the M1 (uci-digits and mobilenetv2 ONNX graphs, single and two replicas) with every node partitioned to the provider and CPU fallback refused, plus the four by-design fails where the provider partitions only part of a graph (MiniLM ONNX, tiny BERT export); which Core ML compute unit executed is unproven, so this is provider-activation evidence, not Neural Engine execution proof."
+    },
+    {
+      "id": "HW-15",
+      "category": "Hardware",
+      "closed": false,
+      "status": "partial",
+      "condition": "Qualify intended Intel macOS and legacy architecture packages where still supported.",
+      "evidence_ids": [],
+      "acceptance_layer": "ENGINE_CONTRACT",
+      "remaining_condition": "No intended Intel macOS/legacy target-native package and workload is recorded.",
+      "next_action": "Resolve whether a currently available target/profile remains supported; build/test that named profile or explicitly defer it without advertising qualification.",
+      "action_category": "target_runtime_qualification"
+    },
+    {
+      "id": "HW-16",
+      "category": "Hardware",
+      "closed": true,
+      "status": "validated_bounded",
+      "condition": "Qualify matching/mixed-machine placement, routing, failure isolation and cleanup.",
+      "evidence_ids": [
+        "E-032"
+      ],
+      "acceptance_layer": "ENGINE_CONTRACT",
+      "qualification_note": "Both matching x64 CPU and mixed x64 CPU/ARM64 DirectML pools passed16 real pinned/automatic/concurrent requests. Two input-policy errors propagated without replay; all leases, Jobs, listeners, clients, tunnels and SSH sessions closed, and baseline shared owners remained. Transport loss, crash failover, LAN discovery and model sharding remain outside this bounded proof."
+    },
+    {
+      "id": "HW-17",
+      "category": "Hardware",
+      "closed": true,
+      "status": "validated_bounded",
+      "condition": "Maintain a versioned model/runtime/device evidence matrix with exclusions.",
+      "evidence_ids": [
+        "E-001",
+        "E-002",
+        "E-007",
+        "E-009",
+        "E-020",
+        "E-021",
+        "E-022",
+        "E-023",
+        "E-024",
+        "E-026",
+        "E-027",
+        "E-028",
+        "E-029",
+        "E-030",
+        "E-031",
+        "E-032",
+        "E-037",
+        "E-038",
+        "E-039",
+        "E-040",
+        "E-041",
+        "E-042",
+        "E-045",
+        "E-046",
+        "E-047",
+        "E-050",
+        "E-089",
+        "E-090",
+        "E-091",
+        "E-092"
+      ],
+      "qualification_note": "The matrix now distinguishes engine, model-quality and human-presentation layers and binds new portable, CPU/CUDA/MPS and pooling receipts. Source/package/UI versions remain explicit. Additional bounded evidence: E-037, E-038, E-039, E-040, E-041, E-042, E-045, E-046, E-047, E-050. Existing closure scope is unchanged.",
+      "acceptance_layer": "ENGINE_CONTRACT",
+      "remaining_condition": "The versioned model/runtime/device evidence matrix now includes the full model x platform-slot execution grid (E-089) with explicit untried and not-applicable cells; keep it regenerated from receipts as new cells are executed."
+    },
+    {
+      "id": "HW-18",
+      "category": "Hardware",
+      "closed": false,
+      "status": "partial",
+      "condition": "Report actual resource/operator limits and explicit supported alternatives.",
+      "evidence_ids": [
+        "E-021",
+        "E-022",
+        "E-023",
+        "E-024",
+        "E-028",
+        "E-029",
+        "E-030",
+        "E-031",
+        "E-032",
+        "E-037",
+        "E-039",
+        "E-047",
+        "E-089",
+        "E-090",
+        "E-091",
+        "E-092"
+      ],
+      "qualification_note": "Later bounded evidence: E-037, E-039, E-047. Their recorded source/runtime/native/presentation limits remain explicit.",
+      "acceptance_layer": "ENGINE_CONTRACT",
+      "remaining_condition": "Resource/device limits are reported in named cases; complete backend/operator limits and actionable alternatives remain incomplete.",
+      "next_action": "Map dtype, memory, prepared-shape and operator constraints from existing runtime/capability receipts into truthful task compatibility guidance.",
+      "action_category": "source_or_local_contract_work"
+    },
+    {
+      "id": "FAIL-01",
+      "category": "Failure behavior",
+      "closed": false,
+      "status": "partial",
+      "condition": "Reject malformed, unsupported, incompatible or corrupted inputs with actionable errors.",
+      "evidence_ids": [
+        "E-015",
+        "E-016",
+        "E-017",
+        "E-018",
+        "E-020",
+        "E-029",
+        "E-035",
+        "E-040",
+        "E-043",
+        "E-044",
+        "E-062"
+      ],
+      "acceptance_layer": "ENGINE_CONTRACT",
+      "qualification_note": "Later bounded evidence: E-035, E-040, E-043, E-044. Their recorded source/runtime/native/presentation limits remain explicit. E-062 adds seven declared speech refusals on the frozen successor (speed, format, unknown voice, empty input, seed range, frame budget, unknown model) with declared statuses and clear error bodies; other provider/music/registration malformed cases remain open.",
+      "remaining_condition": "Many safe rejection paths pass; new provider/music/registration malformed cases need an integrated negative-case matrix.",
+      "next_action": "Use inert corrupted metadata/archive/path fixtures in the native service and verify actionable typed failures with no activation or foreign-file change.",
+      "action_category": "source_or_local_contract_work"
+    },
+    {
+      "id": "FAIL-02",
+      "category": "Failure behavior",
+      "closed": false,
+      "status": "partial",
+      "condition": "Qualify configurable input/body/token/media/tensor/queue limits and overflow semantics.",
+      "evidence_ids": [
+        "E-029",
+        "E-044"
+      ],
+      "acceptance_layer": "ENGINE_CONTRACT",
+      "qualification_note": "Later bounded evidence: E-044. Their recorded source/runtime/native/presentation limits remain explicit.",
+      "remaining_condition": "Real token precedence and source music budgets pass; every input/media/tensor/queue overflow boundary is not native-qualified.",
+      "next_action": "Test just-under/over boundaries using small declared limits and inert bodies, verify no silent clipping and no large allocation or model execution.",
+      "action_category": "source_or_local_contract_work"
+    },
+    {
+      "id": "FAIL-03",
+      "category": "Failure behavior",
+      "closed": false,
+      "status": "partial",
+      "condition": "Qualify queued/active cancellation and distinguish cooperative cancellation from process stop.",
+      "evidence_ids": [
+        "E-011",
+        "E-015",
+        "E-034",
+        "E-044",
+        "E-069"
+      ],
+      "acceptance_layer": "ENGINE_CONTRACT",
+      "remaining_condition": "Historical native socket-disconnect cancellation passes; original CUDA speech cleanup stayed held and new music/video cancellation is unqualified.",
+      "next_action": "Reconcile successful historical cancellation without rerun; test the uncovered queued/active job state transition with an inert worker, reserving real backend cancellation for a fresh owned resource window.",
+      "action_category": "source_or_local_contract_work",
+      "qualification_note": "Later bounded evidence: E-034, E-044. Their recorded source/runtime/native/presentation limits remain explicit. E-069 adds socket-disconnect cancellation releasing a native slot and native-process death failing the stream without replay; queued-job cancellation transitions remain open."
+    },
+    {
+      "id": "FAIL-04",
+      "category": "Failure behavior",
+      "closed": false,
+      "status": "partial",
+      "condition": "Qualify load/OOM/crash/stream/device/artifact failures without corrupting foreign work.",
+      "evidence_ids": [
+        "E-011",
+        "E-012",
+        "E-015",
+        "E-040",
+        "E-046"
+      ],
+      "acceptance_layer": "ENGINE_CONTRACT",
+      "remaining_condition": "Historical crash/stream and compiled child-tree cases exist; real OOM/device/artifact failures across new backends remain open.",
+      "next_action": "Use deterministic failing child/artifact fixtures under owned Jobs to verify registry/artifact/foreign-work preservation; do not induce global resource exhaustion.",
+      "action_category": "source_or_local_contract_work",
+      "qualification_note": "Later bounded evidence: E-040, E-046. Their recorded source/runtime/native/presentation limits remain explicit."
+    },
+    {
+      "id": "FAIL-05",
+      "category": "Failure behavior",
+      "closed": true,
+      "status": "validated_bounded",
+      "condition": "Keep retries bounded, explicit and attributable; do not silently replay costly inference.",
+      "evidence_ids": [
+        "E-009",
+        "E-010",
+        "E-015",
+        "E-016",
+        "E-017",
+        "E-018",
+        "E-014",
+        "E-021",
+        "E-022",
+        "E-023",
+        "E-024",
+        "E-025",
+        "E-026",
+        "E-027",
+        "E-029",
+        "E-032",
+        "E-036",
+        "E-037",
+        "E-047"
+      ],
+      "qualification_note": "Sixteen successful pool requests plus two intentional400 policy failures are exactly accounted for in server logs; failed requests were not replayed. The earlier verifier expected 400 instead of correct 422; its failed attempt and cleanup remain retained. Additional bounded evidence: E-036, E-037, E-047. Existing closure scope is unchanged.",
+      "acceptance_layer": "ENGINE_CONTRACT"
+    },
+    {
+      "id": "FAIL-06",
+      "category": "Failure behavior",
+      "closed": false,
+      "status": "partial",
+      "condition": "Qualify local/network authentication, path isolation and trusted checkpoint-code controls.",
+      "evidence_ids": [
+        "E-016",
+        "E-017",
+        "E-018",
+        "E-029",
+        "E-035",
+        "E-043",
+        "E-044"
+      ],
+      "acceptance_layer": "ENGINE_CONTRACT",
+      "qualification_note": "Later bounded evidence: E-035, E-043, E-044. Their recorded source/runtime/native/presentation limits remain explicit.",
+      "remaining_condition": "Loopback auth and metadata transport protections pass. Since the broker work (2026-10-01 to 2026-10-03) the source has scoped tk_ client keys with budgets and expiry, a keyless-loopback principal that can never hold credentials:write, keys:admin or audit:read outside the audited Studio provider-setup path, native TLS through TITANOS_TLS_CERTFILE/KEYFILE, a broker role that refuses a non-loopback bind without it, and pinned proxy-header handling; all of it is proven against loopback mocks and in-process tests (docs/BROKER_SECURITY.md, docs/broker_matrix.json), not on a LAN. Peer TLS on a real network, default-LAN behaviour and complete trusted-path/code boundaries remain unqualified.",
+      "next_action": "Verify local negative authentication/path/code contracts with inert fixtures, and qualify peer TLS/default-network behavior separately through legitimate authenticated test endpoints.",
+      "action_category": "source_or_local_contract_work"
+    },
+    {
+      "id": "OBS-01",
+      "category": "Observability",
+      "closed": false,
+      "status": "partial",
+      "condition": "Expose useful correlated health, model, worker, job, placement, usage and error observations.",
+      "evidence_ids": [
+        "E-009",
+        "E-011",
+        "E-012",
+        "E-015",
+        "E-016",
+        "E-017",
+        "E-018",
+        "E-021",
+        "E-022",
+        "E-023",
+        "E-024",
+        "E-025",
+        "E-028",
+        "E-029",
+        "E-030",
+        "E-031",
+        "E-032",
+        "E-036",
+        "E-037",
+        "E-040",
+        "E-042",
+        "E-043",
+        "E-044",
+        "E-045",
+        "E-046",
+        "E-047",
+        "E-050"
+      ],
+      "qualification_note": "Later bounded evidence: E-036, E-037, E-040, E-042, E-043, E-044, E-045, E-046, E-047, E-050. Their recorded source/runtime/native/presentation limits remain explicit.",
+      "acceptance_layer": "ENGINE_CONTRACT",
+      "remaining_condition": "Individual request/worker/device/output receipts exist; correlated acquisition/runtime/music job health/error observations remain incomplete.",
+      "next_action": "Compare existing event/status schemas and expose missing correlation or terminal-error fields through the current observability paths, validating with inert workers.",
+      "action_category": "source_or_local_contract_work"
+    },
+    {
+      "id": "OBS-02",
+      "category": "Observability",
+      "closed": false,
+      "status": "partial",
+      "condition": "Establish bounded representative concurrency, soak and repeated lifecycle tests.",
+      "evidence_ids": [
+        "E-001",
+        "E-032"
+      ],
+      "acceptance_layer": "ENGINE_CONTRACT",
+      "qualification_note": "Two concurrent automatic leases performed real requests to distinct hosts in each topology. This is a finite concurrency check, not sustained load/soak or all lifecycle combinations.",
+      "remaining_condition": "Finite slots and sixteen pooled requests are not a representative soak/repeated-failure lifecycle run.",
+      "next_action": "Define a small bounded CPU/inert queue soak with explicit counts and cleanup, reuse existing concurrency passes and measure only the missing retention/leak/fairness condition.",
+      "action_category": "source_or_local_contract_work"
+    },
+    {
+      "id": "PKG-01",
+      "category": "Packaging",
+      "closed": false,
+      "status": "partial",
+      "condition": "Qualify native interpreter/runtime bundles for each intended OS and architecture.",
+      "evidence_ids": [
+        "E-002",
+        "E-013",
+        "E-028",
+        "E-030",
+        "E-036",
+        "E-038",
+        "E-040",
+        "E-044",
+        "E-046",
+        "E-050",
+        "E-066",
+        "E-067",
+        "E-075",
+        "E-076",
+        "E-106",
+        "E-107"
+      ],
+      "acceptance_layer": "ENGINE_CONTRACT",
+      "qualification_note": "Later bounded evidence: E-036, E-038, E-040, E-044, E-046, E-050. Their recorded source/runtime/native/presentation limits remain explicit. E-066/E-067 qualify the native Windows x64 CUDA successor across all core and six extension modalities; Linux/ARM/macOS execution remain per target. E-106 adds the music-inclusive portable candidates C and D: the isolated ACE runtime r3 is packaged, inventory- and archive-bound, and relocation-verified (moved-prefix imports, offline docs, MCP) with no ambient Python; the real music request from the portable bytes remains refused by contained admission, so the portable music sidecar is packaged but not execution-qualified.",
+      "remaining_condition": "Native Windows/Linux/macOS packages exist, the portable music sidecar is packaged and relocation-verified (E-106) and one admitted real music request completed from packaged bytes on candidate H (E-107, one host and one GPU); the complete intended architecture/backend set remains unqualified.",
+      "next_action": "Reconcile package/profile exclusions and build one missing locally feasible profile; keep remote/ARM target execution pending specific resource availability rather than blanket access hold.",
+      "action_category": "source_or_local_contract_work"
+    },
+    {
+      "id": "PKG-02",
+      "category": "Packaging",
+      "closed": false,
+      "status": "partial",
+      "condition": "Keep runtime profiles understandable and model files independently replaceable.",
+      "evidence_ids": [
+        "E-002",
+        "E-013",
+        "E-020",
+        "E-028",
+        "E-029",
+        "E-033",
+        "E-034",
+        "E-035",
+        "E-044",
+        "E-046",
+        "E-050"
+      ],
+      "acceptance_layer": "ENGINE_CONTRACT",
+      "qualification_note": "Later bounded evidence: E-033, E-034, E-035, E-044, E-046, E-050. Their recorded source/runtime/native/presentation limits remain explicit.",
+      "remaining_condition": "Core/full/external weights and managed native runtime are documented; optional runtime availability and per-platform novice guidance still need one coherent map.",
+      "next_action": "Align the staged setup front door with actual delivered core/full contents and missing ACE/Qwen-TTS/Coqui/GenAI sidecars, preserving swappable models.",
+      "action_category": "source_or_local_contract_work"
+    },
+    {
+      "id": "PKG-03",
+      "category": "Packaging",
+      "closed": false,
+      "status": "partial",
+      "condition": "Complete source/dependency/native/model provenance, notices and redistribution review.",
+      "evidence_ids": [
+        "E-034",
+        "E-044",
+        "E-046",
+        "E-049",
+        "E-055",
+        "E-073",
+        "E-076",
+        "E-106"
+      ],
+      "acceptance_layer": "ENGINE_CONTRACT",
+      "remaining_condition": "Bound inventories/notices and actual offline source reconstruction exist; complete dependency/native/model redistribution review and final documentation export remain incomplete.",
+      "next_action": "Reuse E049 member-byte reconstruction; reconcile mixed Sherpa/native/model obligations and export the final staged documentation without private evidence, retaining distinct licenses.",
+      "action_category": "source_or_local_contract_work",
+      "qualification_note": "Later bounded evidence: E-034, E-044, E-046, E-049. Their recorded source/runtime/native/presentation limits remain explicit. E-055 adds the corrected packaged-distribution identity gate (real 97-distribution view passes with separately attributed native Sherpa preserved) and the sealed, unapplied ONNX/protobuf metadata amendment. Redistribution review and final documentation export remain open. E-073 carries the ONNX vendored-protobuf license and source attribution forward to the successor package as a sealed metadata amendment validated by the packaged-distribution gate. E-106 adds the packager-side license supplements for the isolated runtime (loguru, tokenizers, tqdm retained from shipped dist-info), the vendored Swagger UI asset inventory with source and license, DEPENDENCIES/SBOM/notices re-verified against the packaged candidates C and D, and an independent archive check and targeted audits corroborating the inventory; redistribution review and legal/vendor review remain open."
+    },
+    {
+      "id": "PKG-04",
+      "category": "Packaging",
+      "closed": true,
+      "status": "validated_bounded",
+      "condition": "Verify archives, clean-environment startup, installed identity, interfaces and cleanup.",
+      "evidence_ids": [
+        "E-013",
+        "E-028",
+        "E-029",
+        "E-030",
+        "E-036",
+        "E-038",
+        "E-040",
+        "E-046",
+        "E-047",
+        "E-050",
+        "E-056",
+        "E-058",
+        "E-059",
+        "E-088"
+      ],
+      "acceptance_layer": "ENGINE_CONTRACT",
+      "qualification_note": "Archives, isolated/ambient-Python-free startup, executable identity, actual interfaces and owned cleanup are recorded across named Windows/Linux/macOS native packages; latest core/full add cold discovery and native ASR/coexistence. Only the named package/profile evidence closes. All intended OS/architecture/runtime coverage stays PKG-01; complete beginner installation stays APP-02. Planned termination is not graceful drain. E-056 adds a fresh clean-user extraction of the 6bd ENGINE ZIP with every file matching its MANIFEST and a complete local CLI registry workflow without ambient Python. Closure scope is unchanged; the full-smoke ownership repair (E-055) is source-only and does not requalify any package. E-058 adds a fresh offline-validated ENGINE successor whose frozen CLI corrections were verified without model or GPU; closure scope unchanged. E-059 adds the corrected offline ENGINE successor with closure-only inventory and retained raw offline receipts; closure scope unchanged.",
+      "closure_reconciliation": {
+        "date": "2026-09-22",
+        "basis": "Archives, isolated/ambient-Python-free startup, executable identity, actual interfaces and owned cleanup are recorded across named Windows/Linux/macOS native packages; latest core/full add cold discovery and native ASR/coexistence.",
+        "evidence_ids": [
+          "E-028",
+          "E-029",
+          "E-030",
+          "E-036",
+          "E-038",
+          "E-040",
+          "E-046",
+          "E-047",
+          "E-050"
+        ],
+        "exclusions": "Only the named package/profile evidence closes. All intended OS/architecture/runtime coverage stays PKG-01; complete beginner installation stays APP-02. Planned termination is not graceful drain."
+      }
+    },
+    {
+      "id": "PKG-05",
+      "category": "Packaging",
+      "closed": false,
+      "status": "partial",
+      "condition": "Maintain contribution/build/test/security guidance, pinned recipes and platform CI.",
+      "evidence_ids": [
+        "E-015",
+        "E-044",
+        "E-046",
+        "E-049"
+      ],
+      "acceptance_layer": "ENGINE_CONTRACT",
+      "remaining_condition": "Build/security/contribution guidance and actual source reconstruction pass; the complete intended platform CI and clean-machine build toolchain remain unqualified.",
+      "next_action": "Reuse E049 reconstruction and existing CI checks; align declared platform jobs/recipes with real packaged profiles, and prepare the missing clean-toolchain build path.",
+      "action_category": "source_or_local_contract_work",
+      "qualification_note": "Later bounded evidence: E-044, E-046, E-049. Their recorded source/runtime/native/presentation limits remain explicit."
+    },
+    {
+      "id": "DEL-01",
+      "category": "Delivery",
+      "closed": false,
+      "status": "partial",
+      "condition": "Keep one concise front door to setup, APIs, configuration, qualification and remaining work.",
+      "evidence_ids": [
+        "E-043",
+        "E-046",
+        "E-049"
+      ],
+      "acceptance_layer": "ENGINE_CONTRACT",
+      "remaining_condition": "A private development front door exists; public-safe setup/API/config/qualification docs lag the delivered successor.",
+      "next_action": "Keep one README/STATUS front door linked to current setup, API, configuration, profile exclusions, qualification evidence and remaining work.",
+      "action_category": "source_or_local_contract_work",
+      "qualification_note": "Later bounded evidence: E-043, E-046, E-049. Their recorded source/runtime/native/presentation limits remain explicit."
+    },
+    {
+      "id": "DEL-02",
+      "category": "Delivery",
+      "closed": false,
+      "status": "missing",
+      "condition": "Obtain acceptance for the intended full engine and demonstration scope.",
+      "evidence_ids": [
+        "E-048"
+      ],
+      "acceptance_layer": "HUMAN_PRESENTATION",
+      "remaining_condition": "The intended complete engine and final demonstration have not received human acceptance.",
+      "next_action": "Finish missing product/media gates and present their concrete evidence and exclusions; do not convert automated checks into human acceptance.",
+      "action_category": "human_acceptance",
+      "qualification_note": "Later bounded evidence: E-048. Their recorded source/runtime/native/presentation limits remain explicit."
+    },
+    {
+      "id": "DEL-03",
+      "category": "Delivery",
+      "closed": false,
+      "status": "planned",
+      "condition": "Complete a coordinated reproducible development handoff and verified transfer.",
+      "evidence_ids": [
+        "E-046",
+        "E-049"
+      ],
+      "acceptance_layer": "ENGINE_CONTRACT",
+      "remaining_condition": "Reproducible development packages exist, but transfer and verified readback at the agreed destination remain incomplete.",
+      "next_action": "Prepare a checksum-bound source/package/evidence handoff, transfer it to the agreed development destination and verify exact readback and reproducible continuation.",
+      "action_category": "target_delivery_qualification",
+      "qualification_note": "Later bounded evidence: E-046, E-049. Their recorded source/runtime/native/presentation limits remain explicit."
+    }
+  ],
+  "qualification_policy": "Stable IDs are preserved. On 2026-09-21 the project separated engine, model-quality and presentation conditions and corrected rows that had mixed them. Each row names its acceptance layer; closure is bounded to linked evidence for that layer. Model quality misses remain recorded, while untested controls/runtime/package coverage remains open. Source execution, binary qualification, current service availability and human presentation do not imply one another.",
+  "source_baseline_commit": "9b98d0a49d4922f5ddf2aebba4034d1bea887e98",
+  "source_baseline_role": "Historical E-022 through E-024 source baseline only; subsequent native packages retain their own exact source/build identities. The delivered runtime successor is the separately recorded 9e795 archive, not this commit.",
+  "acceptance_layers": {
+    "ENGINE_CONTRACT": "Actual trained-model execution with coherent intended-modality output, valid encoding/storage, declared controls, protocol, placement/routing and lifecycle. Factual intelligence and cosmetic prompt adherence are separate. Requested structured-output enforcement remains an engine contract.",
+    "MODEL_QUALITY": "Retained factual, semantic, perceptual, pronunciation, ranking/classification and cosmetic prompt-adherence results. A coherent wrong answer or gray background does not by itself fail the engine. Degenerate or wrong-modality output is not accepted merely because it decodes.",
+    "HUMAN_PRESENTATION": "Demonstration claims, narration, visual/audio presentation and human watch/listen acceptance; separate from engine inference qualification."
+  },
+  "taxonomy_correction": {
+    "date": "2026-09-21",
+    "authority": "Project direction, 2026-09-21",
+    "reason": "Do not treat coherent wrong answers or cosmetic prompt misses as inference-engine failures; preserve hard output/control/protocol/lifecycle failures and quality observations.",
+    "stable_ids_preserved": 95
+  },
+  "layer_totals": {
+    "ENGINE_CONTRACT": {
+      "items": 88,
+      "closed": 29,
+      "open": 59
+    },
+    "MODEL_QUALITY": {
+      "items": 3,
+      "closed": 3,
+      "open": 0
+    },
+    "HUMAN_PRESENTATION": {
+      "items": 4,
+      "closed": 0,
+      "open": 4
+    }
+  },
+  "layer_totals_basis": "Counts classify each checklist row by its primary acceptance layer only. Linked model-quality observations can remain failed/limited even when an ENGINE_CONTRACT row passes; 3 bounded quality-row closures do not mean all model quality is accepted.",
+  "delivered_runtime_source_archive_sha256": "acd122bd826c42980d4031aa6ea0265831f6f0210c836a450cbd8f6272e33fc4",
+  "reconciliation": {
+    "date": "2026-09-22",
+    "method": "Retained records and local source inspection only; no inference, network, UI or green-test rerun.",
+    "new_evidence_ids": [
+      "E-033",
+      "E-034",
+      "E-035",
+      "E-036",
+      "E-037",
+      "E-038",
+      "E-039",
+      "E-040",
+      "E-041",
+      "E-042",
+      "E-043",
+      "E-044",
+      "E-045",
+      "E-046",
+      "E-047",
+      "E-048",
+      "E-049",
+      "E-050",
+      "E-051"
+    ],
+    "closure_changes": [
+      "MOD-03",
+      "PKG-04",
+      "HW-13",
+      "TEXT-02"
+    ],
+    "closure_rationale": "All 26 existing bounded closures are preserved. Four additional stated conditions are met by retained named evidence; broader platform/modality/human conditions remain open.",
+    "source_state": "Initial reconciliation: Staged documentation only. Delivered runtime source 9e795 and all earlier archives remain immutable; the separately recorded source export includes one test-fixture-only correction. Later delivered cohorts are specified in later_deltas and delivered_runtime_source_scope; no immutable runtime is changed by this documentation update.",
+    "scope": "A native model pass, source/fixture pass, prepared runtime, current availability, and human presentation are distinct.",
+    "later_deltas": [
+      {
+        "date": "2026-09-22",
+        "evidence_added": [
+          "E-051"
+        ],
+        "updated_rows": [
+          "MOD-04",
+          "LIFE-01",
+          "MEDIA-01"
+        ],
+        "closure_changes": [],
+        "scope": "Registry proof is source/ASGI plus actual inert Windows processes, not frozen/trained-model execution. The 25-segment edit map is completed; required visible coverage remains incomplete."
+      },
+      {
+        "date": "2026-09-22",
+        "evidence_added": [
+          "E-052",
+          "E-053",
+          "E-054"
+        ],
+        "updated_rows": [
+          "AUD-03",
+          "AUD-06"
+        ],
+        "closure_changes": [
+          "AUD-03",
+          "AUD-06"
+        ],
+        "scope": "Named ENGINE_CONTRACT only: one known-two-speaker Windows CPU composition, typed anonymous overlap/alignment, shared-deadline refusal, exact unload and owned termination. Model quality, native cancellation blindspots, forced descendant cleanup and human presentation limits remain explicit. Original 3a0529/502 retained.",
+        "evidence_page": "evidence/2026-09-22-audio-analysis.md",
+        "no_new_inference_in_reconciliation": true
+      }
+    ]
+  },
+  "delivered_runtime_source_scope": "Latest named audio native successor; general 130e delivery and earlier 9e/2519/fbf receipts retain their original identities. This subsequent documentation update does not change any immutable executable.",
+  "continuations": [
+    {
+      "date": "2026-09-22",
+      "run_id": "TITANOS-CONTINUE02-20260922",
+      "new_evidence_ids": [
+        "E-055",
+        "E-056"
+      ],
+      "closure_changes": [],
+      "rationale": "Source corrections, a sealed unapplied metadata amendment and a frozen CLI registry workflow add bounded evidence to five open/closed rows without meeting any remaining broad condition; totals stay 32 closed / 63 open.",
+      "method": "Inert regressions, read-only metadata validation and one frozen ENGINE CLI run; no serving, model, GPU, UI or network."
+    },
+    {
+      "date": "2026-09-22",
+      "run_id": "TITANOS-CONTINUE03-20260922",
+      "new_evidence_ids": [
+        "E-057",
+        "E-058"
+      ],
+      "closure_changes": [],
+      "rationale": "Owned same-binary bind diagnostic and a fresh offline ENGINE successor add bounded evidence; broad conditions stay open; totals unchanged.",
+      "method": "Read-only network/policy evidence, one owned Job-controlled server start/stop with passive HTTP checks, existing offline build recipe, in-process regressions."
+    },
+    {
+      "date": "2026-09-22",
+      "run_id": "TITANOS-FROZEN-VEGA-20260922",
+      "new_evidence_ids": [
+        "E-059",
+        "E-060",
+        "E-061",
+        "E-062",
+        "E-063"
+      ],
+      "closure_changes": [],
+      "rationale": "Corrected ENGINE successor, one frozen exact-Vega speech take and the username-environment fix add bounded evidence; no broad condition is met; totals unchanged.",
+      "method": "Existing offline build recipe with retained raw receipts; owned Job-controlled frozen speech runs with hash-verified inputs, passive HTTP checks, unprompted ASR and closure checks; CPU reproduction of the dependency import; focused regression."
+    },
+    {
+      "date": "2026-09-23",
+      "run_id": "TITANOS-MATRIX-20260922",
+      "new_evidence_ids": [
+        "E-064",
+        "E-065",
+        "E-066",
+        "E-067",
+        "E-068"
+      ],
+      "closure_changes": [],
+      "rationale": "Live acceptance of every core modality from source and the frozen successor, real extended-contract models, six extension modalities on the frozen package and a Windows acquisition fix add bounded ENGINE_CONTRACT evidence; no broad condition or human acceptance is met, totals unchanged.",
+      "method": "tests/check.py and tests/check_api_plus.py with pinned public fixtures on shared GPU0; owned Job-controlled extension controller with declared refusals; product pull path with regression."
+    },
+    {
+      "date": "2026-09-23",
+      "run_id": "TITANOS-FULL-OUTCOME-20260923",
+      "new_evidence_ids": [
+        "E-069",
+        "E-070",
+        "E-071",
+        "E-072",
+        "E-073",
+        "E-074"
+      ],
+      "closure_changes": [],
+      "rationale": "Native llama.cpp serving, Studio UI node checks, frozen-package diarization/audio analysis, the public MCP job workflow, the ONNX attribution amendment and the 25-scene edit integration add bounded ENGINE_CONTRACT and tooling evidence; human/media acceptance untouched; totals unchanged.",
+      "method": "Existing harnesses (check_native.py, node checks), owned Job-controlled frozen-package controllers, metadata-only amendment with the product gate, existing film tools extended with separate-board options."
+    },
+    {
+      "date": "2026-09-23",
+      "run_id": "TITANOS-STANDALONE-DELIVERY-20260923",
+      "new_evidence_ids": [
+        "E-075",
+        "E-076",
+        "E-077",
+        "E-078",
+        "E-079",
+        "E-080",
+        "E-081",
+        "E-082"
+      ],
+      "closure_changes": [],
+      "rationale": "The frozen standalone candidate was built under a measured 3 GiB profile, validated by reuse (compiled ASR hint, plain-directory pull, ONNX/protobuf notices) and served privately with measured host footprints; native MCP discovery and the Studio acquisition/ASR journey were captured natively on the candidate; speech on the candidate is proven by API only; an INTERIM 25-scene film package passed automated QA. Bounded ENGINE_CONTRACT evidence; no item closes: the speech recovery UI capture, hardware/routing capture and human acceptance remain open. E-070 corrected to 15/15."
+    },
+    {
+      "date": "2026-09-23",
+      "run_id": "TITANOS-RESUME-AFTER-CAPTURE-20260923",
+      "new_evidence_ids": [
+        "E-083",
+        "E-084",
+        "E-085",
+        "E-086",
+        "E-087",
+        "E-088",
+        "E-089"
+      ],
+      "closure_changes": [],
+      "rationale": "Two Studio defects observed on the native candidate were reproduced from the recorded state snapshots and fixed in source with regression tests: the compatibility advisory now reconciles with the observed loaded runtime without suppressing errors, and completed creations survive translation passes. A drifted worker-assignment test fixture was repaired. No item closes; the fixes are not in the d4dec6cb binary until a validated build carries them. An adversarial review of the first Studio fix found a ReplicaEngine 500 regression, fixed before any binary carried it into use; the option-parity map and its test were recorded and reconciled (E-085); a code-bound provider-compatibility deviation map with a contract test and explicit refusals replaced silent drops and 500s (E-086). Two drifted tests were repaired. No item closes. The representative roster and per-family gates were frozen and test-bound (E-087); required/deferred remains the owner's call. The resume3 successor candidate (b9a0a63b5b59) was built under the measured profile after two retained host-resource aborts and validated by reuse with the Studio, acquisition-unit and protocol-refusal fixes compiled in (E-088); no item closes. The full execution matrix (every model x every platform slot, evidence-bound, explicit gaps) was generated and test-bound (E-089)."
+    },
+    {
+      "date": "2026-10-03",
+      "run_id": "TITANOS-BROKER-STUDIO-20261001-20261003",
+      "new_evidence_ids": [],
+      "closure_changes": [],
+      "rationale": "The cloud broker (settings, write-only vault, scoped inbound keys, loopback mocks, provider adapters, router and policy, app wiring, CLI/MCP/Python/Studio surfaces, matrices and docs), its provider-completeness round, the owner-run live smoke of 2026-10-02 and the Studio redesign with its vendored fonts add source and mock-proven behaviour but no model-on-hardware evidence: their proofs are the broker matrix (docs/broker_matrix.json) and Node UI checks, so no evidence row is added and no checklist row closes. The remaining conditions of INT-06, TEXT-03 and FAIL-06 were restated on 2026-10-05 to match the source; totals stay 32 closed / 63 open.",
+      "method": "Loopback mock providers under a network guard, in-process and subprocess tests, SDK lanes with unmodified vendor SDKs, Node UI checks, one owner-approved live smoke lane (OpenAI and the Hugging Face router); no GPU, no new binary."
+    }
+  ],
+  "source_commit": "fd5638a"
+}

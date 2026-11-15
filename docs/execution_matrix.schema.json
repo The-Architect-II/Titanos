@@ -1,0 +1,61 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "docs/execution_matrix.schema.json",
+ "title": "Titanos execution matrix",
+ "description": "docs/execution_matrix.json: one cell per model x platform slot (tools/build_execution_matrix.py), with the derived per-slot rollup and per-cell evidence_build (tools/rollup_execution_matrix.py). schema_version 1; fields are only added within a version.",
+ "type": "object",
+ "required": ["schema_version", "built_utc", "built_from_commit", "spec", "basis", "slots", "cell_states", "rows", "cells", "execution_modes", "mode_cells", "named_devices", "counts", "slot_rollup"],
+ "properties": {
+  "schema_version": {"const": 1},
+  "built_utc": {"type": "string", "format": "date-time"},
+  "built_from_commit": {"description": "git HEAD the builder ran from, -dirty when the tree had changes; null when not recorded", "type": ["string", "null"], "pattern": "^[0-9a-f]{40}(-dirty)?$"},
+  "spec": {"type": "string"},
+  "basis": {"type": "string"},
+  "slots": {"type": "array", "items": {"type": "object", "required": ["id", "os", "arch", "accelerator", "runtimes"], "properties": {"id": {"type": "string"}, "runtimes": {"type": "array", "items": {"type": "string"}}}}},
+  "cell_states": {"type": "object", "required": ["pass", "fail", "partial", "untried", "na"], "additionalProperties": {"type": "object", "required": ["symbol", "meaning"]}},
+  "rows": {"type": "array", "items": {"type": "object", "required": ["model_id", "display_name", "identity", "task", "backend", "modality_family"]}},
+  "cells": {"type": "array", "items": {"$ref": "#/$defs/cell"}},
+  "mode_cells": {"type": "array", "items": {"type": "object", "required": ["model_id", "slot", "mode", "state", "evidence_ids", "verified"], "properties": {"state": {"$ref": "#/$defs/state"}}}},
+  "execution_modes": {"type": "array", "items": {"type": "object", "required": ["mode", "state", "slots", "plan_items", "note"]}},
+  "named_devices": {"type": "array", "items": {"type": "object", "required": ["slot", "device", "generation", "status", "evidence_ids", "note"]}},
+  "unresolved_reader_cells": {"type": "array"},
+  "counts": {"type": "object", "required": ["rows", "slots", "cells", "pass", "fail", "partial", "untried", "na", "verified_pass"], "additionalProperties": {"type": "integer", "minimum": 0}},
+  "slot_rollup": {
+   "description": "per platform slot: cells per state and the models whose pass a verifier upheld",
+   "type": "array",
+   "items": {
+    "type": "object",
+    "required": ["slot", "counts", "verified_pass_models"],
+    "additionalProperties": false,
+    "properties": {
+     "slot": {"type": "string"},
+     "counts": {"type": "object", "required": ["pass", "fail", "partial", "untried", "na"], "additionalProperties": {"type": "integer", "minimum": 0}},
+     "verified_pass_models": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}
+    }
+   }
+  }
+ },
+ "$defs": {
+  "state": {"enum": ["pass", "fail", "partial", "untried", "na"]},
+  "cell": {
+   "type": "object",
+   "required": ["model_id", "slot", "state", "evidence_ids", "device_named", "package_or_runtime", "receipt", "note", "verified", "readers", "evidence_build"],
+   "properties": {
+    "model_id": {"type": "string"},
+    "slot": {"type": "string"},
+    "state": {"$ref": "#/$defs/state"},
+    "evidence_ids": {"type": "array", "items": {"type": "string", "pattern": "^E-[0-9]{3}$"}},
+    "verified": {"type": ["boolean", "null"]},
+    "readers": {"type": "array", "items": {"type": "string"}},
+    "evidence_build": {
+     "description": "Titanos source commits and versions the cell's package_or_runtime record names; null when it names none or the cell was not executed",
+     "oneOf": [
+      {"type": "null"},
+      {"type": "object", "required": ["commits", "versions"], "additionalProperties": false,
+       "properties": {"commits": {"type": "array", "items": {"type": "string", "pattern": "^[0-9a-f]{7,40}$"}}, "versions": {"type": "array", "items": {"type": "string"}}}}
+     ]
+    }
+   }
+  }
+ }
+}

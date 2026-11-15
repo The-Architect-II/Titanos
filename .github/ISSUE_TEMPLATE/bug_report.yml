@@ -1,0 +1,114 @@
+name: Bug report
+description: Titanos behaves differently from its documentation or from what you expected
+title: "[bug] "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the report. Remove API keys, Hugging Face tokens, private hostnames or addresses and personal paths from everything you paste. A security problem goes through [SECURITY.md](https://github.com/pgoode41/Titanos/blob/main/SECURITY.md), not an issue.
+  - type: checkboxes
+    id: hygiene
+    attributes:
+      label: Before you start
+      options:
+        - label: I removed API keys, tokens, private hostnames or addresses and personal paths from this report.
+          required: true
+        - label: This is not a security vulnerability.
+          required: true
+  - type: input
+    id: version
+    attributes:
+      label: Titanos version
+      description: Output of `titanos --version`. For a source checkout add the commit (`git rev-parse --short HEAD`).
+      placeholder: "<version> (commit <short sha>)"
+    validations:
+      required: true
+  - type: dropdown
+    id: install
+    attributes:
+      label: How Titanos was installed
+      options:
+        - Source checkout (pip install -e .)
+        - Release wheel
+        - Compiled bundle
+        - Docker image
+        - Other (say how in the steps)
+    validations:
+      required: true
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating system and architecture
+      options:
+        - Windows x64
+        - Windows ARM64
+        - Linux x86_64
+        - Linux aarch64
+        - macOS (Apple silicon)
+        - macOS (Intel)
+        - Other (say which in the hardware field)
+    validations:
+      required: true
+  - type: input
+    id: hardware
+    attributes:
+      label: Hardware and runtime profile
+      description: CPU, GPU or NPU model, the driver version if relevant, and the profile from `tools/profiles.json` or the `pyproject.toml` extra you installed (for example cpu, cu128, rocm64, xpu, mps, dml, openvino-gpu, genai-npu).
+      placeholder: "8-core CPU only, profile cpu"
+    validations:
+      required: true
+  - type: dropdown
+    id: interface
+    attributes:
+      label: Interface used
+      options:
+        - HTTP API
+        - MCP over stdio (titanos mcp)
+        - MCP over Streamable HTTP (/mcp)
+        - CLI
+        - Python client
+        - Studio (browser)
+        - Docker
+        - Several or not applicable
+    validations:
+      required: true
+  - type: textarea
+    id: model
+    attributes:
+      label: Model
+      description: The registration as `titanos list` prints it (name, task, backend, device) and, if the checkpoint is public, its repository id and revision. Do not attach weights.
+      render: json
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Exact commands or requests, in order, from a fresh `titanos serve` where possible.
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behaviour
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behaviour
+      description: What happened instead, including the exact error message.
+    validations:
+      required: true
+  - type: textarea
+    id: doctor
+    attributes:
+      label: Output of `titanos doctor`
+      description: Hardware inventory and installed package versions as JSON. It works without a numerical runtime, contains GPU identifiers and driver versions, and prints no secrets. Add `--check` when the problem is about a device.
+      render: json
+  - type: textarea
+    id: logs
+    attributes:
+      label: Server output and tracebacks
+      description: The relevant part of the `titanos serve` output (`--log-level debug` if needed) or the traceback from the CLI. Settings you changed, as `titanos settings` prints them, help too; that command prints no key or token values.
+      render: shell

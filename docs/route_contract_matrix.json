@@ -1980,16 +1980,16 @@
    "models:read": 28,
    "models:write": 20
   },
-  "semantics": 278,
+  "semantics": 280,
   "semantics_by_origin": {
    "derived": 13,
    "shared": 30,
-   "table": 235
+   "table": 237
   },
   "semantics_by_status": {
    "declared-only": 9,
    "ignored": 33,
-   "implemented": 156,
+   "implemented": 158,
    "rejected": 66,
    "rejected-in-job": 14
   },
@@ -6098,10 +6098,19 @@
    "scope_by_action": {},
    "semantics": [
     {
+     "citation": "src/titanos/server.py:1531",
+     "control": "X-Request-Budget-Ms",
+     "identifier": "within_budget",
+     "note": "the request budget (ASCII digits, 1..600000 ms, named once; else 400 budget_invalid) counts from the Guard (titanos.arrived, server.py:263); when it passes, the cancel event handed to engine.infer is set, so a request still waiting for the model lock or a worker is refused unrun and a cancellation after the budget is 504 budget_passed (request_deadline, within_budget); without the header the call is unchanged; tests/check_infer_deadline.py",
+     "origin": "table",
+     "shared_from": null,
+     "status": "implemented"
+    },
+    {
      "citation": "src/titanos/server.py:1529",
      "control": "cancellation (disconnect)",
      "identifier": "/api/infer",
-     "note": "synchronous; no cancel event or deadline",
+     "note": "synchronous: a disconnect is not observed; X-Request-Budget-Ms bounds the wait (row X-Request-Budget-Ms)",
      "origin": "table",
      "shared_from": null,
      "status": "ignored"
@@ -6317,6 +6326,15 @@
      "origin": "table",
      "shared_from": null,
      "status": "rejected"
+    },
+    {
+     "citation": "src/titanos/server.py:2257",
+     "control": "file links (X-Forwarded-Host / X-Forwarded-Proto)",
+     "identifier": "link_base",
+     "note": "artifact URLs start at link_base: from a loopback peer (the cluster facade beside the engine) X-Forwarded-Host and X-Forwarded-Proto (http or https) name the host and scheme, a malformed host gives a relative /v1/files/ path; other peers and requests without the header keep the asked address; the image (server.py:1905), video (server.py:2127) and speech routes build theirs the same way; tests/check_forwarded_links.py",
+     "origin": "table",
+     "shared_from": null,
+     "status": "implemented"
     },
     {
      "citation": "src/titanos/server.py:2231",
@@ -13036,7 +13054,7 @@
   "/api/version": "GET /api/version returns {name, version, role} in every role (Ollama clients read version: protocols.py outside managed role, broker/routes.py in managed role) and is public only in managed role (Guard per-app public set, broker.scopes.MANAGED_PUBLIC_ROUTES); this standalone build lists it as a scoped operation"
  },
  "schema_version": 1,
- "source_version": "0.5.30",
+ "source_version": "0.5.31",
  "unlisted_routes": [
   {
    "auth": "public",

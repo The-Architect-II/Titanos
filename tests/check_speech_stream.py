@@ -209,12 +209,13 @@ class Transfer(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.fixture = Fixture(api_key=KEY)
-        with socket.socket() as probe:
-            probe.bind(('127.0.0.1', 0))
-            cls.port = probe.getsockname()[1]
+        # the bound socket goes to uvicorn as it is: closing it and binding the port again lets another socket take it
+        cls.sock = socket.socket()
+        cls.sock.bind(('127.0.0.1', 0))
+        cls.port = cls.sock.getsockname()[1]
         cls.server = uvicorn.Server(uvicorn.Config(cls.fixture.app, host='127.0.0.1', port=cls.port,
                                                    log_level='warning', lifespan='on'))
-        cls.thread = threading.Thread(target=cls.server.run, daemon=True)
+        cls.thread = threading.Thread(target=cls.server.run, kwargs={'sockets': [cls.sock]}, daemon=True)
         cls.thread.start()
         deadline = time.monotonic() + 30
         while not cls.server.started:
@@ -225,6 +226,7 @@ class Transfer(unittest.TestCase):
     def tearDownClass(cls):
         cls.server.should_exit = True
         cls.thread.join(15)
+        cls.sock.close()
         cls.fixture.temp.cleanup()
 
     def setUp(self):

@@ -322,6 +322,9 @@ def client_main(base_url, model, report_path):
 # server side
 
 
+BIND_REFUSED = 'error while attempting to bind'  # asyncio's OSError text, which uvicorn logs before it exits
+
+
 def free_port(port_range):
     if port_range:
         low, high = (int(v) for v in port_range.split('-'))
@@ -379,24 +382,37 @@ def main():
                'PYTHONPATH': os.pathsep.join(filter(None, [str(ROOT / 'src'), os.environ.get('PYTHONPATH')])), 'PYTHONIOENCODING': 'utf-8'}
         env.pop('TITANOS_API_KEY', None)
         flags = subprocess.CREATE_NEW_PROCESS_GROUP if sys.platform == 'win32' else 0
-        log = (root / 'server.log').open('wb')
+
+        def launch(port):
+            log = (root / 'server.log').open('wb')
+            proc = subprocess.Popen([sys.executable, '-B', '-m', 'titanos', '--config', str(registry), 'serve', '--host', '127.0.0.1', '--port', str(port)],
+                                    cwd=tmp, env=env, stdout=log, stderr=subprocess.STDOUT, creationflags=flags, start_new_session=sys.platform != 'win32')
+            return proc, log
         started = time.monotonic()
-        proc = subprocess.Popen([sys.executable, '-B', '-m', 'titanos', '--config', str(registry), 'serve', '--host', '127.0.0.1', '--port', str(port)],
-                                cwd=tmp, env=env, stdout=log, stderr=subprocess.STDOUT, creationflags=flags, start_new_session=sys.platform != 'win32')
+        proc, log = launch(port)
+        # a chosen port another socket took after free_port closed its probe (uvicorn's bind error) moves to a fresh one
+        rebinds = 0 if args.port else 2
         client_report = root / 'client.json'
         try:
-            with httpx.Client(base_url=url, timeout=10, trust_env=False) as c:
+            with httpx.Client(timeout=10, trust_env=False) as c:
                 while True:
                     try:
-                        if c.get('/healthz').status_code == 200:
+                        if c.get(url + '/healthz').status_code == 200:
                             break
                     except httpx.TransportError:
                         pass
+                    if proc.poll() is not None and rebinds and BIND_REFUSED in (root / 'server.log').read_text(errors='replace'):
+                        log.close()
+                        rebinds -= 1
+                        port = free_port(args.port_range)
+                        url = f'http://127.0.0.1:{port}'
+                        proc, log = launch(port)
+                        continue
                     if proc.poll() is not None or time.monotonic() - started > 120:
                         log.close()
                         raise SystemExit('titanos serve did not start:\n' + (root / 'server.log').read_text(errors='replace')[-3000:])
                     time.sleep(.2)
-                info = c.get('/api/info').json()
+                info = c.get(url + '/api/info').json()
                 report['server'] = {'url': url, 'version': info.get('version'), 'port': port}
             command = [args.sdk_python, '-B', str(Path(__file__).resolve()), '--client', '--base-url', url, '--model', args.model, '--report', str(client_report)]
             client_env = {k: v for k, v in os.environ.items() if k != 'PYTHONPATH'}

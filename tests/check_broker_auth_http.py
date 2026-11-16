@@ -310,15 +310,17 @@ class MountedMcp(unittest.TestCase):
         import uvicorn
         full = W.FullApp(None, models={'chat-local': 'chat'}, api_key=api_key)
         self.addCleanup(full.close)
-        port = free_port()
+        sock = bound_socket()
+        port = sock.getsockname()[1]
         server = uvicorn.Server(uvicorn.Config(full.app, host='127.0.0.1', port=port, log_level='warning',
                                                lifespan='on'))
-        thread = threading.Thread(target=server.run, daemon=True)
+        thread = threading.Thread(target=server.run, kwargs={'sockets': [sock]}, daemon=True)
         thread.start()
 
         def stop():
             server.should_exit = True
             thread.join(15)
+            sock.close()
         self.addCleanup(stop)
         deadline = time.monotonic() + 30
         while not server.started:
@@ -398,18 +400,23 @@ SERVER = textwrap.dedent('''
         if scope['type'] in ('http', 'websocket'):
             scope = dict(scope, client=('192.0.2.10', 40000))
         await inner(scope, receive, send)
-    uvicorn.run(lan_peer, host='127.0.0.1', port=int(os.environ['WP7_PORT']), proxy_headers=False,
-                forwarded_allow_ips='127.0.0.1', log_level='warning')
+    import socket
+    sock = socket.socket()
+    sock.bind(('127.0.0.1', 0))
+    port_file = Path(os.environ['WP7_PORT_FILE'])
+    port_file.with_suffix('.tmp').write_text(str(sock.getsockname()[1]))
+    port_file.with_suffix('.tmp').replace(port_file)
+    uvicorn.Server(uvicorn.Config(lan_peer, host='127.0.0.1', port=sock.getsockname()[1], proxy_headers=False,
+                                  forwarded_allow_ips='127.0.0.1', log_level='warning')).run(sockets=[sock])
 ''')
 
 
-def free_port() -> int:
+def bound_socket() -> socket.socket:
+    """A loopback socket bound to a free port and handed to uvicorn as it is: closing it and binding the port again
+    lets another socket take the port in between (Windows then refuses uvicorn's bind with WinError 10013)."""
     sock = socket.socket()
     sock.bind(('127.0.0.1', 0))
-    try:
-        return sock.getsockname()[1]
-    finally:
-        sock.close()
+    return sock
 
 
 class UvicornPinnedProxy(unittest.TestCase):
@@ -419,19 +426,23 @@ class UvicornPinnedProxy(unittest.TestCase):
         script = Path(home) / 'serve.py'
         script.write_text(SERVER, encoding='utf-8')
         report = Path(home) / 'netguard.jsonl'
-        port = free_port()
+        port_file = Path(home) / 'port'
         env = {**os.environ, 'WP7_SRC': str(ROOT / 'src'), 'WP7_BOOT': BOOT, 'WP7_PROXY': proxy,
-               'WP7_PORT': str(port), 'TITANOS_HOME': str(Path(home) / 'home'), 'TITANOS_TEST_NETGUARD': '1',
+               'WP7_PORT_FILE': str(port_file), 'TITANOS_HOME': str(Path(home) / 'home'), 'TITANOS_TEST_NETGUARD': '1',
                'TITANOS_TEST_NETGUARD_REPORT': str(report),
                'PYTHONPATH': os.pathsep.join([str(ROOT / 'tests' / 'broker_mocks' / 'netguard_site'),
                                               str(ROOT / 'src')])}
         process = subprocess.Popen([sys.executable, '-B', str(script)], env=env, stdout=subprocess.DEVNULL,
                                    stderr=subprocess.PIPE)
         self.addCleanup(lambda: (process.kill(), process.wait(10)))
-        import httpx
-        client = httpx.Client(base_url=f'http://127.0.0.1:{port}', trust_env=False, timeout=10)
-        self.addCleanup(client.close)
         deadline = time.monotonic() + 60
+        while not port_file.exists():
+            if process.poll() is not None or time.monotonic() > deadline:
+                self.fail('the uvicorn subprocess did not bind: ' + process.stderr.read().decode()[-500:])
+            time.sleep(0.05)
+        import httpx
+        client = httpx.Client(base_url=f'http://127.0.0.1:{port_file.read_text()}', trust_env=False, timeout=10)
+        self.addCleanup(client.close)
         while True:
             try:
                 if client.get('/healthz').status_code == 200:

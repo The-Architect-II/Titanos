@@ -7,6 +7,7 @@ server stops the health server. Also: health_app routing at the ASGI level, the 
 choosing the runner only when the port is set (uvicorn replaced, nothing binds). Loopback only, ephemeral ports chosen by
 the operating system; no model, GPU or outside network."""
 import asyncio
+import functools
 import json
 import logging
 import os
@@ -30,10 +31,12 @@ from titanos.config import Config, write_config  # noqa: E402
 from titanos.settings import Settings  # noqa: E402
 
 
-def free_port():
-    with socket.socket() as probe:
-        probe.bind(('127.0.0.1', 0))
-        return probe.getsockname()[1]
+def bound_socket():
+    """A loopback socket bound to a free port and handed to uvicorn as it is: closing it and binding the port again
+    lets another socket take the port in between (Windows then refuses uvicorn's bind with WinError 10013)."""
+    sock = socket.socket()
+    sock.bind(('127.0.0.1', 0))
+    return sock
 
 
 def application(release):
@@ -72,11 +75,13 @@ def check_routing():
 
 def check_live():
     release = threading.Event()
-    main_port, health_port = free_port(), free_port()
+    main_sock, health_sock = bound_socket(), bound_socket()
+    main_port, health_port = main_sock.getsockname()[1], health_sock.getsockname()[1]
     pair = health_listener.server(application(release), health_port, host='127.0.0.1', port=main_port, limit_concurrency=2,
                                   log_level='warning', timeout_keep_alive=5)
     assert logging.getLogger('uvicorn.access').handlers, 'building the health server leaves access logging configured'
-    thread = threading.Thread(target=pair.run, daemon=True)
+    pair.health.serve = functools.partial(pair.health.serve, sockets=[health_sock])
+    thread = threading.Thread(target=pair.run, kwargs={'sockets': [main_sock]}, daemon=True)
     thread.start()
     deadline = time.monotonic() + 20
     while not (pair.started and pair.health.started) and time.monotonic() < deadline:

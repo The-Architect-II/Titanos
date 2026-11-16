@@ -260,7 +260,7 @@ class Guard:
     async def __call__(self, scope, receive, send):
         if scope["type"] != "http":
             return await self.app(scope, receive, send)
-        headers = dict(scope.get("headers", []))
+        headers = dict(scope.get("headers", [])); scope.setdefault("titanos.arrived", time.monotonic())  # request_deadline
         method = scope.get("method", "GET").upper()
         public = public_path(scope["path"]) in self.public_routes
         if public:
@@ -1527,8 +1527,8 @@ def create_app(config: Config, api_key: str | None = None, output_dir: Path | No
         return await asyncio.to_thread(acquisitions.delete_weights,identifier)
 
     @app.post("/api/infer")
-    def tensors(payload: TensorRequest):
-        return engine.infer(payload.model, "tensor", payload.model_dump())
+    def tensors(payload: TensorRequest, request: Request):
+        return within_budget(request, lambda cancel: engine.infer(payload.model, "tensor", payload.model_dump(), cancel=cancel))
 
     def model_defaults(payload):
         from .request_defaults import model_defaults as apply_defaults
@@ -1902,7 +1902,7 @@ def create_app(config: Config, api_key: str | None = None, output_dir: Path | No
                         dest = artifact(".png"); created.append(dest)
                         if owned_artifacts is not None:owned_artifacts.append(dest)
                         im.save(dest)
-                        results.append({"url": str(request.base_url) + "v1/files/" + dest.name})
+                        results.append({"url": link_base(request) + "v1/files/" + dest.name})
                     else:
                         buf = io.BytesIO()
                         im.save(buf, format="PNG")
@@ -2115,7 +2115,7 @@ def create_app(config: Config, api_key: str | None = None, output_dir: Path | No
     def video(payload: VideoRequest, request: Request):
         admission=local_admission(payload.model,request,lambda:None)
         try:
-            return make_video(payload,str(request.base_url))
+            return make_video(payload,link_base(request))
         finally:
             if admission is not None:admission.release()
 
@@ -2124,7 +2124,7 @@ def create_app(config: Config, api_key: str | None = None, output_dir: Path | No
         payload=model_defaults(payload)
         admission=local_admission(payload.model,request,lambda:engine.validate(payload.model,'video'))
         owned=[]
-        return submit_job(payload,request,'video',lambda cancel:make_video(payload,str(request.base_url),cancel,owned),owned,
+        return submit_job(payload,request,'video',lambda cancel:make_video(payload,link_base(request),cancel,owned),owned,
                           admission=admission)
 
     def submit_job(payload,request,task,generate,owned_artifacts=None,decision_id=None,on_refused=None,admission=None):
@@ -2199,7 +2199,7 @@ def create_app(config: Config, api_key: str | None = None, output_dir: Path | No
         admission=broker.limiter.admit(principal,stage.target,estimate)
         decision_id=uuid.uuid4().hex
         owned=[]
-        base_url=str(request.base_url)
+        base_url=link_base(request)
 
         def generate_cloud(cancel):
             try:
@@ -2233,7 +2233,7 @@ def create_app(config: Config, api_key: str | None = None, output_dir: Path | No
         owned=[]
         def generate_asset(cancel):
             if payload.task=='video':
-                return make_video(VideoRequest(**data),str(request.base_url),cancel,owned)
+                return make_video(VideoRequest(**data),link_base(request),cancel,owned)
             if payload.task=='image':
                 return image_result(ImageRequest(**{**data,'response_format':'url'}),request,cancel=cancel,owned_artifacts=owned)
             if payload.task=='music':
@@ -2247,14 +2247,14 @@ def create_app(config: Config, api_key: str | None = None, output_dir: Path | No
                     result.update(channels=stream.getnchannels(),sample_rate=stream.getframerate(),
                                   duration=stream.getnframes()/stream.getframerate())
                 dest=artifact('.wav');owned.append(dest);dest.write_bytes(wav)
-                return {'url':str(request.base_url)+'v1/files/'+dest.name,'format':'wav','model':payload.model,
+                return {'url':link_base(request)+'v1/files/'+dest.name,'format':'wav','model':payload.model,
                         'task':'music',**result}
             wav=engine.infer(payload.model,'speech',data,cancel=cancel)
             if cancel.is_set():raise EngineError('Speech cancelled',499,'cancelled')
             dest=artifact('.wav')
             owned.append(dest)
             dest.write_bytes(wav)
-            return {'url':str(request.base_url)+'v1/files/'+dest.name,'format':'wav','model':payload.model}
+            return {'url':link_base(request)+'v1/files/'+dest.name,'format':'wav','model':payload.model}
         return submit_job(payload,request,payload.task,generate_asset,owned,admission=admission)
 
     @app.post('/v1/music/generations',status_code=202)
@@ -2397,3 +2397,67 @@ def create_app(config: Config, api_key: str | None = None, output_dir: Path | No
         app.state.mcp=create_mcp(app=mcp_dispatch(app),api_key=api_key,**extra)
         app.mount('/mcp',app.state.mcp.streamable_http_app(streamable_http_path='/',max_request_body_size=settings.max_body_bytes))
     return app
+
+BUDGET_HEADER = "x-request-budget-ms"
+BUDGET_MAX_MS = 600000
+FORWARDED_HOST = re.compile(r"(?:[A-Za-z0-9](?:[A-Za-z0-9.-]{0,251}[A-Za-z0-9])?|\[[0-9A-Fa-f:.]{2,45}\])(?::[0-9]{1,5})?")
+
+
+def request_deadline(request):
+    """The monotonic time a request with X-Request-Budget-Ms must be answered by (its arrival at the Guard plus the
+    budget), or None without the header. The value is ASCII digits alone, 1 to 600000 ms, named once (as the cluster
+    facade checks it); anything else is 400 budget_invalid."""
+    values = request.headers.getlist(BUDGET_HEADER)
+    if not values:
+        return None
+    value = values[0].strip()
+    if len(values) > 1 or not re.fullmatch(r"[0-9]{1,6}", value) or not 1 <= int(value) <= BUDGET_MAX_MS:
+        raise EngineError(f"X-Request-Budget-Ms must be one whole number of milliseconds from 1 to {BUDGET_MAX_MS}",
+                          400, "budget_invalid")
+    return request.scope.get("titanos.arrived", time.monotonic()) + int(value) / 1000
+
+
+def within_budget(request, run):
+    """run(cancel) within the request's budget: without X-Request-Budget-Ms, run(None) as before; with it, a cancel
+    event set when the budget passes, so a request still waiting for the model or a worker is refused unrun, and a
+    cancellation after the budget is answered 504 budget_passed."""
+    deadline = request_deadline(request)
+    if deadline is None:
+        return run(None)
+    cancel = threading.Event()
+    timer = threading.Timer(max(0.0, deadline - time.monotonic()), cancel.set)
+    timer.daemon = True
+    timer.start()
+    try:
+        if time.monotonic() >= deadline:
+            cancel.set()
+        return run(cancel)
+    except EngineError as exc:
+        if exc.code == "cancelled" and time.monotonic() >= deadline:
+            raise EngineError("The request's budget passed before it was answered", 504, "budget_passed") from exc
+        raise
+    finally:
+        timer.cancel()
+
+
+def link_base(request):
+    """Where the links to this server's files start (ending in /). A loopback peer (the cluster facade beside this
+    engine) that sends X-Forwarded-Host gets links on that host, with X-Forwarded-Proto's http or https (else this
+    request's scheme), and a relative /... path when the host is malformed, so a link never names this engine's own
+    loopback address to a client of the facade. Without the header, or from any other peer, the address the client
+    asked is used, as before."""
+    import ipaddress
+    path = urlsplit(str(request.base_url)).path
+    peer = (request.scope.get("client") or ("",))[0]
+    try:
+        loopback = ipaddress.ip_address(peer).is_loopback
+    except ValueError:
+        loopback = False
+    hosts = request.headers.getlist("x-forwarded-host")
+    if not loopback or not hosts:
+        return str(request.base_url)
+    host = hosts[0].split(",")[0].strip()
+    if not FORWARDED_HOST.fullmatch(host):
+        return path
+    proto = (request.headers.get("x-forwarded-proto") or "").split(",")[0].strip().lower()
+    return f"{proto if proto in ('http', 'https') else request.url.scheme}://{host}{path}"

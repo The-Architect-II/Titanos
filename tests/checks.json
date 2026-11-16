@@ -520,6 +520,18 @@
         {
           "run": "python -B tests/check_owned_command_race.py",
           "note": "RACE: run_owned's byte budget skips a file the child renames or deletes between listing and size read (progress.json.tmp replaced onto progress.json) and still reads a growing file's size from os.stat; the music progress read tolerates a missing file; injected stat failures plus 5 real jobs of 1,500 progress publications each, no failure"
+        },
+        {
+          "run": "python -B tests/check_infer_deadline.py",
+          "note": "/api/infer takes X-Request-Budget-Ms (1-600000, digits, once; else 400 budget_invalid) as a deadline from arrival; a request still waiting for the model when it passes is 504 budget_passed and never runs; within it, or without the header, as before"
+        },
+        {
+          "run": "python -B tests/check_forwarded_links.py",
+          "note": "file links from a loopback peer with X-Forwarded-Host use that host and X-Forwarded-Proto (relative when malformed); other peers and requests without it keep the asked address; helper cases plus a speech job end to end"
+        },
+        {
+          "run": "python -B tests/check_python_lock.py",
+          "note": "the pinned-interpreter install inputs: tools/python-lock.json (https CPython builds by sha256 and size, a relative python_bin, https indexes without credentials, source wheels at full commits) and tools/locks/ (one line per package, name==version and sha256 hashes, no markers, URLs, paths, options or repeated names; versions satisfy pyproject dependencies, the models and qwen3-tts extras and the source wheels' requirements, pins exact; LF only); offline"
         }
       ]
     },

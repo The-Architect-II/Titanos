@@ -63,6 +63,7 @@ import httpx  # noqa: E402
 
 NETGUARD_SITE = TESTS / 'broker_mocks' / 'netguard_site'
 START_TIMEOUT = 90.0
+BIND_REFUSED = 'error while attempting to bind'  # asyncio's OSError text, which uvicorn logs before it exits
 STOP_TIMEOUT = 30.0
 WINDOWS = sys.platform == 'win32'
 # credential id -> (env variable the vault record names, WP4 sentinel the variable holds)
@@ -178,7 +179,9 @@ class Serve:
             raise RuntimeError(f'offline credential set {cred_id} failed ({done.returncode}): {done.stderr[-2000:]}')
         return done
 
-    def start(self) -> 'Serve':
+    def start(self, attempts: int = 3) -> 'Serve':
+        """serve on self.port; a port another socket took after free_port closed its probe (uvicorn's bind error)
+        moves to a fresh port, up to attempts times."""
         argv = [sys.executable, '-B', '-m', 'titanos', '--config', str(self.registry), 'serve', '--host', '127.0.0.1',
                 '--port', str(self.port)]
         if self.log_level:
@@ -191,6 +194,11 @@ class Serve:
         with httpx.Client(trust_env=False, timeout=2.0) as probe:
             while time.monotonic() < deadline:
                 if self.proc.poll() is not None:
+                    if attempts > 1 and BIND_REFUSED in self.log():
+                        self._log.close()
+                        self.port = free_port()
+                        self.url = f'http://127.0.0.1:{self.port}'
+                        return self.start(attempts - 1)
                     raise RuntimeError(f'serve exited with {self.proc.returncode}:\n{self.log()[-4000:]}')
                 try:
                     if probe.get(self.url + '/healthz').status_code == 200:

@@ -191,6 +191,9 @@ jobs:
       - run: python -B tests/check_health_listener.py
       - run: python -B tests/check_log_rotation.py
       - run: python -B tests/check_owned_command_race.py
+      - run: python -B tests/check_infer_deadline.py
+      - run: python -B tests/check_forwarded_links.py
+      - run: python -B tests/check_python_lock.py
   extras:
     # extras tier: numpy and pillow (the `dev` extra) and the node:vm Studio checks on Node 22, then the OpenAI SDK
     # client checks and the broker SDK lanes (OpenAI, Anthropic, Google GenAI and ElevenLabs SDKs against a real

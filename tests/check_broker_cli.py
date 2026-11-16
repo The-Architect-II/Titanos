@@ -366,13 +366,12 @@ class RunningServer(Guarded):
         self.assertEqual(full.http.get('/api/keys/self').status_code, 401)  # enforcement is on now
 
 
-def free_port() -> int:
+def bound_socket() -> socket.socket:
+    """A loopback socket bound to a free port and handed to uvicorn as it is: closing it and binding the port again
+    lets another socket take the port in between (Windows then refuses uvicorn's bind with WinError 10013)."""
     sock = socket.socket()
     sock.bind(('127.0.0.1', 0))
-    try:
-        return sock.getsockname()[1]
-    finally:
-        sock.close()
+    return sock
 
 
 class UrlMode(Guarded):
@@ -385,11 +384,12 @@ class UrlMode(Guarded):
                                                       models=['gpt-4o-mini'])}}
         full = W.FullApp(document, models={'chat-local': 'chat'}, api_key=BOOT)
         self.addCleanup(full.close)
-        port = free_port()
+        sock = bound_socket()
+        port = sock.getsockname()[1]
         server = uvicorn.Server(uvicorn.Config(full.app, host='127.0.0.1', port=port, log_level='warning', lifespan='on'))
-        thread = threading.Thread(target=server.run, daemon=True)
+        thread = threading.Thread(target=server.run, kwargs={'sockets': [sock]}, daemon=True)
         thread.start()
-        self.addCleanup(lambda: (setattr(server, 'should_exit', True), thread.join(15)))
+        self.addCleanup(lambda: (setattr(server, 'should_exit', True), thread.join(15), sock.close()))
         deadline = time.monotonic() + 30
         while not server.started:
             self.assertLess(time.monotonic(), deadline)

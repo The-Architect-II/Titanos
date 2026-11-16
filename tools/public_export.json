@@ -141,6 +141,13 @@
     "/home/example"
    ],
    "reason": "synthetic user-profile and Linux-home paths for the redaction fixture (account `example`); the assertion needs only the final component to survive"
+  },
+  {
+   "path": "tools/locks/python-lock-linux_x86_64.txt",
+   "literals": [
+    "10.3.9.90"
+   ],
+   "reason": "a package version in the Linux hash lock (the CUDA random-number library's 10.3.9.90 wheel); not an address"
   }
  ],
  "fixture_allowlist_note": "A hit is tolerated only when the matched text equals one of the listed literals in the listed file. Any deliberate future example must use a neutral placeholder or an allowlist entry with a reason. No literal of the windows_generated_machine_name class, no private-map name and no machine name may be allowlisted (tests/check_public_export_hygiene.py asserts all three).",

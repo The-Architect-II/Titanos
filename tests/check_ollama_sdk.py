@@ -30,6 +30,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 PORT_RANGE = range(49900, 49950)
+BIND_REFUSED = 'error while attempting to bind'  # asyncio's OSError text, which uvicorn logs before it exits
 FIXTURE_ENV = 'TITANOS_SDK_FIXTURE_MODELS'
 GGUF_ENV = 'TITANOS_OLLAMA_SDK_GGUF'
 LLAMA_ENV = 'TITANOS_OLLAMA_SDK_LLAMA_SERVER'
@@ -272,7 +273,9 @@ class Serve:
                     'HF_HUB_DISABLE_TELEMETRY': '1', 'CUDA_VISIBLE_DEVICES': ''})
         return env
 
-    def start(self) -> str:
+    def start(self, attempts: int = 3) -> str:
+        """serve on a free port; a port another socket took after free_port closed its probe (uvicorn's bind error)
+        moves to a fresh port, up to attempts times."""
         import urllib.request
         import urllib.error
         self.port = free_port()
@@ -290,6 +293,9 @@ class Serve:
                         return url
             except (urllib.error.URLError, OSError, ValueError):
                 pass
+            if self.process.poll() is not None and attempts > 1 and BIND_REFUSED in self.log():
+                self._log.close()
+                return self.start(attempts - 1)
             if self.process.poll() is not None or time.monotonic() > deadline:
                 raise RuntimeError('titanos serve did not start: ' + self.log()[-1500:])
             time.sleep(0.2)

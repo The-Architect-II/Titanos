@@ -2,6 +2,16 @@
 
 Newest first. Each entry names the source version it describes. A version number is not a qualification claim: delivered packages keep their own manifests and validation receipts, and the [capability matrix](CAPABILITY_MATRIX.md) records what has actually run. `.github/workflows/release.yml` attaches this file to every draft release it creates.
 
+## 0.5.31 (15 Nov 2026)
+
+A release can now be installed from a pinned interpreter and a hash lock alone, and `/api/infer` takes a deadline.
+
+- **Pinned-interpreter install.** Each release carries a hash lock per platform (`python-lock-win_amd64.txt`, `python-lock-linux_x86_64.txt`): one `name==version` line per package with its `--hash=sha256:` values, every package a wheel on PyPI or the PyTorch CUDA 12.8 index (torch 2.8.0, torchvision 0.23.0, torchaudio 2.8.0). Both locks carry the CUDA build of PyTorch, so for now a machine with an AMD or Intel GPU installed this way runs the engine's PyTorch backends on the processor; the native runtimes keep their ROCm, SYCL, OpenVINO and Vulkan builds. The speech wrapper qwen-tts, a git dependency until now, ships as the release asset `qwen_tts-0.0.4-py3-none-any.whl`, built from its pinned commit; with the engine's own wheel it installs offline. `release.json` gains `python_lock`: the CPython 3.12 standalone builds by URL, sha256 and size, the indexes, the wheels and the locks. [RELEASING.md](RELEASING.md#pinned-interpreter-install) lists the steps; `tools/build_python_lock.py` rebuilds the locks and `tests/check_python_lock.py` checks them. The install catalog and the native profiles are unchanged, and `install.py` still installs the same way.
+- The locks cover the base dependencies and the `models` and `qwen3-tts` extras. gradio is not in them: only qwen-tts's demo program imports it ([QWEN_TTS.md](QWEN_TTS.md)).
+- **Request budget.** `POST /api/infer` reads `X-Request-Budget-Ms` (1 to 600000, counted from the request's arrival). Work whose budget has passed before it runs, or while it waits for the model, is refused with 504 `budget_passed` and never started; a malformed or repeated header is 400 `budget_invalid`. Without the header nothing changes.
+- **File links behind a proxy.** The image, video and audio links in `/api/jobs` results follow `X-Forwarded-Host` and `X-Forwarded-Proto` when a loopback proxy sends them, and are relative paths when the forwarded host is malformed; the engine's own loopback address no longer reaches a client behind a proxy.
+- Tests: `tests/check_sentiment_language.py` allows the language guess 2 s on a loaded host, and the checks that start a server hand it the socket they bound (or, for a child process, retry when another process took the port), so a port race no longer fails them.
+
 ## 0.5.30 (15 Nov 2026)
 
 A maintenance release: the engine, its routes, the install catalog and the native profiles are unchanged from 0.5.29. Three tests are fixed.

@@ -35,15 +35,18 @@ SECRET = 'tk_gateway_fixture_secret_0001'
 OTHER = 'hive_fixture_other_secret_0002'
 
 
-def free_port() -> int:
-    """A free loopback port in the lane's 49900-49949 window."""
+class ExclusiveServer(ThreadingHTTPServer):
+    allow_reuse_address = False  # on Windows SO_REUSEADDR lets the bind succeed on a port another socket holds
+
+
+def bind_in_window(handler) -> ThreadingHTTPServer:
+    """The server bound to the first free loopback port in the lane's 49900-49949 window (binding is the probe: closing
+    a probe socket and binding the port again lets another socket take it in between)."""
     for port in range(49900, 49950):
-        with socket.socket() as probe:
-            try:
-                probe.bind(('127.0.0.1', port))
-            except OSError:
-                continue
-            return port
+        try:
+            return ExclusiveServer(('127.0.0.1', port), handler)
+        except OSError:
+            continue
     raise AssertionError('no free port in 49900-49949')
 
 
@@ -80,8 +83,8 @@ class Gateway:
                 self.end_headers()
                 self.wfile.write(payload)
 
-        self.port = free_port()
-        self.server = ThreadingHTTPServer(('127.0.0.1', self.port), Handler)
+        self.server = bind_in_window(Handler)
+        self.port = self.server.server_address[1]
         self.url = f'http://127.0.0.1:{self.port}'
         self.thread = threading.Thread(target=self.server.serve_forever, daemon=True)
 

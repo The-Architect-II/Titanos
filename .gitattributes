@@ -18,3 +18,5 @@ docs/ROUTE_CONTRACT_MATRIX.md text eol=lf
 *.png binary
 # This rules file is itself LF on every checkout, so its bytes do not depend on core.autocrlf.
 .gitattributes text eol=lf
+# The hash locks are release assets: the same bytes on every checkout.
+tools/locks/* text eol=lf

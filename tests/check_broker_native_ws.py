@@ -218,10 +218,12 @@ class Keyless(Base):
         self.assertEqual(MOCKS['openai'].hits[-1].credentials, [('header:authorization', 'Bearer <sentinel:openai>')])
 
 
-def _free_port() -> int:
-    with socket.socket() as probe:
-        probe.bind(('127.0.0.1', 0))
-        return probe.getsockname()[1]
+def _bound_socket() -> socket.socket:
+    """A loopback socket bound to a free port and handed to uvicorn as it is: closing it and binding the port again
+    lets another socket take the port in between (Windows then refuses uvicorn's bind with WinError 10013)."""
+    sock = socket.socket()
+    sock.bind(('127.0.0.1', 0))
+    return sock
 
 
 class RealServe(unittest.TestCase):
@@ -241,11 +243,12 @@ class RealServe(unittest.TestCase):
         MOCKS['openai'].hits.clear()
         self.full = W.FullApp(document(), api_key=BOOT)
         self.token = self.full.mint('native', 'cloud', name='realserve')[1]
-        self.port = _free_port()
+        self.sock = _bound_socket()
+        self.port = self.sock.getsockname()[1]
         config = uvicorn.Config(self.full.app, host='127.0.0.1', port=self.port, ws='websockets', lifespan='off',
                                 log_level='warning', proxy_headers=False)
         self.server = uvicorn.Server(config)
-        self.thread = threading.Thread(target=self.server.run, daemon=True)
+        self.thread = threading.Thread(target=self.server.run, kwargs={'sockets': [self.sock]}, daemon=True)
         self.thread.start()
         deadline = time.monotonic() + 20
         while not self.server.started and time.monotonic() < deadline and self.thread.is_alive():
@@ -257,6 +260,7 @@ class RealServe(unittest.TestCase):
         if server is not None:
             server.should_exit = True
             self.thread.join(timeout=20)
+            self.sock.close()
             self.full.close()
             self.assertEqual(netguard.attempts(), [], 'a non-loopback connect was attempted')
 

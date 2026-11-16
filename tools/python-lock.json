@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "python": "3.12",
+  "indexes": ["https://pypi.org/simple", "https://download.pytorch.org/whl/cu128"],
+  "extras": ["models", "qwen3-tts"],
+  "pins": ["torch==2.8.0+cu128", "torchvision==0.23.0+cu128", "torchaudio==2.8.0+cu128", "onnxruntime==1.27.0"],
+  "source_wheels": {
+    "qwen-tts": {"url": "https://github.com/dffdeeq/Qwen3-TTS-streaming.git", "commit": "13ef823ffe76aec4ac7e35d3fec28ecfc8d7427a"}
+  },
+  "leave_out": {
+    "gradio": "qwen-tts lists it for its demo (qwen_tts.cli.demo); the engine imports qwen_tts and qwen_tts.core only"
+  },
+  "platforms": {
+    "win_amd64": {
+      "resolver_platform": "x86_64-pc-windows-msvc",
+      "interpreter": {
+        "url": "https://github.com/astral-sh/python-build-standalone/releases/download/20261110/cpython-3.12.16%2B20261110-x86_64-pc-windows-msvc-install_only.tar.gz",
+        "sha256": "e23fe5b16926de1d81661b1a97352e89fb167549c55a6825796ccd0f32ec7f1b",
+        "size": 47438699,
+        "python_bin": "python/python.exe"
+      }
+    },
+    "linux_x86_64": {
+      "resolver_platform": "x86_64-manylinux_2_28",
+      "interpreter": {
+        "url": "https://github.com/astral-sh/python-build-standalone/releases/download/20261110/cpython-3.12.16%2B20261110-x86_64-unknown-linux-gnu-install_only.tar.gz",
+        "sha256": "c2f87d4b4e8db3abddb0f116c6ccfc503d0cbdbb9ee8faacddad1b679ec12e99",
+        "size": 68163679,
+        "python_bin": "python/bin/python3.12"
+      }
+    }
+  }
+}

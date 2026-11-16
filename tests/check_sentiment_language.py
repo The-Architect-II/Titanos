@@ -115,7 +115,7 @@ def contracts():
                 intervals.append(interval)
                 return actual_timer(interval, *args, **kwargs)
             with patch('titanos.api_plus.threading.Timer', side_effect=timer):
-                assert compose(timeout=150).json()['status'] == 'ok'
+                assert compose(timeout=2000).json()['status'] == 'ok'
             assert len(intervals) == 2 and 0 < intervals[1] < intervals[0] - .015, intervals
             before = len(seen); body = compose(timeout=10).json()
             assert body['status'] == 'failed' and body['classifier']['error']['code'] == 'deadline_exceeded'

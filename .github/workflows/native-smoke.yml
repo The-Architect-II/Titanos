@@ -13,8 +13,8 @@ jobs:
   smoke:
     runs-on: ${{ fromJSON(inputs.runner) }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: '3.12'
       - name: Install CPU runtime
@@ -46,7 +46,7 @@ jobs:
               subprocess.run(base + ['--mode', 'replicas', '--require-all', '--report', 'replicas.json'], check=True)
               subprocess.run(base + ['--mode', 'tensor_parallel', '--require-all', '--report', 'tp.json'], check=True)
           PY
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: native-qualification
